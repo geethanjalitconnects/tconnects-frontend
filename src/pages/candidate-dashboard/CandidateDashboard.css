@@ -1,0 +1,789 @@
+/* ----------------------------------------------------------
+   GLOBAL RESET + INTER FONT
+---------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+/* ✅ CRITICAL FIX - ADD THIS AT THE TOP */
+.cd-layout {
+  margin-top: 90px !important; 
+  min-height: calc(100vh - 90px) !important;
+  background: linear-gradient(135deg,#e6f7f7,#bfeef0,#81d7d7) !important;
+  display: flex !important;
+  flex-direction: row !important;
+  position: relative !important;
+  width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+.cd-sidebar {
+  width: 240px !important;
+  position: fixed !important;
+  top: 90px !important;
+  left: 0 !important;
+  height: calc(100vh - 90px) !important;
+  z-index: 50 !important;
+  background: linear-gradient(180deg,#0f7072,#199d9c) !important;
+  flex-shrink: 0 !important;
+}
+
+.cd-main {
+  margin-left: 240px !important;
+  width: calc(100% - 240px) !important;
+  padding: 30px 40px !important;
+  min-height: calc(100vh - 90px) !important;
+  box-sizing: border-box !important;
+  flex: 1 !important;
+}
+* {
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif !important;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* ----------------------------------------------------------
+   MAIN LAYOUT — FIXED & PERFECT WIDTH HANDLING
+---------------------------------------------------------- */
+.cd-layout {
+  margin-top: 90px; 
+  min-height: calc(100vh - 90px);
+  background: linear-gradient(135deg,#e6f7f7,#bfeef0,#81d7d7);
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* ----------------------------------------------------------
+   SIDEBAR — SINGLE DEFINITION
+---------------------------------------------------------- */
+.cd-sidebar {
+  width: 240px;
+  background: linear-gradient(180deg,#0f7072,#199d9c);
+  color: white;
+  padding: 18px 14px;
+  height: calc(100vh - 90px);
+  position: fixed;
+  top: 90px;
+  left: 0;
+  overflow-y: auto;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  z-index: 50;
+  flex-shrink: 0;
+}
+
+/* Sidebar Scrollbar */
+.cd-sidebar::-webkit-scrollbar { width: 4px; }
+.cd-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.25);
+  border-radius: 4px;
+}
+
+/* Sidebar Brand */
+.cd-sidebar-top {
+  text-align: center;
+  padding-bottom: 18px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.cd-logo {
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ----------------------------------------------------------
+   NAVIGATION
+---------------------------------------------------------- */
+.cd-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cd-nav-link {
+  padding: 12px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.cd-nav-link:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.cd-nav-link.active {
+  background: rgba(255,255,255,0.25);
+  font-weight: 600;
+}
+
+/* ----------------------------------------------------------
+   FREELANCER DROPDOWN — FIXED SPACING + FULL WIDTH
+---------------------------------------------------------- */
+.cd-dropdown {
+  margin-top: 8px;
+}
+
+.cd-dropdown-toggle {
+  padding: 12px 14px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 8px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cd-dropdown-toggle:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.cd-dropdown-arrow {
+  font-size: 11px;
+  transition: transform 0.3s ease;
+}
+
+.cd-dropdown.open .cd-dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.cd-dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-left: 10px;
+  margin-top: 8px;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  width: calc(100% - 12px);
+  transition: all 0.3s ease;
+}
+
+.cd-dropdown-menu.show {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.cd-dropdown-item {
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  text-decoration: none;
+  color: rgba(255,255,255,0.85);
+  transition: background 0.2s ease;
+}
+
+.cd-dropdown-item:hover {
+  background: rgba(255,255,255,0.18);
+}
+
+.cd-dropdown-item.active {
+  background: rgba(255,255,255,0.28);
+  color: white;
+  font-weight: 600;
+}
+
+/* ----------------------------------------------------------
+   COLLAPSED SIDEBAR MODE
+---------------------------------------------------------- */
+.cd-layout.collapsed .cd-sidebar {
+  width: 70px;
+}
+
+.cd-layout.collapsed .cd-nav-link {
+  font-size: 0;
+  padding: 12px 6px;
+  text-align: center;
+}
+
+.cd-layout.collapsed .cd-nav-link::before {
+  content: "•";
+  font-size: 18px;
+}
+
+.cd-layout.collapsed .cd-dropdown-toggle {
+  font-size: 0;
+  padding: 12px 6px;
+}
+
+.cd-layout.collapsed .cd-dropdown-menu {
+  display: none;
+}
+
+.cd-layout.collapsed .cd-main {
+  margin-left: 70px;
+  width: calc(100% - 70px);
+}
+
+/* ----------------------------------------------------------
+   ✅ MAIN CONTENT AREA — THE FIX IS HERE
+---------------------------------------------------------- */
+.cd-main {
+  margin-left: 240px;
+  padding: 30px 40px;
+  min-height: calc(100vh - 90px);
+  width: calc(100% - 240px);
+  box-sizing: border-box;
+  overflow-x: hidden;
+  flex: 1;
+}
+
+.cd-content {
+  width: 100%;
+  max-width: 100%;
+  padding-bottom: 50px;
+  box-sizing: border-box;
+}
+
+/* Remove duplicate header */
+.cd-header { 
+  display: none !important; 
+}
+
+/* ----------------------------------------------------------
+   RESPONSIVE (Mobile)
+---------------------------------------------------------- */
+@media (max-width: 900px) {
+  .cd-sidebar {
+    position: fixed;
+    left: -260px;
+    top: 90px;
+    z-index: 999;
+    transition: left 0.3s ease;
+  }
+
+  .cd-layout.sidebar-open .cd-sidebar {
+    left: 0;
+  }
+
+  .cd-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 20px 30px;
+  }
+}
+
+/* ----------------------------------------------------------
+   ENSURE CARDS DON'T OVERFLOW
+---------------------------------------------------------- */
+.cd-stats-grid,
+.cd-form-grid {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.cd-welcome-card,
+.cd-stat-card,
+.cd-profile-card,
+.cd-job-card,
+.cd-saved-card,
+.cd-message-item,
+.cd-course-card,
+.cd-application-card {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* ---------------- OVERVIEW PAGE ---------------- */
+.cd-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 100%;
+}
+
+.cd-welcome-card {
+  background: linear-gradient(135deg, #d9f7f7, #b3eeee);
+  padding: 26px 28px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0, 100, 100, 0.1);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.cd-welcome-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #064e53;
+}
+
+.cd-welcome-text {
+  font-size: 15px;
+  font-weight: 400;
+  color: #0d6b70;
+  line-height: 1.4;
+}
+
+.cd-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  max-width: 100%;
+}
+
+.cd-stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  box-shadow: 0 3px 10px rgba(0, 90, 90, 0.1);
+  border-left: 5px solid #0f7173;
+  transition: transform 0.15s ease;
+}
+
+.cd-stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.cd-stat-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #0f7173, #1bb2b0);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.cd-stat-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: #064e53;
+}
+
+.cd-stat-label {
+  color: #0f7078;
+  font-size: 14px;
+}
+
+.cd-section {
+  margin-top: 10px;
+}
+
+.cd-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #064e53;
+}
+
+.cd-application-card {
+  background: white;
+  padding: 18px 20px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 3px 10px rgba(0, 90, 90, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cd-job-title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 16px;
+  color: #073c3f;
+}
+
+.cd-job-company {
+  margin-top: 2px;
+  font-size: 14px;
+  color: #0f696b;
+}
+
+.cd-status {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.cd-status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.cd-status-reviewed {
+  background: #d4edda;
+  color: #155724;
+}
+
+/* ---------------- PROFILE PAGE ---------------- */
+.cd-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cd-section-header {
+  margin-bottom: 4px;
+}
+
+.cd-profile-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #064e53;
+}
+
+.cd-profile-subtitle {
+  color: #0f6b71;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.cd-profile-card {
+  background: white;
+  padding: 22px 24px;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0, 60, 60, 0.08);
+}
+
+.cd-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.cd-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.cd-full-width {
+  grid-column: span 2;
+}
+
+.cd-form-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #065d61;
+  margin-bottom: 6px;
+}
+
+.cd-input,
+.cd-textarea {
+  padding: 14px;
+  border-radius: 10px;
+  border: 2px solid #e0f2f1;
+  background: #faffff;
+  outline: none;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.cd-input:focus,
+.cd-textarea:focus {
+  border-color: #0f7173;
+  box-shadow: 0 0 0 3px rgba(0, 140, 140, 0.15);
+}
+
+.cd-textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.cd-upload-card {
+  padding: 30px;
+}
+
+.cd-upload-box {
+  width: 100%;
+  border: 2px dashed #0f8a8a;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.cd-upload-box:hover {
+  background: #e6f7f7;
+}
+
+.cd-upload-icon {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.cd-upload-text {
+  color: #065f61;
+  font-size: 14px;
+}
+
+.cd-save-btn {
+  width: 180px;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0f7173, #1bb2b0);
+  color: white;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: 0.2s ease;
+}
+
+.cd-save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 120, 120, 0.3);
+}
+
+/* ---------------- APPLIED JOBS PAGE ---------------- */
+.cd-applied {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cd-section-subtitle {
+  font-size: 14px;
+  color: #0f6b71;
+  margin-top: -4px;
+  margin-bottom: 18px;
+}
+
+.cd-job-card {
+  background: white;
+  padding: 20px 24px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 60, 60, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.2s ease;
+  border-left: 5px solid #0f7173;
+}
+
+.cd-job-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 14px rgba(0, 100, 100, 0.12);
+}
+
+.cd-job-info h3 {
+  margin: 0;
+}
+
+.cd-job-date {
+  font-size: 13px;
+  color: #0d8088;
+  margin-top: 6px;
+}
+
+.cd-status-rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* ---------------- SAVED JOBS PAGE ---------------- */
+.cd-saved {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cd-saved-card {
+  background: white;
+  padding: 22px 24px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 60, 60, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.2s ease;
+  border-left: 5px solid #1bb2b0;
+}
+
+.cd-saved-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 14px rgba(0, 120, 120, 0.12);
+}
+
+.cd-saved-info h3 {
+  margin: 0;
+}
+
+.cd-remove-btn {
+  background: #e57373;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.15s ease;
+}
+
+.cd-remove-btn:hover {
+  background: #d32f2f;
+  transform: translateY(-2px);
+}
+
+/* ---------------- MESSAGES PAGE ---------------- */
+.cd-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cd-message-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cd-message-item {
+  background: white;
+  padding: 18px 20px;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0, 60, 60, 0.08);
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: 0.2s ease;
+  border-left: 5px solid #0f7173;
+}
+
+.cd-message-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 14px rgba(0, 100, 100, 0.12);
+}
+
+.cd-message-avatar {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(135deg, #0f7173, #1bb2b0);
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.cd-message-content {
+  flex: 1;
+}
+
+.cd-message-sender {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #064e53;
+}
+
+.cd-message-text {
+  font-size: 14px;
+  color: #0f6f78;
+  margin: 6px 0;
+  line-height: 1.5;
+}
+
+.cd-message-time {
+  font-size: 12px;
+  color: #0b7c85;
+  font-weight: 600;
+}
+
+/* ---------------- COURSES PAGE ---------------- */
+.cd-courses {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cd-course-card {
+  background: white;
+  padding: 22px 24px;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0, 60, 60, 0.08);
+  border-left: 5px solid #0f7173;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  transition: 0.2s ease;
+}
+
+.cd-course-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 14px rgba(0, 100, 100, 0.12);
+}
+
+.cd-course-info {
+  flex: 1;
+}
+
+.cd-course-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #064e53;
+}
+
+.cd-course-provider {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #0f6f78;
+}
+
+.cd-course-progress-text {
+  font-size: 13px;
+  color: #0d8088;
+  margin-bottom: 8px;
+}
+
+.cd-progress {
+  width: 100%;
+  height: 10px;
+  background: #e0f5f5;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cd-progress-bar {
+  height: 10px;
+  background: linear-gradient(135deg, #0f7173, #1bb2b0);
+  border-radius: 10px;
+}
+
+.cd-course-status {
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.cd-status-ongoing {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.cd-status-completed {
+  background: #d4edda;
+  color: #155724;
+}

@@ -1,0 +1,136 @@
+/* ---------------- PAGE WRAPPER ---------------- */
+.jobs-page {
+  margin-top: 120px;
+  padding: 0 90px;
+  font-family: Inter, sans-serif;
+}
+
+/* ---------------- HEADER ---------------- */
+.jobs-header {
+  margin-bottom: 20px;
+}
+
+.jobs-title {
+  font-size: 38px;
+  font-weight: 800;
+  color: #064e53;
+}
+
+.jobs-subtitle {
+  margin-top: 5px;
+  font-size: 16px;
+  color: #0f6b71;
+}
+
+/* ---------------- FILTER BAR ---------------- */
+.jobs-filter-bar {
+  display: flex;
+  gap: 18px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.jobs-search {
+  flex: 1;
+  padding: 14px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: 1px solid #d9e7e8;
+  background: #fff;
+}
+
+.jobs-filter-select {
+  width: 220px;
+  padding: 14px;
+  font-size: 15px;
+  border-radius: 10px;
+  border: 1px solid #d7eaea;
+  background: #fff;
+}
+
+/* ---------------- COUNT ---------------- */
+.jobs-count {
+  font-size: 15px;
+  margin-bottom: 16px;
+  color: #0d6b70;
+}
+
+/* ---------------- JOB CARD ---------------- */
+.job-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 26px;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 18px rgba(0, 90, 90, 0.08);
+}
+
+.job-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #033536;
+}
+
+.company-name {
+  margin-top: 6px;
+  font-size: 16px;
+  color: #066b6e;
+}
+
+.job-info {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #0d6b70;
+}
+
+.job-info span {
+  margin-right: 6px;
+}
+
+.job-desc {
+  font-size: 15px;
+  margin: 10px 0 16px 0;
+  color: #07565c;
+}
+
+/* ---------------- TAGS ---------------- */
+.tags {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.tags span {
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: #e8f7f7;
+  color: #0f7072;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ---------------- ACTION BUTTONS ---------------- */
+.job-actions {
+  display: flex;
+  gap: 14px;
+}
+
+.view-btn {
+  padding: 12px 22px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0f7173, #17a3a2);
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.save-btn {
+  padding: 12px 22px;
+  background: #fff;
+  border: 2px solid #0f7273;
+  border-radius: 10px;
+  font-weight: 700;
+  color: #0f7273;
+  cursor: pointer;
+}

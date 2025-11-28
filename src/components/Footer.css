@@ -1,0 +1,120 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+.footer-social-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Enhanced Social Media Icons */
+.footer-social-icon {
+  color: #006064 !important;
+  font-size: 1.3rem;
+  padding: 0.75rem;
+  margin: 0 0.25rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(0, 96, 100, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  text-decoration: none;
+  width: 45px;
+  height: 45px;
+}
+
+.footer-social-icon:hover {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #006064 0%, #00838f 100%);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 96, 100, 0.4);
+  text-decoration: none;
+}
+
+/* Specific hover effects for each platform */
+.footer-social-icon:hover svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* LinkedIn specific styling */
+.footer-social-icon[aria-label="LinkedIn"]:hover {
+  background: linear-gradient(135deg, #0077b5 0%, #005885 100%);
+  box-shadow: 0 6px 20px rgba(0, 119, 181, 0.4);
+}
+
+/* Instagram specific styling */
+.footer-social-icon[aria-label="Instagram"]:hover {
+  background: linear-gradient(135deg, #e4405f 0%, #833ab4 50%, #fccc63 100%);
+  box-shadow: 0 6px 20px rgba(228, 64, 95, 0.4);
+}
+
+/* Mobile responsive for social icons */
+@media (max-width: 768px) {
+  .footer-social-links {
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+  
+  .footer-social-icon {
+    font-size: 1.2rem;
+    width: 42px;
+    height: 42px;
+    padding: 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-social-icon {
+    font-size: 1.1rem;
+    width: 40px;
+    height: 40px;
+    padding: 0.6rem;
+    margin: 0 0.15rem;
+  }
+}
+
+/* Animation for social icons */
+@keyframes social-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 96, 100, 0.4);
+  }
+  70% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 8px rgba(0, 96, 100, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 96, 100, 0);
+  }
+}
+
+/* Optional: Add subtle pulse animation on hover */
+.footer-social-icon:hover {
+  animation: social-pulse 0.6s ease-out;
+}
+
+/* High contrast mode for social icons */
+@media (prefers-contrast: high) {
+  .footer-social-icon {
+    background: #ffffff !important;
+    border: 2px solid #000000 !important;
+    color: #000000 !important;
+  }
+  
+  .footer-social-icon:hover {
+    background: #000000 !important;
+    color: #ffffff !important;
+  }
+}
+
+/* Reduced motion for social icons */
+@media (prefers-reduced-motion: reduce) {
+  .footer-social-icon:hover {
+    transform: none !important;
+    animation: none !important;
+  }
+}

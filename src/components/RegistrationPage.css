@@ -1,0 +1,312 @@
+/* Styles for RegistrationPage.jsx */
+
+.register-page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin-top: 3rem;
+}
+
+.register-container {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 105, 92, 0.15);
+  width: 100%;
+  max-width: 450px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* User Type Selector */
+.user-type-selector {
+  display: flex;
+  gap: 0;
+  margin-bottom: 30px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.user-type-btn {
+  flex: 1;
+  padding: 16px 20px;
+  border: none;
+  background: transparent;
+  color: #718096;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.user-type-btn:hover {
+  background: rgba(0, 137, 123, 0.05);
+}
+
+.user-type-btn.active {
+  background: #00897b;
+  color: white;
+  font-weight: 600;
+}
+
+.user-type-btn.active:hover {
+  background: #00695c;
+}
+
+.user-type-icon {
+  font-size: 18px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.google-btn {
+  width: 100%;
+  padding: 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 24px;
+}
+
+.google-btn:hover {
+  border-color: #00897b;
+  background: #f8fffe;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 137, 123, 0.15);
+}
+
+.google-icon {
+  flex-shrink: 0;
+}
+
+.divider {
+  text-align: center;
+  margin: 24px 0;
+  position: relative;
+  color: #a0aec0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.divider span {
+  background: white;
+  padding: 0 16px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.input-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #2d3748;
+  margin-bottom: 8px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  outline: none;
+  background: white;
+}
+
+.input-field:focus {
+  border-color: #00897b;
+  box-shadow: 0 0 0 3px rgba(0, 137, 123, 0.1);
+}
+
+.input-field::placeholder {
+  color: #a0aec0;
+}
+
+.input-field.error {
+  border-color: #e53e3e;
+  background-color: #fff5f5;
+}
+
+.input-field.error:focus {
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+}
+
+.error-text {
+  color: #e53e3e;
+  font-size: 13px;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 137, 123, 0.3);
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, #00695c 0%, #004d40 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 137, 123, 0.4);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.login-link-container {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.login-text {
+  color: #2d3748;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.login-link {
+  background: none;
+  border: none;
+  color: #00695c;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.login-link:hover {
+  color: #004d40;
+  text-decoration: underline;
+  background: rgba(0, 105, 92, 0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .register-container {
+    padding: 30px 20px;
+    margin: 10px;
+  }
+  
+  .title {
+    font-size: 28px;
+    margin-bottom: 25px;
+  }
+
+  .user-type-selector {
+    margin-bottom: 25px;
+  }
+
+  .user-type-btn {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+
+  .google-btn, .submit-btn {
+    padding: 14px;
+    font-size: 15px;
+  }
+
+  .input-field {
+    padding: 14px;
+    font-size: 15px;
+  }
+
+  .input-label {
+    font-size: 15px;
+  }
+
+  .login-text,
+  .login-link {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .register-page {
+    padding: 15px;
+  }
+
+  .register-container {
+    padding: 25px 15px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .user-type-btn {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .google-btn, .submit-btn {
+    font-size: 14px;
+  }
+}

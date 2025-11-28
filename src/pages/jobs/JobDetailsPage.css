@@ -1,0 +1,158 @@
+/* JobDetailsPage.css */
+
+/* Global */
+.jd-container {
+  padding: 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  margin-top: 40px;
+  font-family: "Inter", sans-serif;
+}
+
+/* ==============================
+   HEADER CARD
+============================== */
+.jd-header-card {
+  background: linear-gradient(135deg, #d7f3f3, #b3ecec);
+  padding: 30px;
+  border-radius: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;
+  box-shadow: 0 4px 12px rgba(0, 120, 120, 0.12);
+}
+
+.jd-header-left {
+  max-width: 70%;
+}
+
+.jd-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #064d4d;
+  margin: 0 0 10px 0;
+}
+
+.jd-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: #0a5f5f;
+  font-size: 14px;
+}
+
+.jd-meta-item {
+  background: white;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 80, 80, 0.1);
+}
+
+.jd-badge {
+  background: #0f7173;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* Buttons */
+.jd-header-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.jd-apply-btn {
+  background: linear-gradient(135deg, #0f7173, #1bb2b0);
+  border: none;
+  padding: 12px 24px;
+  font-size: 15px;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.2s;
+}
+
+.jd-apply-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 120, 120, 0.3);
+}
+
+.jd-save-btn {
+  background: white;
+  border: 2px solid #0f7173;
+  padding: 12px 24px;
+  font-size: 15px;
+  border-radius: 10px;
+  color: #0f7173;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.2s;
+}
+
+.jd-save-btn:hover {
+  background: #e9fafa;
+}
+
+/* ==============================
+   SECTION CARDS
+============================== */
+.jd-section-card {
+  background: white;
+  padding: 28px;
+  border-radius: 14px;
+  margin-bottom: 26px;
+  box-shadow: 0 3px 10px rgba(0, 70, 70, 0.08);
+}
+
+.jd-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #064e53;
+  margin-bottom: 16px;
+}
+
+/* Company Overview */
+.jd-company-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.jd-company-about {
+  color: #0f6f6f;
+  line-height: 1.5;
+}
+
+/* Job Description */
+.jd-list {
+  padding-left: 20px;
+  color: #0f6f78;
+  line-height: 1.6;
+}
+
+/* Required Skills */
+.jd-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.jd-tag {
+  background: #e0f7f7;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+  color: #0b5b5b;
+}
+
+.jd-education {
+  font-size: 15px;
+  color: #064e53;
+}
