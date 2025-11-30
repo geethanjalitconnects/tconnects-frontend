@@ -15,6 +15,8 @@ const LoginPage = ({ onLoginSuccess, navigateToRegister }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  const navigate = useNavigate();
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -55,6 +57,25 @@ const LoginPage = ({ onLoginSuccess, navigateToRegister }) => {
     window.location.href = `${API_BASE_URL}/api/auth/google/login/?user_type=${userType}`;
   };
 
+  // Common login success handler (no localStorage)
+  const handleLoginSuccess = (userData) => {
+    showSuccessPopup('Login successful!');
+    setTimeout(() => {
+      // Redirect based on role
+      if (userData.role === 'candidate') {
+        navigate('/candidate-dashboard');
+      } else if (userData.role === 'recruiter') {
+        navigate('/recruiter-dashboard');
+      }
+
+      // Notify parent (e.g., header) about logged-in user
+      onLoginSuccess && onLoginSuccess(userData);
+    }, 1200);
+  };
+
+  // ------------------------
+  // Submit handler (OTP or password)
+  // ------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -80,46 +101,43 @@ const LoginPage = ({ onLoginSuccess, navigateToRegister }) => {
           showSuccessPopup('OTP sent successfully!');
         }
       } else {
+        // Password login — backend sets HttpOnly cookies
         const response = await api.post('/api/auth/login/', {
           email: formData.email,
           password: formData.password,
           role: userType
         });
 
-        if (response.data.tokens) {
-          localStorage.setItem('accessToken', response.data.tokens.access);
-          localStorage.setItem('refreshToken', response.data.tokens.refresh);
+        const userData = response.data.user;
 
-          const userData = {
-            id: response.data.user?.id,
-            name: response.data.user?.full_name,
-            email: response.data.user?.email,
-            userType: response.data.user?.role,
-            loginMethod: 'password'
-          };
-
-          showSuccessPopup('Login successful!');
-          setTimeout(() => onLoginSuccess && onLoginSuccess(userData), 2000);
+        if (userData) {
+          handleLoginSuccess(userData);
+        } else {
+          // Fallback error
+          setError('Login failed. Please try again.');
         }
       }
     } catch (error) {
       console.error('Login error:', error);
-      const errorMsg = error.response?.data?.detail || 
-                      error.response?.data?.message || 
-                      'Login failed. Please try again.';
+      const errorMsg = error.response?.data?.detail ||
+                       error.response?.data?.message ||
+                       'Login failed. Please try again.';
       setError(errorMsg);
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // ------------------------
+  // OTP helpers
+  // ------------------------
   const handleOtpChange = (index, value) => {
     if (!/^\d*$/.test(value)) return;
-    
+
     const newOtpValues = [...otpValues];
     newOtpValues[index] = value.slice(-1);
     setOtpValues(newOtpValues);
-    
+
     if (value && index < 5) {
       document.querySelector(`input[data-index="${index + 1}"]`)?.focus();
     }
@@ -141,11 +159,11 @@ const LoginPage = ({ onLoginSuccess, navigateToRegister }) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
     const newOtpValues = [...otpValues];
-    
+
     for (let i = 0; i < 6; i++) {
       newOtpValues[i] = pastedData[i] || '';
     }
-    
+
     setOtpValues(newOtpValues);
     document.querySelector(`input[data-index="${Math.min(pastedData.length, 5)}"]`)?.focus();
   };
@@ -154,7 +172,7 @@ const LoginPage = ({ onLoginSuccess, navigateToRegister }) => {
     if (isSubmitting) return;
     setIsSubmitting(true);
     setError('');
-    
+
     try {
       await api.post('/api/auth/send-otp/', {
         email: formData.email,
@@ -173,37 +191,30 @@ const LoginPage = ({ onLoginSuccess, navigateToRegister }) => {
 
   const handleOtpVerification = async () => {
     const otpValue = otpValues.join('');
-    
+
     if (otpValue.length !== 6) {
       setError('Please enter complete 6-digit OTP');
       return;
     }
-    
+
     if (isSubmitting) return;
     setIsSubmitting(true);
     setError('');
 
     try {
+      // verify-otp returns user and backend sets cookies
       const response = await api.post('/api/auth/verify-otp/', {
         email: formData.email,
         code: otpValue,
         role: userType
       });
 
-      if (response.data.tokens) {
-        localStorage.setItem('accessToken', response.data.tokens.access);
-        localStorage.setItem('refreshToken', response.data.tokens.refresh);
+      const userData = response.data.user;
 
-        const userData = {
-          id: response.data.user?.id,
-          name: response.data.user?.full_name,
-          email: response.data.user?.email,
-          userType: response.data.user?.role,
-          loginMethod: 'otp'
-        };
-
-        showSuccessPopup('Login successful!');
-        setTimeout(() => onLoginSuccess && onLoginSuccess(userData), 2000);
+      if (userData) {
+        handleLoginSuccess(userData);
+      } else {
+        setError('OTP verification failed. Please try again.');
       }
     } catch (error) {
       setError(error.response?.data?.detail || 'Invalid or expired OTP.');

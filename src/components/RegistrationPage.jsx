@@ -15,8 +15,10 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
+  const navigate = useNavigate();
+
   const personalEmailDomains = [
-    'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 
+    'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com',
     'aol.com', 'icloud.com', 'mail.com', 'protonmail.com',
     'yandex.com', 'zoho.com', 'gmx.com', 'live.com',
     'msn.com', 'rediffmail.com', 'inbox.com'
@@ -51,7 +53,7 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
   const validateCompanyEmail = (email) => {
     if (!email.trim()) return 'Email is required';
     if (!/\S+@\S+\.\S+/.test(email)) return 'Please enter a valid email address';
-    
+
     const domain = email.split('@')[1]?.toLowerCase();
     if (personalEmailDomains.includes(domain)) {
       return 'Please use your company email address, not a personal email';
@@ -61,10 +63,10 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     const nameError = validateFullName(formData.fullName);
     if (nameError) newErrors.fullName = nameError;
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -73,7 +75,7 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
       const companyEmailError = validateCompanyEmail(formData.email);
       if (companyEmailError) newErrors.email = companyEmailError;
     }
-    
+
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 8) {
@@ -81,24 +83,24 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
     } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
       newErrors.password = 'Password must contain uppercase, lowercase, and numbers';
     }
-    
+
     if (!formData.confirmPassword) {
       newErrors.confirmPassword = 'Please confirm your password';
     } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsSubmitting(true);
-    
+
     try {
       const response = await api.post('/api/auth/register/', {
         full_name: formData.fullName.trim(),
@@ -107,34 +109,38 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
         role: userType
       });
 
-      if (response.data.tokens) {
-        localStorage.setItem('accessToken', response.data.tokens.access);
-        localStorage.setItem('refreshToken', response.data.tokens.refresh);
-      }
-
       const userData = {
         id: response.data.user?.id,
         name: response.data.user?.full_name,
         email: response.data.user?.email,
-        userType: response.data.user?.role || userType
+        role: response.data.user?.role
       };
 
+      // Show success popup
       setShowSuccessModal(true);
 
       setTimeout(() => {
         setShowSuccessModal(false);
+
+        // Redirect based on role
+        if (userType === 'candidate') {
+          navigate('/candidate-dashboard');
+        } else {
+          navigate('/recruiter-dashboard');
+        }
+
+        // Notify parent component
         if (typeof onRegisterSuccess === 'function') {
-          const targetDashboard = userType === 'candidate' ? 'myaccount' : 'recruiter';
-          onRegisterSuccess(userData, targetDashboard);
+          onRegisterSuccess(userData);
         }
       }, 2000);
 
     } catch (error) {
       console.error('Registration error:', error);
-      
+
       if (error.response?.data) {
         const responseData = error.response.data;
-        
+
         if (responseData.errors) {
           const apiErrors = {};
           const fieldMapping = {
@@ -144,21 +150,21 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
             'role': 'userType',
             'non_field_errors': 'general'
           };
-          
+
           Object.keys(responseData.errors).forEach(key => {
             const frontendField = fieldMapping[key] || key;
-            const errorMessage = Array.isArray(responseData.errors[key]) 
-              ? responseData.errors[key][0] 
+            const errorMessage = Array.isArray(responseData.errors[key])
+              ? responseData.errors[key][0]
               : responseData.errors[key];
             apiErrors[frontendField] = errorMessage;
           });
-          
+
           setErrors(apiErrors);
         } else {
-          const errorMsg = responseData.detail || 
-                         responseData.error || 
-                         responseData.message || 
-                         'Registration failed. Please check your information.';
+          const errorMsg = responseData.detail ||
+            responseData.error ||
+            responseData.message ||
+            'Registration failed. Please check your information.';
           setErrors({ general: errorMsg });
         }
       } else if (error.request) {
@@ -306,15 +312,14 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
       </div>
 
       {showSuccessModal && (
-  <div className="popup-overlay">
-    <div className="popup-card">
-      <div className="popup-icon">✓</div>
-      <h2 className="popup-title">Registration Successful!</h2>
-      <p className="popup-message">Your account has been created successfully.</p>
-    </div>
-  </div>
-)}
-
+        <div className="popup-overlay">
+          <div className="popup-card">
+            <div className="popup-icon">✓</div>
+            <h2 className="popup-title">Registration Successful!</h2>
+            <p className="popup-message">Your account has been created successfully.</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
