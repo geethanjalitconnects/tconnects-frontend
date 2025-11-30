@@ -1,5 +1,5 @@
 import React from "react";
-import "./freelancer.css";
+import "./Freelancer.css";
 
 export default function FreelancerProfilePreview() {
   // 📌 Temporary mock data (UI only)

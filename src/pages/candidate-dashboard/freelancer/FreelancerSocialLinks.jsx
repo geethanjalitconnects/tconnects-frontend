@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./freelancer.css";
+import "./Freelancer.css";
 
 export default function FreelancerSocialLinks() {
   const [links, setLinks] = useState({
