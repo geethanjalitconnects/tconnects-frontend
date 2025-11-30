@@ -6,7 +6,7 @@ export default function AppliedJobs() {
     <div className="cd-applied">
 
       {/* Page Header */}
-      <h2 className="cd-section-title">Applied Jobs</h2>
+      <h1 className="cd-section-title">Applied Jobs</h1>
       <p className="cd-section-subtitle">
         Track all the jobs you have applied for and check their application status.
       </p>

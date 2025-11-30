@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Environment-based API URL configuration
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://tconnects-backend.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://tconnects_backend.onrender.com';
 
 // Create axios instance with default configuration
 const api = axios.create({

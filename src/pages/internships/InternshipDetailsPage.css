@@ -1,0 +1,200 @@
+/*******************************
+   🔥 FORCE DESKTOP VIEW ONLY
+********************************/
+.jd-desktop-wrapper {
+  width: 1100px !important;
+  margin: auto;
+  padding-top: 40px;
+}
+
+/* Disable mobile responsive collapsing */
+@media (max-width: 1200px) {
+  body {
+    min-width: 1100px !important;
+    overflow-x: auto !important;
+  }
+
+  .jd-desktop-wrapper {
+    transform: scale(0.95);
+    transform-origin: top center;
+  }
+}
+
+/***********************************
+   MAIN CONTAINER
+***********************************/
+.jd-container {
+  font-family: "Poppins", sans-serif;
+  padding: 20px;
+}
+
+/***********************************
+   HEADER CARD
+***********************************/
+.jd-header-card {
+  background: white;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 4px 22px rgba(0, 105, 92, 0.12);
+  margin-bottom: 26px;
+
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.jd-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #00695c;
+  margin-bottom: 12px;
+}
+
+.jd-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.jd-badge {
+  padding: 6px 12px;
+  background: #e0f2f1;
+  color: #00796b;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.jd-meta-item {
+  color: #37474f;
+  font-size: 14px;
+}
+
+/***********************************
+   HEADER RIGHT BUTTONS
+***********************************/
+.jd-header-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.jd-apply-btn {
+  padding: 12px 22px;
+  background: linear-gradient(135deg, #00897b, #00695c);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.jd-apply-btn:hover {
+  background: linear-gradient(135deg, #00695c, #004d40);
+}
+
+.jd-save-btn {
+  padding: 12px 22px;
+  background: white;
+  border: 2px solid #00897b;
+  color: #00897b;
+  border-radius: 50px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.jd-save-btn:hover {
+  background: #e0f2f1;
+}
+
+/***********************************
+   SECTION CARD
+***********************************/
+.jd-section-card {
+  background: white;
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 4px 20px rgba(0, 121, 107, 0.15);
+  margin-bottom: 25px;
+}
+
+.jd-section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #004d40;
+  margin-bottom: 18px;
+}
+
+/***********************************
+   COMPANY GRID
+***********************************/
+.jd-company-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.jd-company-item {
+  font-size: 15px;
+  color: #37474f;
+}
+
+.jd-company-about {
+  margin-top: 12px;
+  font-size: 15px;
+  color: #37474f;
+  line-height: 1.6;
+}
+
+/***********************************
+   LIST STYLES
+***********************************/
+.jd-list {
+  margin-left: 20px;
+  font-size: 15px;
+  color: #37474f;
+  line-height: 1.7;
+}
+
+/***********************************
+   TAGS
+***********************************/
+.jd-tags {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.jd-tag {
+  padding: 6px 12px;
+  background: #e0f2f1;
+  color: #00796b;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/***********************************
+   EDUCATION SECTION
+***********************************/
+.jd-education {
+  font-size: 15px;
+  color: #37474f;
+  line-height: 1.6;
+}
+
+/***********************************
+   LINKS
+***********************************/
+.jd-company-item a {
+  color: #00695c;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.jd-company-item a:hover {
+  text-decoration: underline;
+}

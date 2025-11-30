@@ -60,6 +60,19 @@ export default function Profile() {
             />
           </div>
 
+          {/* NEW EXPERIENCE FIELD */}
+          <div className="cd-form-group">
+            <label className="cd-form-label">Experience</label>
+            <select className="cd-input">
+              <option value="">Select Experience</option>
+              <option>Fresher</option>
+              <option>1 Year</option>
+              <option>2 Years</option>
+              <option>3 Years</option>
+              <option>4+ Years</option>
+            </select>
+          </div>
+
           {/* Skills */}
           <div className="cd-form-group cd-full-width">
             <label className="cd-form-label">Skills</label>

@@ -787,3 +787,20 @@ body, html {
   background: #d4edda;
   color: #155724;
 }
+/* =============== EXPERIENCE DROPDOWN =============== */
+
+.cd-input {
+  padding: 14px 16px;
+  border: 2px solid #d9eeee;
+  background: #f8ffff;
+  border-radius: 10px;
+  font-size: 15px;
+  width: 100%;
+  transition: 0.2s ease;
+}
+
+.cd-input:focus {
+  border-color: #0f7173;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(15, 113, 115, 0.2);
+}

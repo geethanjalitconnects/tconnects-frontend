@@ -1,10 +1,7 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import "./JobsListPage.css";
 
 export default function JobsListPage() {
-  const navigate = useNavigate();
-
   return (
     <div className="jobs-page">
 
@@ -59,8 +56,7 @@ export default function JobsListPage() {
           <span>Noida</span> •
           <span>1–3 Years</span> •
           <span>6–9 LPA</span> •
-          <span>Full-Time</span> •
-          <span>1 week ago</span>
+          <span>Full-Time</span> 
         </div>
 
         <p className="job-desc">
@@ -76,7 +72,7 @@ export default function JobsListPage() {
         <div className="job-actions">
           <button
             className="view-btn"
-            onClick={() => navigate("/jobs/1")}
+            onClick={() => window.open("/jobs/1", "_blank")}
           >
             View Details
           </button>
@@ -93,8 +89,7 @@ export default function JobsListPage() {
           <span>Chennai</span> •
           <span>0–1 Years</span> •
           <span>4–6 LPA</span> •
-          <span>Full-Time</span> •
-          <span>3 days ago</span>
+          <span>Full-Time</span> 
         </div>
 
         <p className="job-desc">
@@ -110,7 +105,7 @@ export default function JobsListPage() {
         <div className="job-actions">
           <button
             className="view-btn"
-            onClick={() => navigate("/jobs/2")}
+            onClick={() => window.open("/jobs/2", "_blank")}
           >
             View Details
           </button>

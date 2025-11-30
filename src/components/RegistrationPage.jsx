@@ -306,15 +306,15 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
       </div>
 
       {showSuccessModal && (
-        <div className="success-modal-overlay">
-          <div className="success-modal">
-            <div className="success-icon-wrapper">✓</div>
-            <h2 className="success-title">Registration Successful!</h2>
-            <p className="success-text">Your account has been created successfully.</p>
-            <p className="success-subtext">Redirecting to your dashboard...</p>
-          </div>
-        </div>
-      )}
+  <div className="popup-overlay">
+    <div className="popup-card">
+      <div className="popup-icon">✓</div>
+      <h2 className="popup-title">Registration Successful!</h2>
+      <p className="popup-message">Your account has been created successfully.</p>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

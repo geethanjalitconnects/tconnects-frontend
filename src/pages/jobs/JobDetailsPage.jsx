@@ -1,93 +1,106 @@
 // JobDetailsPage.jsx
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./JobDetailsPage.css";
 
 const JobDetailsPage = () => {
+  const navigate = useNavigate();
+
+  const handleApplyNow = () => {
+    navigate("/apply-job");
+  };
+
   return (
-    <div className="jd-container">
+    <div className="jd-desktop-wrapper">
+      <div className="jd-container">
 
-      {/* =======================
-          JOB HEADER SECTION
-      ======================== */}
-      <div className="jd-header-card">
-        <div className="jd-header-left">
+        {/* ======================= JOB HEADER ======================= */}
+        <div className="jd-header-card">
+          <div className="jd-header-left">
 
-          <h1 className="jd-title">Fraud Risk Investigator</h1>
+            <h1 className="jd-title">Senior Risk Analyst</h1>
 
-          <div className="jd-meta">
-            <span className="jd-badge">Risk Management</span>
-            <span className="jd-meta-item">Paytm</span>
-            <span className="jd-meta-item">Noida, India</span>
-            <span className="jd-meta-item">Full-Time</span>
-            <span className="jd-meta-item">₹6–9 LPA</span>
-            <span className="jd-meta-item">3+ years experience</span>
-            <span className="jd-meta-item">Posted 1 week ago</span>
-            <span className="jd-meta-item">Deadline: 30 Dec 2025</span>
-            {/* Removed: Apply Before */}
+            <div className="jd-meta">
+              <span className="jd-badge">Risk Management</span>
+              <span className="jd-meta-item">ICICI Bank</span>
+              <span className="jd-meta-item">Hyderabad, India</span>
+              <span className="jd-meta-item">4–6 Years Experience</span>
+              <span className="jd-meta-item">₹12–16 LPA</span>
+              <span className="jd-meta-item">Full-Time</span>
+              <span className="jd-meta-item">Deadline: 30 Dec 2025</span>
+            </div>
+          </div>
+
+          <div className="jd-header-right">
+            <button className="jd-apply-btn" onClick={handleApplyNow}>
+              Apply Now
+            </button>
+            <button className="jd-save-btn">Save Job</button>
           </div>
         </div>
 
-        <div className="jd-header-right">
-          <button className="jd-apply-btn">Apply Now</button>
-          <button className="jd-save-btn">Save Job</button>
+        {/* ======================= COMPANY OVERVIEW ======================= */}
+        <div className="jd-section-card">
+          <h2 className="jd-section-title">Company Overview</h2>
+
+          <div className="jd-company-grid">
+            <div className="jd-company-item"><strong>Company Size:</strong> 20,000+ Employees</div>
+            <div className="jd-company-item"><strong>Industry:</strong> Banking / Finance</div>
+            <div className="jd-company-item">
+              <strong>Website:</strong>{" "}
+              <a href="https://www.icicibank.com" target="_blank" rel="noopener noreferrer">
+                www.icicibank.com
+              </a>
+            </div>
+          </div>
+
+          <p className="jd-company-about">
+            ICICI Bank is a leading private sector bank offering banking and financial services 
+            with a strong focus on digital innovation and customer satisfaction.
+          </p>
         </div>
-      </div>
 
-      {/* =======================
-          COMPANY OVERVIEW
-      ======================== */}
-      <div className="jd-section-card">
-        <h2 className="jd-section-title">Company Overview</h2>
+        {/* ======================= JOB DESCRIPTION (NEW) ======================= */}
+        <div className="jd-section-card">
+          <h2 className="jd-section-title">Job Description</h2>
+          <p className="jd-description">
+            The Senior Risk Analyst is responsible for analyzing financial risks, evaluating 
+            market and credit exposure, preparing risk assessment reports, and supporting 
+            senior managers in forming risk mitigation strategies. You will work across 
+            departments, ensuring compliance and contributing to high-level financial decisions.
+          </p>
+        </div>
 
-        <div className="jd-company-grid">
-          <div className="jd-company-item"><strong>Company Size:</strong> 5,000+ Employees</div>
-          <div className="jd-company-item"><strong>Industry:</strong> FinTech / Payments</div>
-          <div className="jd-company-item">
-            <strong>Website:</strong>{" "}
-            <a href="https://paytm.com" target="_blank" rel="noopener noreferrer">
-              www.paytm.com
-            </a>
+        {/* ======================= RESPONSIBILITIES ======================= */}
+        <div className="jd-section-card">
+          <h2 className="jd-section-title">Job Responsibilities</h2>
+
+          <ul className="jd-list">
+            <li>Perform financial and operational risk analysis.</li>
+            <li>Develop and maintain risk monitoring dashboards.</li>
+            <li>Investigate suspicious transactions.</li>
+            <li>Prepare risk assessment reports.</li>
+            <li>Collaborate across teams for risk mitigation.</li>
+          </ul>
+        </div>
+
+        {/* ======================= SKILLS ======================= */}
+        <div className="jd-section-card">
+          <h2 className="jd-section-title">Required Skills</h2>
+
+          <div className="jd-tags">
+            <span className="jd-tag">SQL</span>
+            <span className="jd-tag">Excel</span>
+            <span className="jd-tag">Risk Modelling</span>
+            <span className="jd-tag">Python</span>
+            <span className="jd-tag">Data Analysis</span>
+          </div>
+
+          <div className="jd-education">
+            <strong>Eligible Degrees:</strong> MBA, B.Tech, BBA, B.Com, CA, Finance-specific degrees.
           </div>
         </div>
 
-        <p className="jd-company-about">
-          Paytm is India’s largest payments company, providing secure and seamless financial
-          technology solutions to millions of users.
-        </p>
-      </div>
-
-      {/* =======================
-          JOB RESPONSIBILITIES
-      ======================== */}
-      <div className="jd-section-card">
-        <h2 className="jd-section-title">Job Responsibilities</h2>
-
-        <ul className="jd-list">
-          <li>Investigate suspicious transactions and detect fraud patterns.</li>
-          <li>Monitor daily transaction activities and raise alerts.</li>
-          <li>Collaborate with risk and compliance teams.</li>
-          <li>Prepare risk assessment reports.</li>
-        </ul>
-      </div>
-
-      {/* =======================
-          REQUIRED SKILLS
-      ======================== */}
-      <div className="jd-section-card">
-        <h2 className="jd-section-title">Required Skills</h2>
-
-        <div className="jd-tags">
-          <span className="jd-tag">Fraud Detection</span>
-          <span className="jd-tag">SQL</span>
-          <span className="jd-tag">AML</span>
-          <span className="jd-tag">Transaction Monitoring</span>
-        </div>
-
-        <div className="jd-education">
-          <strong>Educational Qualification:</strong>{" "}
-          Bachelor’s Degree in Finance, Economics, Computer Science,
-          or related fields.
-        </div>
       </div>
     </div>
   );

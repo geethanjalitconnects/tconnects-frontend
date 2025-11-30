@@ -1,6 +1,10 @@
 /* Import fonts to match HeroSection */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
+.auth-buttons a,
+.auth-buttons a * {
+  text-decoration: none !important;
+}
 
 /* 🔧 HEADER SPACER - PREVENTS OVERLAP */
 .header-spacer {
@@ -892,4 +896,85 @@
     transform: scale(0.98);
     transition: transform 0.1s ease;
   }
+}
+/* RIGHT USER SECTION */
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* USER MENU */
+.header-user-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+/* Avatar circle */
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background: #e8dbff;
+  color: #542fbf;
+  border-radius: 50%;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+}
+
+/* Name */
+.user-name {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 15px;
+}
+
+/* DROPDOWN UNDER USER */
+.user-dropdown-menu {
+  position: absolute;
+  top: 53px;
+  right: 0;
+  width: 185px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 10px 0;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  display: none;
+  z-index: 2000;
+}
+
+.header-user-menu:hover .user-dropdown-menu {
+  display: block;
+}
+
+/* Dropdown Items */
+.user-dropdown-item {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.user-dropdown-item:hover {
+  background: #f4f8ff;
+}
+
+.logout-item {
+  color: #c62828;
+}
+
+.logout-item:hover {
+  background: #fdeaea;
+  color: #b71c1c;
 }
