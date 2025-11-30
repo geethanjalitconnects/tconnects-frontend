@@ -6,9 +6,9 @@ import "./CandidateDashboard.css";
 const MAIN_LINKS = [
   { to: "/candidate-dashboard/overview", label: "Overview" },
   { to: "/candidate-dashboard/profile", label: "Profile" },
-  { to: "/candidate-dashboard/applied", label: "Applied Jobs" },
+  { to: "/candidate-dashboard/applied-jobs", label: "Applied Jobs" },
   { to: "/candidate-dashboard/applied-internships", label: "Applied Internships" },
-  { to: "/candidate-dashboard/saved", label: "Saved Jobs" },
+  { to: "/candidate-dashboard/saved-jobs", label: "Saved Jobs" },
   { to: "/candidate-dashboard/saved-internships", label: "Saved Internships" },
   { to: "/candidate-dashboard/courses", label: "Courses" },
 ];
