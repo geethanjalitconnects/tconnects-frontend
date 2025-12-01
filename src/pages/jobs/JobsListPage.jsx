@@ -1,7 +1,63 @@
-import React from "react";
+// JobsListPage.jsx — FULL BACKEND INTEGRATION
+import React, { useEffect, useState } from "react";
+import api from "../../config/api";
 import "./JobsListPage.css";
 
 export default function JobsListPage() {
+  const [jobs, setJobs] = useState([]);
+  const [savedItems, setSavedItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load saved jobs first
+  useEffect(() => {
+    const loadSaved = async () => {
+      try {
+        const res = await api.get("/api/applications/saved-jobs/");
+        setSavedItems(res.data.map((i) => i.job.id));
+      } catch (err) {
+        console.error("Failed to fetch saved jobs:", err);
+      }
+    };
+    loadSaved();
+  }, []);
+
+  // Load jobs from backend
+  useEffect(() => {
+    const loadJobs = async () => {
+      try {
+        const res = await api.get("/api/jobs/");
+        setJobs(res.data);
+      } catch (err) {
+        console.error("Failed to load jobs:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadJobs();
+  }, []);
+
+  const isSaved = (id) => savedItems.includes(id);
+
+  const toggleSave = async (id) => {
+    try {
+      if (isSaved(id)) {
+        await api.delete(`/api/applications/saved-jobs/remove/${id}/`);
+        setSavedItems(savedItems.filter((x) => x !== id));
+      } else {
+        await api.post("/api/applications/saved-jobs/", { job: id });
+        setSavedItems([...savedItems, id]);
+      }
+    } catch (err) {
+      console.error("Save/Unsave failed:", err);
+    }
+  };
+
+  const openDetails = (id) => {
+    window.open(`/jobs/${id}`, "_blank");
+  };
+
+  if (loading) return <div className="jobs-loading">Loading jobs…</div>;
+
   return (
     <div className="jobs-page">
 
@@ -45,73 +101,52 @@ export default function JobsListPage() {
       </div>
 
       {/* RESULTS COUNT */}
-      <p className="jobs-count">Showing 5 of 5 job opportunities</p>
+      <p className="jobs-count">Showing {jobs.length} job opportunities</p>
 
-      {/* ---------------- JOB CARD 1 ---------------- */}
-      <div className="job-card">
-        <h2 className="job-title">Fraud Risk Investigator</h2>
-        <p className="company-name">Paytm</p>
+      {/* ---------------- JOB LIST ---------------- */}
+      {jobs.length === 0 && (
+        <p className="jobs-empty">No jobs posted yet.</p>
+      )}
 
-        <div className="job-info">
-          <span>Noida</span> •
-          <span>1–3 Years</span> •
-          <span>6–9 LPA</span> •
-          <span>Full-Time</span> 
+      {jobs.map((job) => (
+        <div className="job-card" key={job.id}>
+          <h2 className="job-title">{job.title}</h2>
+          <p className="company-name">{job.company_name}</p>
+
+          <div className="job-info">
+            <span>{job.location}</span> •
+            <span>{job.experience}</span> •
+            <span>{job.salary}</span> •
+            <span>{job.job_type}</span>
+          </div>
+
+          <p className="job-desc">
+            {job.short_description || "Job description not provided."}
+          </p>
+
+          <div className="tags">
+            {job.skills?.map((skill, index) => (
+              <span key={index}>{skill}</span>
+            ))}
+          </div>
+
+          <div className="job-actions">
+            <button
+              className="view-btn"
+              onClick={() => openDetails(job.id)}
+            >
+              View Details
+            </button>
+
+            <button
+              className="save-btn"
+              onClick={() => toggleSave(job.id)}
+            >
+              {isSaved(job.id) ? "Unsave" : "Save Job"}
+            </button>
+          </div>
         </div>
-
-        <p className="job-desc">
-          Investigate suspicious transactions and build fraud detection patterns.
-        </p>
-
-        <div className="tags">
-          <span>Fraud Detection</span>
-          <span>SQL</span>
-          <span>Transaction Monitoring</span>
-        </div>
-
-        <div className="job-actions">
-          <button
-            className="view-btn"
-            onClick={() => window.open("/jobs/1", "_blank")}
-          >
-            View Details
-          </button>
-          <button className="save-btn">Save Job</button>
-        </div>
-      </div>
-
-      {/* ---------------- JOB CARD 2 ---------------- */}
-      <div className="job-card">
-        <h2 className="job-title">AML Compliance Analyst</h2>
-        <p className="company-name">HSBC</p>
-
-        <div className="job-info">
-          <span>Chennai</span> •
-          <span>0–1 Years</span> •
-          <span>4–6 LPA</span> •
-          <span>Full-Time</span> 
-        </div>
-
-        <p className="job-desc">
-          Monitor alerts and support AML investigation activities.
-        </p>
-
-        <div className="tags">
-          <span>AML</span>
-          <span>Compliance</span>
-          <span>KYC</span>
-        </div>
-
-        <div className="job-actions">
-          <button
-            className="view-btn"
-            onClick={() => window.open("/jobs/2", "_blank")}
-          >
-            View Details
-          </button>
-          <button className="save-btn">Save Job</button>
-        </div>
-      </div>
+      ))}
 
     </div>
   );

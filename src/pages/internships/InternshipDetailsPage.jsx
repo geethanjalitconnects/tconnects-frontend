@@ -1,32 +1,95 @@
-// InternshipDetailsPage.jsx
-import React from "react";
-import { useNavigate } from "react-router-dom";
+// InternshipDetailsPage.jsx — FULL BACKEND INTEGRATION
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import api from "../../config/api";
 import "./InternshipDetailsPage.css";
 
 const InternshipDetailsPage = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
 
-  const handleApplyNow = () => {
-    navigate("/apply-internship");
+  const [saved, setSaved] = useState(false);
+  const [internship, setInternship] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // =====================================================
+  // 1. Load internship details from backend
+  // =====================================================
+  useEffect(() => {
+    const loadInternship = async () => {
+      try {
+        const res = await api.get(`/api/internships/${id}/`);
+        setInternship(res.data);
+      } catch (err) {
+        console.error("Failed to load internship:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadInternship();
+  }, [id]);
+
+  // =====================================================
+  // 2. Load saved status
+  // =====================================================
+  useEffect(() => {
+    const fetchSaved = async () => {
+      try {
+        const res = await api.get("/api/applications/saved-internships/");
+        const ids = res.data.map((i) => i.internship.id);
+        setSaved(ids.includes(parseInt(id)));
+      } catch (err) {
+        console.error("Error checking saved status:", err);
+      }
+    };
+    fetchSaved();
+  }, [id]);
+
+  // =====================================================
+  // 3. Save / Unsave toggle
+  // =====================================================
+  const toggleSave = async () => {
+    try {
+      if (saved) {
+        await api.delete(`/api/applications/saved-internships/remove/${id}/`);
+        setSaved(false);
+      } else {
+        await api.post("/api/applications/saved-internships/", {
+          internship: id,
+        });
+        setSaved(true);
+      }
+    } catch (err) {
+      console.error("Failed to save/unsave:", err);
+    }
   };
+
+  const handleApplyNow = () => navigate(`/apply-internship/${id}`);
+
+  if (loading) return <div className="jd-loading">Loading internship…</div>;
+  if (!internship) return <div className="jd-error">Internship not found.</div>;
 
   return (
     <div className="jd-desktop-wrapper">
       <div className="jd-container">
 
-        {/* ======================= INTERNSHIP HEADER ======================== */}
+        {/* ======================= HEADER ======================= */}
         <div className="jd-header-card">
           <div className="jd-header-left">
-            <h1 className="jd-title">Risk Analytics Intern</h1>
+            <h1 className="jd-title">{internship.title}</h1>
 
             <div className="jd-meta">
-              <span className="jd-badge">Risk Management</span>
-              <span className="jd-meta-item">HDFC Bank</span>
-              <span className="jd-meta-item">Mumbai, India</span>
-              <span className="jd-meta-item">2 Months Internship</span>
-              <span className="jd-meta-item">Stipend: ₹10,000</span>
-              <span className="jd-meta-item">Hybrid</span>
-              <span className="jd-meta-item">Deadline: 25 Dec 2025</span>
+              <span className="jd-badge">{internship.category || "Internship"}</span>
+              <span className="jd-meta-item">{internship.company_name}</span>
+              <span className="jd-meta-item">{internship.location}</span>
+              <span className="jd-meta-item">{internship.duration}</span>
+              <span className="jd-meta-item">Stipend: {internship.stipend}</span>
+              <span className="jd-meta-item">{internship.work_mode}</span>
+              {internship.deadline && (
+                <span className="jd-meta-item">
+                  Deadline: {new Date(internship.deadline).toLocaleDateString("en-IN")}
+                </span>
+              )}
             </div>
           </div>
 
@@ -34,67 +97,50 @@ const InternshipDetailsPage = () => {
             <button className="jd-apply-btn" onClick={handleApplyNow}>
               Apply Now
             </button>
-            <button className="jd-save-btn">Save Internship</button>
+
+            <button className="jd-save-btn" onClick={toggleSave}>
+              {saved ? "Unsave" : "Save Internship"}
+            </button>
           </div>
         </div>
 
-        {/* ======================= COMPANY OVERVIEW ======================== */}
-        <div className="jd-section-card">
-          <h2 className="jd-section-title">Company Overview</h2>
+        {/* ======================= DESCRIPTION ======================= */}
+        <div className="jd-section">
+          <h2 className="jd-section-title">About the Internship</h2>
+          <p className="jd-description">{internship.description}</p>
+        </div>
 
-          <div className="jd-company-grid">
-            <div className="jd-company-item"><strong>Company Size:</strong> 5000+ Employees</div>
-            <div className="jd-company-item"><strong>Industry:</strong> Banking / Financial Services</div>
-            <div className="jd-company-item">
-              <strong>Website:</strong>{" "}
-              <a href="https://hdfcbank.com" target="_blank" rel="noopener noreferrer">
-                www.hdfcbank.com
-              </a>
-            </div>
+        {/* ======================= RESPONSIBILITIES ======================= */}
+        {internship.responsibilities && (
+          <div className="jd-section">
+            <h2 className="jd-section-title">Responsibilities</h2>
+            <ul className="jd-list">
+              {internship.responsibilities.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
           </div>
+        )}
 
-          <p className="jd-company-about">
-            HDFC Bank is one of India’s largest private sector banks, known for digital innovation
-            and customer-centric financial solutions.
-          </p>
-        </div>
-
-        {/* ======================= INTERNSHIP DESCRIPTION (NEW) ======================== */}
-        <div className="jd-section-card">
-          <h2 className="jd-section-title">Internship Description</h2>
-          <p className="jd-description">
-            The Risk Analytics Intern will contribute to data cleaning, dashboard creation, 
-            transaction analysis, and investigation of risk-related cases. You will support 
-            senior analysts while gaining hands-on experience using Excel, SQL, and analytical tools.
-          </p>
-        </div>
-
-        {/* ======================= RESPONSIBILITIES ======================== */}
-        <div className="jd-section-card">
-          <h2 className="jd-section-title">Internship Responsibilities</h2>
-
-          <ul className="jd-list">
-            <li>Assist risk analysts in modeling, data cleaning, and reporting.</li>
-            <li>Analyze transactions to identify unusual patterns.</li>
-            <li>Prepare daily/weekly dashboards using Excel and SQL.</li>
-            <li>Work with senior analysts in risk investigation projects.</li>
-          </ul>
-        </div>
-
-        {/* ======================= REQUIRED SKILLS ======================== */}
-        <div className="jd-section-card">
-          <h2 className="jd-section-title">Required Skills</h2>
-
-          <div className="jd-tags">
-            <span className="jd-tag">Excel</span>
-            <span className="jd-tag">SQL</span>
-            <span className="jd-tag">Risk Modelling</span>
-            <span className="jd-tag">Data Analysis</span>
+        {/* ======================= REQUIREMENTS ======================= */}
+        {internship.requirements && (
+          <div className="jd-section">
+            <h2 className="jd-section-title">Requirements</h2>
+            <ul className="jd-list">
+              {internship.requirements.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
           </div>
+        )}
 
-          <div className="jd-education">
-            <strong>Eligibility:</strong> Students pursuing Bachelor's in Finance, Economics,
-            Data Science, Computer Science, or related fields.
+        {/* ======================= SKILLS ======================= */}
+        <div className="jd-section">
+          <h2 className="jd-section-title">Skills Required</h2>
+          <div className="jd-skills">
+            {internship.skills?.map((skill, index) => (
+              <span key={index} className="jd-skill">{skill}</span>
+            ))}
           </div>
         </div>
 

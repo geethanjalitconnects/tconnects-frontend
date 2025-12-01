@@ -1,52 +1,86 @@
-// ManageInternships.jsx
-import React from "react";
+// ManageInternships.jsx — Backend Integrated
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../recruiter-dashboard/RecruiterDashboard.css";
+import api from "../../../config/api";
+import "../RecruiterDashboard.css";
 
 export default function ManageInternships() {
   const navigate = useNavigate();
 
-  // Sample internship data
-  const internships = [
-    {
-      id: 1,
-      title: "Risk Analytics Intern",
-      stipend: "₹10,000",
-      duration: "2 Months",
-      posted: "10 Dec 2025",
-      status: "Active",
-    },
-    {
-      id: 2,
-      title: "Financial Research Intern",
-      stipend: "₹8,000",
-      duration: "3 Months",
-      posted: "01 Dec 2025",
-      status: "Closed",
-    },
-    {
-      id: 3,
-      title: "Compliance Intern",
-      stipend: "₹12,000",
-      duration: "1 Month",
-      posted: "28 Nov 2025",
-      status: "Active",
-    },
-  ];
+  const [internships, setInternships] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // ============================================================
+  // 1. FETCH ALL INTERNSHIPS POSTED BY LOGGED-IN RECRUITER
+  // ============================================================
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await api.get("/api/internships/my-internships/");
+        setInternships(res.data);
+      } catch (err) {
+        console.error("Failed to load internships:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // ============================================================
+  // 2. DELETE INTERNSHIP
+  // ============================================================
+  const deleteInternship = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this internship?")) return;
+
+    try {
+      await api.delete(`/api/internships/${id}/delete/`);
+      setInternships(internships.filter((i) => i.id !== id));
+      alert("Internship deleted successfully!");
+    } catch (err) {
+      console.error("Delete failed:", err);
+      alert("Failed to delete internship.");
+    }
+  };
+
+  // ============================================================
+  // 3. TOGGLE STATUS (Active <-> Closed)
+  // ============================================================
+  const toggleStatus = async (id, currentStatus) => {
+    try {
+      const newStatus = currentStatus === "Active" ? "Closed" : "Active";
+
+      const res = await api.patch(`/api/internships/${id}/status/`, {
+        status: newStatus,
+      });
+
+      setInternships(
+        internships.map((i) =>
+          i.id === id ? { ...i, status: res.data.status } : i
+        )
+      );
+    } catch (err) {
+      console.error("Status update failed:", err);
+    }
+  };
+
+  if (loading) return <div className="rd-loading">Loading Internships…</div>;
 
   return (
     <div className="rd-managejobs-page">
-
       <h2 className="rd-page-title">Manage Internships</h2>
       <p className="rd-page-subtitle">
         View, edit, close or delete your internship postings.
       </p>
 
       <div className="rd-job-list">
+        {internships.length === 0 && (
+          <p className="rd-empty-text">No internships posted yet.</p>
+        )}
 
         {internships.map((item) => (
           <div key={item.id} className="rd-job-card">
-
             {/* Internship Info */}
             <div className="rd-job-card-left">
               <h3 className="rd-job-title">{item.title}</h3>
@@ -60,10 +94,14 @@ export default function ManageInternships() {
               </p>
 
               <p className="rd-job-meta">
-                Posted on: <span>{item.posted}</span>
+                Posted on: <span>{item.posted_on}</span>
               </p>
 
-              <p className={`rd-job-status ${item.status === "Active" ? "active" : "closed"}`}>
+              <p
+                className={`rd-job-status ${
+                  item.status === "Active" ? "active" : "closed"
+                }`}
+              >
                 {item.status}
               </p>
             </div>
@@ -71,7 +109,7 @@ export default function ManageInternships() {
             {/* ACTION BUTTONS */}
             <div className="rd-job-card-actions">
 
-              {/* 🔥 EDIT INTERNSHIP */}
+              {/* Edit Internship */}
               <button
                 className="rd-action-btn edit"
                 onClick={() =>
@@ -81,7 +119,7 @@ export default function ManageInternships() {
                 Edit
               </button>
 
-              {/* 🔥 VIEW APPLICATIONS */}
+              {/* View Applications */}
               <button
                 className="rd-action-btn apps"
                 onClick={() =>
@@ -91,12 +129,24 @@ export default function ManageInternships() {
                 View Applications
               </button>
 
-              <button className="rd-action-btn delete">Delete</button>
-            </div>
+              {/* Toggle Status */}
+              <button
+                className="rd-action-btn status"
+                onClick={() => toggleStatus(item.id, item.status)}
+              >
+                {item.status === "Active" ? "Close Internship" : "Reopen Internship"}
+              </button>
 
+              {/* Delete Internship */}
+              <button
+                className="rd-action-btn delete"
+                onClick={() => deleteInternship(item.id)}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         ))}
-
       </div>
     </div>
   );

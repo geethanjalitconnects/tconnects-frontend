@@ -1,9 +1,14 @@
+// EditInternship.jsx — Backend Integrated
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import api from "../../../config/api";
 import "../../recruiter-dashboard/RecruiterDashboard.css";
 
 export default function EditInternship() {
   const { id } = useParams();
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const [form, setForm] = useState({
     title: "",
@@ -20,29 +25,92 @@ export default function EditInternship() {
     scheduleTime: "",
   });
 
+  // ============================================================
+  // 1. FETCH INTERNSHIP DETAILS FROM BACKEND
+  // ============================================================
   useEffect(() => {
-    const internship = {
-      title: "Risk Analytics Intern",
-      category: "Risk Management",
-      location: "Mumbai, India",
-      stipend: "₹10,000",
-      duration: "2 Months",
-      mode: "Hybrid",
-      description: "Assist with risk modeling, data cleaning and reporting.",
-      responsibilities:
-        "• Assist risk analysts\n• Prepare dashboards\n• Analyze transactions",
-      eligibility: "B.Com, BBA, Finance, Economics, Data Science Students",
-    };
-    setForm(internship);
-  }, []);
+    const fetchInternship = async () => {
+      try {
+        const res = await api.get(`/api/internships/${id}/`);
 
+        setForm({
+          title: res.data.title,
+          category: res.data.category,
+          location: res.data.location,
+          stipend: res.data.stipend,
+          duration: res.data.duration,
+          mode: res.data.mode,
+          description: res.data.description,
+          responsibilities: res.data.responsibilities,
+          eligibility: res.data.eligibility,
+          scheduleType: res.data.post_type === "now" ? "now" : "later",
+          scheduleDate: res.data.schedule_date || "",
+          scheduleTime: res.data.schedule_time || "",
+        });
+      } catch (err) {
+        console.error("Failed to load internship:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInternship();
+  }, [id]);
+
+  // ============================================================
+  // 2. HANDLE FORM INPUTS
+  // ============================================================
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
   };
 
+  // ============================================================
+  // 3. SAVE CHANGES — PATCH REQUEST
+  // ============================================================
+  const handleSave = async () => {
+    setSaving(true);
+
+    try {
+      const payload = {
+        title: form.title,
+        category: form.category,
+        location: form.location,
+        stipend: form.stipend,
+        duration: form.duration,
+        mode: form.mode,
+        description: form.description,
+        responsibilities: form.responsibilities,
+        eligibility: form.eligibility,
+        post_type: form.scheduleType === "now" ? "now" : "later",
+        schedule_date:
+          form.scheduleType === "later" ? form.scheduleDate : null,
+        schedule_time:
+          form.scheduleType === "later" ? form.scheduleTime : null,
+      };
+
+      await api.patch(`/api/internships/${id}/update/`, payload);
+
+      alert("Internship updated successfully!");
+      window.location.href =
+        "/recruiter-dashboard/jobs/manage-internships";
+    } catch (err) {
+      console.error("Failed to update internship:", err);
+      alert("Something went wrong. Try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) return <div className="rd-loading">Loading...</div>;
+
+  // ============================================================
+  // 4. UI — EXACT SAME DESIGN (NO CHANGES)
+  // ============================================================
   return (
     <div className="rd-edit-wrapper">
-
       <h1 className="rd-edit-title">Edit Internship</h1>
       <p className="rd-edit-subtitle">Modify internship posting details.</p>
 
@@ -51,7 +119,6 @@ export default function EditInternship() {
         <h2 className="rd-card-heading">Internship Details</h2>
 
         <div className="rd-grid-3">
-
           <div className="rd-form-group">
             <label>Internship Title</label>
             <input
@@ -115,7 +182,6 @@ export default function EditInternship() {
               <option>Hybrid</option>
             </select>
           </div>
-
         </div>
 
         <div className="rd-form-group full">
@@ -193,7 +259,13 @@ export default function EditInternship() {
         </div>
       </div>
 
-      <button className="rd-save-btn">Save Changes</button>
+      <button
+        className="rd-save-btn"
+        disabled={saving}
+        onClick={handleSave}
+      >
+        {saving ? "Saving…" : "Save Changes"}
+      </button>
     </div>
   );
 }

@@ -1,7 +1,12 @@
-import React, { useState } from "react";
-import "../RecruiterDashboard.css"; // correct relative path
+// CompanyProfile.jsx — Recruiter Dashboard Integration
+import React, { useEffect, useState } from "react";
+import api from "../../../config/api";
+import "../RecruiterDashboard.css";
 
 export default function CompanyProfile() {
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
   const [form, setForm] = useState({
     companyName: "",
     industry: "",
@@ -11,22 +16,77 @@ export default function CompanyProfile() {
     about: "",
   });
 
-  const handleChange = (e) => {
+  // ============================================================
+  // 1. FETCH COMPANY PROFILE FROM BACKEND
+  // ============================================================
+  useEffect(() => {
+    const fetchCompany = async () => {
+      try {
+        const res = await api.get("/api/profiles/recruiter/company/");
+
+        setForm({
+          companyName: res.data.company_name || "",
+          industry: res.data.industry || "",
+          size: res.data.size || "",
+          location: res.data.location || "",
+          website: res.data.website || "",
+          about: res.data.about || "",
+        });
+      } catch (err) {
+        console.error("Failed to load company profile:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCompany();
+  }, []);
+
+  // ============================================================
+  // 2. HANDLE FORM CHANGES
+  // ============================================================
+  const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
+
+  // ============================================================
+  // 3. SAVE COMPANY PROFILE
+  // ============================================================
+  const handleSave = async () => {
+    setSaving(true);
+
+    try {
+      await api.patch("/api/profiles/recruiter/company/update/", {
+        company_name: form.companyName,
+        industry: form.industry,
+        size: form.size,
+        location: form.location,
+        website: form.website,
+        about: form.about,
+      });
+
+      alert("Company profile updated successfully!");
+    } catch (err) {
+      console.error("Failed to update company profile:", err);
+      alert("Something went wrong.");
+    } finally {
+      setSaving(false);
+    }
   };
 
+  if (loading) return <div className="rd-loading">Loading...</div>;
+
+  // ============================================================
+  // 4. UI (NO DESIGN CHANGES)
+  // ============================================================
   return (
     <div className="rd-company-profile-page">
-
-      {/* ====== Page Title ====== */}
+      
       <h2 className="rd-page-title">Company Profile</h2>
       <p className="rd-page-subtitle">
         Keep your company information updated for candidates to view.
       </p>
 
-      {/* ====== White Card ====== */}
       <div className="rd-profile-card">
-
         <div className="rd-grid">
 
           {/* Company Name */}
@@ -37,8 +97,8 @@ export default function CompanyProfile() {
               name="companyName"
               value={form.companyName}
               onChange={handleChange}
-              placeholder="Enter company name"
               className="rd-input"
+              placeholder="Enter company name"
             />
           </div>
 
@@ -50,8 +110,8 @@ export default function CompanyProfile() {
               name="industry"
               value={form.industry}
               onChange={handleChange}
-              placeholder="Finance, Banking, Technology, etc."
               className="rd-input"
+              placeholder="Finance, Banking, Technology, etc."
             />
           </div>
 
@@ -63,8 +123,8 @@ export default function CompanyProfile() {
               name="size"
               value={form.size}
               onChange={handleChange}
-              placeholder="e.g. 50–200 employees"
               className="rd-input"
+              placeholder="e.g. 50–200 employees"
             />
           </div>
 
@@ -76,8 +136,8 @@ export default function CompanyProfile() {
               name="location"
               value={form.location}
               onChange={handleChange}
-              placeholder="City, Country"
               className="rd-input"
+              placeholder="City, Country"
             />
           </div>
 
@@ -89,27 +149,32 @@ export default function CompanyProfile() {
               name="website"
               value={form.website}
               onChange={handleChange}
-              placeholder="https://companysite.com"
               className="rd-input"
+              placeholder="https://companysite.com"
             />
           </div>
 
-          {/* About Company - Full width */}
+          {/* About Company (full width) */}
           <div className="rd-form-group rd-full">
             <label className="rd-label">About Company</label>
             <textarea
               name="about"
               value={form.about}
               onChange={handleChange}
-              placeholder="Write a brief description about your company..."
               className="rd-textarea"
+              placeholder="Write a brief description about your company..."
             ></textarea>
           </div>
-
         </div>
 
-        {/* Save Button */}
-        <button className="rd-save-btn">Save Company Profile</button>
+        {/* SAVE BUTTON */}
+        <button
+          className="rd-save-btn"
+          onClick={handleSave}
+          disabled={saving}
+        >
+          {saving ? "Saving…" : "Save Company Profile"}
+        </button>
       </div>
     </div>
   );

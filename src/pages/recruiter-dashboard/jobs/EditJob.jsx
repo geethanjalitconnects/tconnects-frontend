@@ -1,15 +1,20 @@
+// EditJob.jsx — Backend Integrated
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import "../../recruiter-dashboard/RecruiterDashboard.css";
+import api from "../../../config/api";
+import "../RecruiterDashboard.css";
 
 export default function EditJob() {
   const { id } = useParams();
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const [form, setForm] = useState({
     title: "",
     category: "",
     location: "",
-    jobType: "",
+    jobType: "Full-Time",
     salary: "",
     experience: "",
     description: "",
@@ -21,23 +26,42 @@ export default function EditJob() {
     scheduleTime: "",
   });
 
+  // ============================================================
+  // 1. FETCH JOB DETAILS BY ID
+  // ============================================================
   useEffect(() => {
-    const job = {
-      title: "Senior Risk Analyst",
-      category: "Risk Management",
-      location: "Hyderabad, India",
-      jobType: "Full-Time",
-      salary: "₹12–16 LPA",
-      experience: "4–6 Years",
-      description: "Analyze financial risks and support investigation teams.",
-      responsibilities:
-        "• Perform financial analysis\n• Prepare weekly dashboards\n• Monitor KPIs",
-      expertise: "SQL, Excel, Python, Tableau",
-      qualification: "MBA, B.Tech, BBA, Finance Degrees",
-    };
-    setForm(job);
-  }, []);
+    const fetchJob = async () => {
+      try {
+        const res = await api.get(`/api/jobs/${id}/`);
 
+        setForm({
+          title: res.data.title,
+          category: res.data.category,
+          location: res.data.location,
+          jobType: res.data.job_type,
+          salary: res.data.salary,
+          experience: res.data.experience,
+          description: res.data.description,
+          responsibilities: res.data.responsibilities,
+          expertise: res.data.skills.join(", "),
+          qualification: res.data.education,
+          scheduleType: res.data.post_type === "now" ? "now" : "later",
+          scheduleDate: res.data.schedule_date || "",
+          scheduleTime: res.data.schedule_time || "",
+        });
+      } catch (err) {
+        console.error("Failed to load job:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJob();
+  }, [id]);
+
+  // ============================================================
+  // 2. HANDLE FORM CHANGES
+  // ============================================================
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -45,22 +69,60 @@ export default function EditJob() {
     });
   };
 
+  // ============================================================
+  // 3. SAVE CHANGES (PATCH)
+  // ============================================================
+  const handleSave = async () => {
+    setSaving(true);
+
+    try {
+      const payload = {
+        title: form.title,
+        category: form.category,
+        location: form.location,
+        job_type: form.jobType,
+        salary: form.salary,
+        experience: form.experience,
+        description: form.description,
+        responsibilities: form.responsibilities,
+        skills: form.expertise.split(",").map((s) => s.trim()),
+        education: form.qualification,
+        post_type: form.scheduleType === "now" ? "now" : "later",
+        schedule_date:
+          form.scheduleType === "later" ? form.scheduleDate : null,
+        schedule_time:
+          form.scheduleType === "later" ? form.scheduleTime : null,
+      };
+
+      await api.patch(`/api/jobs/${id}/update/`, payload);
+
+      alert("Job updated successfully!");
+      window.location.href = "/recruiter-dashboard/jobs/manage-jobs";
+    } catch (err) {
+      console.error("Job update failed:", err);
+      alert("Something went wrong. Try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) return <div className="rd-loading">Loading...</div>;
+
+  // ============================================================
+  // 4. UI — NO DESIGN CHANGES
+  // ============================================================
   return (
     <div className="rd-edit-wrapper">
-
-      {/* Page Title */}
       <h1 className="rd-edit-title">Edit Job</h1>
       <p className="rd-edit-subtitle">
         Modify and update your existing job posting.
       </p>
 
-      {/* ============ JOB DETAILS CARD ============ */}
+      {/* JOB DETAILS CARD */}
       <div className="rd-card">
-
         <h2 className="rd-card-heading">Job Details</h2>
 
         <div className="rd-grid-3">
-
           <div className="rd-form-group">
             <label>Job Title</label>
             <input
@@ -102,8 +164,8 @@ export default function EditJob() {
               <option>Full-Time</option>
               <option>Part-Time</option>
               <option>Remote</option>
+              <option>Hybrid</option>
               <option>Contract</option>
-              <option>Internship</option>
             </select>
           </div>
 
@@ -126,7 +188,6 @@ export default function EditJob() {
               onChange={handleChange}
             />
           </div>
-
         </div>
 
         <div className="rd-form-group full">
@@ -136,7 +197,7 @@ export default function EditJob() {
             name="description"
             value={form.description}
             onChange={handleChange}
-          ></textarea>
+          />
         </div>
 
         <div className="rd-form-group full">
@@ -146,7 +207,7 @@ export default function EditJob() {
             name="responsibilities"
             value={form.responsibilities}
             onChange={handleChange}
-          ></textarea>
+          />
         </div>
 
         <div className="rd-form-group full">
@@ -156,7 +217,7 @@ export default function EditJob() {
             name="expertise"
             value={form.expertise}
             onChange={handleChange}
-          ></textarea>
+          />
         </div>
 
         <div className="rd-form-group full">
@@ -166,17 +227,15 @@ export default function EditJob() {
             name="qualification"
             value={form.qualification}
             onChange={handleChange}
-          ></textarea>
+          />
         </div>
       </div>
 
-      {/* ============ SCHEDULE JOB CARD ============ */}
+      {/* SCHEDULE JOB */}
       <div className="rd-card rd-schedule-box">
-
         <h2 className="rd-card-heading">Schedule Job Update</h2>
 
         <div className="rd-grid-3">
-
           <div className="rd-form-group">
             <label>Post Type</label>
             <select
@@ -213,11 +272,12 @@ export default function EditJob() {
               disabled={form.scheduleType === "now"}
             />
           </div>
-
         </div>
       </div>
 
-      <button className="rd-save-btn">Save Changes</button>
+      <button className="rd-save-btn" disabled={saving} onClick={handleSave}>
+        {saving ? "Saving…" : "Save Changes"}
+      </button>
     </div>
   );
 }
