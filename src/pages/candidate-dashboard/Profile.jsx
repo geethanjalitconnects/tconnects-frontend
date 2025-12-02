@@ -26,7 +26,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await api.get("/api/profiles/me/");
+        const res = await api.get("/api/profiles/candidate/me/");
 
         setUserData({
           full_name: res.data.full_name || "",
@@ -65,14 +65,14 @@ export default function Profile() {
     setSaving(true);
 
     try {
-      await api.patch("/api/profiles/update/", {
-        full_name: userData.full_name,
-        phone_number: userData.phone_number,
-        location: userData.location,
-        experience: userData.experience,
-        skills: userData.skills.split(",").map((s) => s.trim()),
-        bio: userData.bio,
-      });
+      await api.patch("/api/profiles/candidate/me/", {
+  full_name: userData.full_name,
+  phone_number: userData.phone_number,
+  location: userData.location,
+  experience_level: userData.experience,
+  skills: userData.skills.split(",").map(s => s.trim()),
+  bio: userData.bio,
+});
 
       alert("Profile updated successfully!");
     } catch (err) {
@@ -96,7 +96,7 @@ export default function Profile() {
     formData.append("resume", file);
 
     try {
-      const res = await api.post("/api/profiles/upload-resume/", formData, {
+      const res = await api.post("/api/profiles/candidate/upload-resume/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
