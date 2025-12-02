@@ -20,50 +20,56 @@ export default function PostJob() {
     post_type: "Post Now",
     schedule_date: "",
     schedule_time: "",
-    companyName: "",              // REQUIRED FOR BACKEND
-    shortDescription: "",         // REQUIRED FOR BACKEND
-    deadline: "",                 // optional
+    deadline: "",
   });
 
+  // Handle Input Change
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  // Submit Job to Backend
   const handleSubmit = async () => {
     setSaving(true);
 
     try {
-      // ============= FIXED PAYLOAD TO MATCH BACKEND =============
+      // 🔥 MATCHED PAYLOAD TO BACKEND
       const payload = {
         title: form.title,
-        company_name: form.companyName,                 // REQUIRED
         category: form.category,
         location: form.location,
-        employment_type: form.job_type,                 // MAPPED
-        salary_range: form.salary,                      // MAPPED
-        experience_range: form.experience,              // MAPPED
-        short_description: form.shortDescription,       // REQUIRED
-        full_description: form.description,             // MAPPED
+
+        employment_type: form.job_type,          // backend field
+        salary_range: form.salary,              // backend field
+        experience_range: form.experience,      // backend field
+
+        full_description: form.description,      // backend field
+
+        // responsibilities MUST be list
         responsibilities: form.responsibilities
           .split(",")
           .map((s) => s.trim())
           .filter((s) => s),
-        requirements: [],                               // you don’t collect it, so empty
+
+        // skills MUST be list
         skills: form.skills
           .split(",")
           .map((s) => s.trim())
           .filter((s) => s),
+
+        // education -> eligible_degrees
         eligible_degrees: form.education
           .split(",")
           .map((s) => s.trim())
           .filter((s) => s),
+
         application_deadline: form.deadline || null,
       };
 
+      // POST JOB (URL CORRECT)
       await api.post("/api/jobs/create/", payload);
 
       alert("Job posted successfully!");
       window.location.href = "/recruiter-dashboard/jobs/manage-jobs";
-
     } catch (err) {
       console.error("Job posting failed:", err);
       alert("Something went wrong. Please try again.");
@@ -84,8 +90,6 @@ export default function PostJob() {
         <h3 className="rd-card-title">Job Details</h3>
 
         <div className="rd-grid">
-
-          {/* Job Title */}
           <div className="rd-form-group">
             <label className="rd-label">Job Title</label>
             <input
@@ -98,7 +102,6 @@ export default function PostJob() {
             />
           </div>
 
-          {/* Job Category */}
           <div className="rd-form-group">
             <label className="rd-label">Job Category</label>
             <input
@@ -111,7 +114,6 @@ export default function PostJob() {
             />
           </div>
 
-          {/* Location */}
           <div className="rd-form-group">
             <label className="rd-label">Location</label>
             <input
@@ -124,7 +126,6 @@ export default function PostJob() {
             />
           </div>
 
-          {/* Job Type */}
           <div className="rd-form-group">
             <label className="rd-label">Job Type</label>
             <select
@@ -140,7 +141,6 @@ export default function PostJob() {
             </select>
           </div>
 
-          {/* Salary */}
           <div className="rd-form-group">
             <label className="rd-label">Salary Range</label>
             <input
@@ -153,7 +153,6 @@ export default function PostJob() {
             />
           </div>
 
-          {/* Experience */}
           <div className="rd-form-group">
             <label className="rd-label">Experience Required</label>
             <input
@@ -166,20 +165,6 @@ export default function PostJob() {
             />
           </div>
 
-          {/* Short Description */}
-          <div className="rd-form-group rd-full">
-            <label className="rd-label">Short Description</label>
-            <input
-              type="text"
-              className="rd-input"
-              name="shortDescription"
-              value={form.shortDescription}
-              onChange={handleChange}
-              placeholder="Short 1-line summary..."
-            />
-          </div>
-
-          {/* Job Description */}
           <div className="rd-form-group rd-full">
             <label className="rd-label">Job Description</label>
             <textarea
@@ -191,7 +176,6 @@ export default function PostJob() {
             ></textarea>
           </div>
 
-          {/* Responsibilities */}
           <div className="rd-form-group rd-full">
             <label className="rd-label">Job Responsibilities</label>
             <textarea
@@ -203,7 +187,6 @@ export default function PostJob() {
             ></textarea>
           </div>
 
-          {/* Skills */}
           <div className="rd-form-group rd-full">
             <label className="rd-label">Area of Expertise</label>
             <input
@@ -216,7 +199,6 @@ export default function PostJob() {
             />
           </div>
 
-          {/* Education */}
           <div className="rd-form-group rd-full">
             <label className="rd-label">Education Qualification</label>
             <input
@@ -229,20 +211,6 @@ export default function PostJob() {
             />
           </div>
 
-          {/* Company Name */}
-          <div className="rd-form-group rd-full">
-            <label className="rd-label">Company Name</label>
-            <input
-              type="text"
-              className="rd-input"
-              name="companyName"
-              value={form.companyName}
-              onChange={handleChange}
-              placeholder="Enter your company name"
-            />
-          </div>
-
-          {/* Deadline */}
           <div className="rd-form-group rd-full">
             <label className="rd-label">Application Deadline</label>
             <input
@@ -253,17 +221,17 @@ export default function PostJob() {
               onChange={handleChange}
             />
           </div>
-
         </div>
       </div>
 
-      {/* Schedule Job */}
+      {/* === SCHEDULE SECTION (UI SAME, BACKEND IGNORES THIS) === */}
       <div className="rd-schedule-card">
         <h3 className="rd-card-title">Schedule Job</h3>
-        <p className="rd-schedule-info">You can post the job immediately or schedule it for a later date.</p>
+        <p className="rd-schedule-info">
+          You can post the job immediately or schedule it for a later date.
+        </p>
 
         <div className="rd-grid">
-
           <div className="rd-form-group">
             <label className="rd-label">Post Job</label>
             <select
@@ -300,7 +268,6 @@ export default function PostJob() {
               disabled={form.post_type === "Post Now"}
             />
           </div>
-
         </div>
       </div>
 
