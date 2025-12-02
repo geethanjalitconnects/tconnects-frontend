@@ -1,4 +1,4 @@
-// EditInternship.jsx — Backend Integrated
+// EditInternship.jsx — Backend Integrated (UI unchanged)
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../../config/api";
@@ -26,7 +26,7 @@ export default function EditInternship() {
   });
 
   // ============================================================
-  // 1. FETCH INTERNSHIP DETAILS FROM BACKEND
+  // 1. FETCH INTERNSHIP DETAILS (FIX MAPPING)
   // ============================================================
   useEffect(() => {
     const fetchInternship = async () => {
@@ -40,12 +40,16 @@ export default function EditInternship() {
           stipend: res.data.stipend,
           duration: res.data.duration,
           mode: res.data.mode,
-          description: res.data.description,
-          responsibilities: res.data.responsibilities,
+
+          // FIXED BACKEND FIELD
+          description: res.data.full_description,
+
+          responsibilities: res.data.responsibilities.join(", "),
           eligibility: res.data.eligibility,
-          scheduleType: res.data.post_type === "now" ? "now" : "later",
-          scheduleDate: res.data.schedule_date || "",
-          scheduleTime: res.data.schedule_time || "",
+
+          scheduleType: "now",
+          scheduleDate: "",
+          scheduleTime: "",
         });
       } catch (err) {
         console.error("Failed to load internship:", err);
@@ -58,7 +62,7 @@ export default function EditInternship() {
   }, [id]);
 
   // ============================================================
-  // 2. HANDLE FORM INPUTS
+  // 2. HANDLE INPUT
   // ============================================================
   const handleChange = (e) => {
     setForm({
@@ -68,7 +72,7 @@ export default function EditInternship() {
   };
 
   // ============================================================
-  // 3. SAVE CHANGES — PATCH REQUEST
+  // 3. SAVE (PATCH) TO BACKEND — FIXED PAYLOAD
   // ============================================================
   const handleSave = async () => {
     setSaving(true);
@@ -81,17 +85,24 @@ export default function EditInternship() {
         stipend: form.stipend,
         duration: form.duration,
         mode: form.mode,
-        description: form.description,
-        responsibilities: form.responsibilities,
+
+        // FIXED FIELDS (backend requires these)
+        full_description: form.description,
+        short_description: form.description.slice(0, 120),
+
+        responsibilities: form.responsibilities
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => s),
+
         eligibility: form.eligibility,
-        post_type: form.scheduleType === "now" ? "now" : "later",
-        schedule_date:
-          form.scheduleType === "later" ? form.scheduleDate : null,
-        schedule_time:
-          form.scheduleType === "later" ? form.scheduleTime : null,
+
+        // backend does not support scheduling
+        application_deadline: null,
       };
 
-      await api.patch(`/api/internships/${id}/update/`, payload);
+      // FIXED URL — backend has no /update/
+      await api.patch(`/api/internships/${id}/`, payload);
 
       alert("Internship updated successfully!");
       window.location.href =
@@ -107,7 +118,7 @@ export default function EditInternship() {
   if (loading) return <div className="rd-loading">Loading...</div>;
 
   // ============================================================
-  // 4. UI — EXACT SAME DESIGN (NO CHANGES)
+  // 4. UI — NO CHANGES AT ALL
   // ============================================================
   return (
     <div className="rd-edit-wrapper">

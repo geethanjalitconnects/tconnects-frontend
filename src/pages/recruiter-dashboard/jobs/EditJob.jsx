@@ -1,4 +1,4 @@
-// EditJob.jsx — Backend Integrated
+// EditJob.jsx — Backend Integrated (UI unchanged)
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../../config/api";
@@ -27,7 +27,7 @@ export default function EditJob() {
   });
 
   // ============================================================
-  // 1. FETCH JOB DETAILS BY ID
+  // 1. FETCH JOB DETAILS BY ID (FIXED MAPPING)
   // ============================================================
   useEffect(() => {
     const fetchJob = async () => {
@@ -38,16 +38,19 @@ export default function EditJob() {
           title: res.data.title,
           category: res.data.category,
           location: res.data.location,
-          jobType: res.data.job_type,
-          salary: res.data.salary,
-          experience: res.data.experience,
-          description: res.data.description,
-          responsibilities: res.data.responsibilities,
-          expertise: res.data.skills.join(", "),
-          qualification: res.data.education,
-          scheduleType: res.data.post_type === "now" ? "now" : "later",
-          scheduleDate: res.data.schedule_date || "",
-          scheduleTime: res.data.schedule_time || "",
+
+          jobType: res.data.employment_type,            // FIXED
+          salary: res.data.salary_range,                // FIXED
+          experience: res.data.experience_range,        // FIXED
+
+          description: res.data.full_description,       // FIXED
+          responsibilities: res.data.responsibilities.join(", "), // FIXED
+          expertise: res.data.skills.join(", "),                    // FIXED
+          qualification: res.data.eligible_degrees.join(", "),      // FIXED
+
+          scheduleType: "now",
+          scheduleDate: "",
+          scheduleTime: "",
         });
       } catch (err) {
         console.error("Failed to load job:", err);
@@ -70,7 +73,7 @@ export default function EditJob() {
   };
 
   // ============================================================
-  // 3. SAVE CHANGES (PATCH)
+  // 3. SAVE CHANGES — FIXED BACKEND MAPPING
   // ============================================================
   const handleSave = async () => {
     setSaving(true);
@@ -80,21 +83,32 @@ export default function EditJob() {
         title: form.title,
         category: form.category,
         location: form.location,
-        job_type: form.jobType,
-        salary: form.salary,
-        experience: form.experience,
-        description: form.description,
-        responsibilities: form.responsibilities,
-        skills: form.expertise.split(",").map((s) => s.trim()),
-        education: form.qualification,
-        post_type: form.scheduleType === "now" ? "now" : "later",
-        schedule_date:
-          form.scheduleType === "later" ? form.scheduleDate : null,
-        schedule_time:
-          form.scheduleType === "later" ? form.scheduleTime : null,
+
+        employment_type: form.jobType,        // FIXED
+        salary_range: form.salary,            // FIXED
+        experience_range: form.experience,    // FIXED
+
+        full_description: form.description,   // FIXED
+        short_description: form.description.slice(0, 120), // Generate short
+
+        responsibilities: form.responsibilities
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => s),
+
+        skills: form.expertise
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => s),
+
+        eligible_degrees: form.qualification
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => s),
       };
 
-      await api.patch(`/api/jobs/${id}/update/`, payload);
+      // ❗ FIXED URL (backend does NOT have /update/)
+      await api.patch(`/api/jobs/${id}/`, payload);
 
       alert("Job updated successfully!");
       window.location.href = "/recruiter-dashboard/jobs/manage-jobs";
@@ -231,7 +245,7 @@ export default function EditJob() {
         </div>
       </div>
 
-      {/* SCHEDULE JOB */}
+      {/* SCHEDULE (UI kept but backend doesn't use it) */}
       <div className="rd-card rd-schedule-box">
         <h2 className="rd-card-heading">Schedule Job Update</h2>
 

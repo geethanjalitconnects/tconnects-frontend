@@ -1,4 +1,4 @@
-// PostInternship.jsx — Backend Integrated
+// PostInternship.jsx — Backend Integrated (UI unchanged)
 import React, { useState } from "react";
 import api from "../../../config/api";
 import "../RecruiterDashboard.css";
@@ -31,6 +31,7 @@ export default function PostInternship() {
     setSaving(true);
 
     try {
+      // 🔥🔥 FIXED PAYLOAD TO MATCH BACKEND 🔥🔥
       const payload = {
         title: form.title,
         category: form.category,
@@ -38,22 +39,39 @@ export default function PostInternship() {
         mode: form.mode,
         stipend: form.stipend,
         duration: form.duration,
-        description: form.description,
-        responsibilities: form.responsibilities,
-        skills: form.skills.split(",").map((s) => s.trim()),
+
+        // Backend requires full_description
+        full_description: form.description,
+
+        // Backend requires short_description
+        short_description: form.description.slice(0, 120),
+
+        // Convert string → list
+        responsibilities: form.responsibilities
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => s),
+
+        skills: form.skills
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => s),
+
         eligibility: form.eligibility,
-        post_type: form.post_type,
-        schedule_date:
-          form.post_type === "Schedule for later" ? form.schedule_date : null,
-        schedule_time:
-          form.post_type === "Schedule for later" ? form.schedule_time : null,
+
+        // Backend accepts application_deadline
+        application_deadline:
+          form.post_type === "Schedule for later"
+            ? form.schedule_date
+            : null,
       };
 
       await api.post("/api/internships/create/", payload);
 
       alert("Internship posted successfully!");
       window.location.href =
-        "/recruiter-dashboard/jobs/manage-internships"; // your UI route
+        "/recruiter-dashboard/jobs/manage-internships";
+
     } catch (err) {
       console.error("Internship posting failed:", err);
       alert("Something went wrong!");

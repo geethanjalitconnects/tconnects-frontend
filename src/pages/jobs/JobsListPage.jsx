@@ -1,4 +1,5 @@
-// JobsListPage.jsx — FULL BACKEND INTEGRATION
+// JobsListPage.jsx — FULL BACKEND INTEGRATION (UI unchanged)
+// Fixed: POST URL for saving a job -> /api/applications/saved-jobs/add/
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
 import "./JobsListPage.css";
@@ -41,11 +42,13 @@ export default function JobsListPage() {
   const toggleSave = async (id) => {
     try {
       if (isSaved(id)) {
+        // Unsave
         await api.delete(`/api/applications/saved-jobs/remove/${id}/`);
-        setSavedItems(savedItems.filter((x) => x !== id));
+        setSavedItems((prev) => prev.filter((x) => x !== id));
       } else {
-        await api.post("/api/applications/saved-jobs/", { job: id });
-        setSavedItems([...savedItems, id]);
+        // Save — NOTE: correct backend endpoint is ".../add/"
+        await api.post("/api/applications/saved-jobs/add/", { job: id });
+        setSavedItems((prev) => [...prev, id]);
       }
     } catch (err) {
       console.error("Save/Unsave failed:", err);
