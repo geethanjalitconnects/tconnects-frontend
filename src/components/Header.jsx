@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { FaChevronDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,22 +6,12 @@ import newLogo from "../assets/TconnectsNewLogo.png";
 import api from "../config/api";
 import "./Header.css";
 
+import { AuthContext } from "../context/AuthContext";
+
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [user, setUser] = useState(null); // user from backend
+  const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
-
-  // 🔥 1. Fetch user from backend using secure cookies
-  useEffect(() => {
-    api
-      .get("/api/auth/me/")
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch(() => {
-        setUser(null); // not logged in
-      });
-  }, []);
 
   // Scroll Effect
   useEffect(() => {
@@ -38,10 +28,10 @@ const Header = () => {
     }
   };
 
-  // 🔥 2. Logout (clear cookies on backend)
+  // Logout
   const logoutUser = () => {
     api.post("/api/auth/logout/").finally(() => {
-      setUser(null); // Remove user from state
+      setUser(null); // update global user state
       navigate("/");
     });
   };
@@ -63,7 +53,7 @@ const Header = () => {
         </Navbar.Toggle>
 
         <Navbar.Collapse id="basic-navbar-nav">
-          {/* CENTER NAV MENU */}
+          {/* CENTER NAV */}
           <Nav className="mx-auto navbar-nav-custom">
 
             <Nav.Link as={Link} to="/" className="nav-link-custom" onClick={closeMobileMenu}>
@@ -97,18 +87,18 @@ const Header = () => {
             </Nav.Link>
           </Nav>
 
-          {/* RIGHT SIDE – USER OR LOGIN BUTTONS */}
+          {/* RIGHT SECTION */}
           <div className="right-section">
 
-            {/* 🔥 When user is logged in */}
             {user ? (
+              // When USER is LOGGED IN
               <div className="header-user-menu">
+
                 {/* Avatar */}
                 <div className="user-avatar">
                   {user.full_name?.charAt(0)?.toUpperCase()}
                 </div>
 
-                {/* Name */}
                 <div className="user-name">
                   Hi, {user.full_name?.split(" ")[0]}
                 </div>
@@ -118,11 +108,11 @@ const Header = () => {
                   <button
                     className="user-dropdown-item"
                     onClick={() => {
-                      if (user.role === "candidate") {
-                        navigate("/candidate-dashboard");
-                      } else {
-                        navigate("/recruiter-dashboard");
-                      }
+                      navigate(
+                        user.role === "candidate"
+                          ? "/candidate-dashboard"
+                          : "/recruiter-dashboard"
+                      );
                     }}
                   >
                     🧑‍💼 My Account
@@ -137,7 +127,7 @@ const Header = () => {
                 </div>
               </div>
             ) : (
-              // 🔥 When user is NOT logged in
+              // When USER is NOT LOGGED IN
               <div className="auth-buttons">
                 <Link to="/register">
                   <button className="auth-btn register-btn">Register</button>
