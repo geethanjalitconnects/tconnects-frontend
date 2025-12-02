@@ -1,11 +1,8 @@
-// Profile.jsx (Candidate Dashboard)
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
 import "./CandidateDashboard.css";
 
-export default function Profile() {
-  const [loading, setLoading] = useState(true);
-
+const Profile = () => {
   const [userData, setUserData] = useState({
     full_name: "",
     email: "",
@@ -17,218 +14,244 @@ export default function Profile() {
     resume_url: "",
   });
 
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-  // ============================================================
-  // 1. FETCH PROFILE FROM BACKEND
-  // ============================================================
+  // ============================
+  // LOAD PROFILE DATA
+  // ============================
+  const loadProfile = async () => {
+    try {
+      const res = await api.get("/api/profiles/candidate/me/");
+      const data = res.data;
+
+      setUserData({
+        full_name: data.user.full_name || "",
+        email: data.user.email || "",
+        phone_number: data.phone_number || "",
+        location: data.location || "",
+        experience: data.experience_level || "",
+        skills: (data.skills || []).join(", "),
+        bio: data.bio || "",
+        resume_url: data.resume || "",
+      });
+
+    } catch (error) {
+      console.error("Failed to load profile:", error);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await api.get("/api/profiles/candidate/me/");
-
-        setUserData({
-          full_name: res.data.full_name || "",
-          email: res.data.email || "",
-          phone_number: res.data.phone_number || "",
-          location: res.data.location || "",
-          experience: res.data.experience || "",
-          skills: res.data.skills?.join(", ") || "",
-          bio: res.data.bio || "",
-          resume_url: res.data.resume_url || "",
-        });
-      } catch (err) {
-        console.error("Failed to load profile:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
+    loadProfile();
   }, []);
 
-  // ============================================================
-  // 2. HANDLE INPUT CHANGES
-  // ============================================================
+  // ============================
+  // HANDLE INPUT CHANGE
+  // ============================
   const handleChange = (e) => {
-    setUserData({
-      ...userData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ============================================================
-  // 3. UPDATE PROFILE (PATCH)
-  // ============================================================
+  // ============================
+  // SAVE PROFILE
+  // ============================
   const handleSave = async () => {
     setSaving(true);
-
     try {
       await api.patch("/api/profiles/candidate/me/", {
-  full_name: userData.full_name,
-  phone_number: userData.phone_number,
-  location: userData.location,
-  experience_level: userData.experience,
-  skills: userData.skills.split(",").map(s => s.trim()),
-  bio: userData.bio,
-});
+        full_name: userData.full_name,
+        phone_number: userData.phone_number,
+        location: userData.location,
+        experience_level: userData.experience,
+        skills: userData.skills.split(",").map((s) => s.trim()),
+        bio: userData.bio,
+      });
 
       alert("Profile updated successfully!");
-    } catch (err) {
-      console.error("Update failed:", err);
-      alert("Something went wrong.");
-    } finally {
-      setSaving(false);
+    } catch (error) {
+      console.error("Update failed:", error);
+      alert("Update failed!");
     }
+    setSaving(false);
   };
 
-  // ============================================================
-  // 4. UPLOAD RESUME
-  // ============================================================
+  // ============================
+  // RESUME UPLOAD
+  // ============================
   const handleResumeUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     setUploading(true);
-
     const formData = new FormData();
     formData.append("resume", file);
 
     try {
-      const res = await api.post("/api/profiles/candidate/upload-resume/", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await api.post(
+        "/api/profiles/candidate/upload-resume/",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
 
-      setUserData({
-        ...userData,
-        resume_url: res.data.resume_url,
-      });
-
+      setUserData((prev) => ({ ...prev, resume_url: res.data.resume_url }));
       alert("Resume uploaded successfully!");
-    } catch (err) {
-      console.error("Resume upload failed:", err);
-      alert("Upload failed. Try again.");
-    } finally {
-      setUploading(false);
+
+    } catch (error) {
+      console.error("Resume upload failed:", error);
+      alert("Resume upload failed!");
     }
+
+    setUploading(false);
   };
 
-  if (loading) return <div className="cd-loading">Loading...</div>;
+  if (loading) return <p>Loading...</p>;
 
-  // ============================================================
-  // UI (NO DESIGN CHANGES)
-  // ============================================================
   return (
     <div className="cd-profile">
-      <h2 className="cd-section-title">My Profile</h2>
+      
+      {/* Page Heading */}
+      <div className="cd-section-header">
+        <h2 className="cd-profile-title">My Profile</h2>
+        <p className="cd-profile-subtitle">
+          Update your personal information and resume
+        </p>
+      </div>
 
-      <div className="cd-profile-form">
+      <div className="cd-profile-card">
 
-        {/* FULL NAME */}
-        <div className="cd-input-group">
-          <label>Full Name</label>
-          <input
-            type="text"
-            name="full_name"
-            value={userData.full_name}
-            onChange={handleChange}
-          />
-        </div>
+        {/* FORM GRID */}
+        <div className="cd-form-grid">
 
-        {/* EMAIL (READ ONLY) */}
-        <div className="cd-input-group">
-          <label>Email Address</label>
-          <input type="text" value={userData.email} disabled />
-          <small className="cd-readonly-text">Email cannot be changed</small>
-        </div>
+          {/* FULL NAME */}
+          <div className="cd-form-group">
+            <label className="cd-form-label">Full Name</label>
+            <input
+              type="text"
+              className="cd-input"
+              name="full_name"
+              value={userData.full_name}
+              onChange={handleChange}
+            />
+          </div>
 
-        {/* PHONE NUMBER */}
-        <div className="cd-input-group">
-          <label>Phone Number</label>
-          <input
-            type="text"
-            name="phone_number"
-            value={userData.phone_number}
-            onChange={handleChange}
-          />
-        </div>
+          {/* EMAIL */}
+          <div className="cd-form-group">
+            <label className="cd-form-label">Email Address</label>
+            <input
+              type="text"
+              className="cd-input"
+              value={userData.email}
+              disabled
+            />
+          </div>
 
-        {/* LOCATION */}
-        <div className="cd-input-group">
-          <label>Location</label>
-          <input
-            type="text"
-            name="location"
-            value={userData.location}
-            onChange={handleChange}
-          />
-        </div>
+          {/* PHONE */}
+          <div className="cd-form-group">
+            <label className="cd-form-label">Phone Number</label>
+            <input
+              type="text"
+              className="cd-input"
+              name="phone_number"
+              value={userData.phone_number}
+              onChange={handleChange}
+            />
+          </div>
 
-        {/* EXPERIENCE */}
-        <div className="cd-input-group">
-          <label>Experience</label>
-          <select
-            name="experience"
-            value={userData.experience}
-            onChange={handleChange}
-          >
-            <option value="">Select Experience</option>
-            <option value="Fresher">Fresher</option>
-            <option value="1 Year">1 Year</option>
-            <option value="2 Years">2 Years</option>
-            <option value="3 Years">3 Years</option>
-            <option value="4+ Years">4+ Years</option>
-          </select>
-        </div>
+          {/* LOCATION */}
+          <div className="cd-form-group">
+            <label className="cd-form-label">Location</label>
+            <input
+              type="text"
+              className="cd-input"
+              name="location"
+              value={userData.location}
+              onChange={handleChange}
+            />
+          </div>
 
-        {/* SKILLS */}
-        <div className="cd-input-group">
-          <label>Skills (comma separated)</label>
-          <input
-            type="text"
-            name="skills"
-            value={userData.skills}
-            onChange={handleChange}
-            placeholder="e.g. Python, SQL, Risk Analysis"
-          />
-        </div>
-
-        {/* BIO */}
-        <div className="cd-input-group">
-          <label>Bio</label>
-          <textarea
-            name="bio"
-            value={userData.bio}
-            onChange={handleChange}
-          ></textarea>
-        </div>
-
-        {/* RESUME UPLOAD */}
-        <div className="cd-input-group">
-          <label>Resume</label>
-
-          {userData.resume_url ? (
-            <button
-              className="cd-resume-btn"
-              onClick={() => window.open(userData.resume_url, "_blank")}
+          {/* EXPERIENCE */}
+          <div className="cd-form-group">
+            <label className="cd-form-label">Experience</label>
+            <select
+              className="cd-input"
+              name="experience"
+              value={userData.experience}
+              onChange={handleChange}
             >
-              View Resume
-            </button>
-          ) : (
-            <p>No resume uploaded</p>
-          )}
+              <option value="">Select Experience</option>
+              <option value="Fresher">Fresher</option>
+              <option value="1 Year">1 Year</option>
+              <option value="2 Years">2 Years</option>
+              <option value="3 Years">3 Years</option>
+              <option value="4+ Years">4+ Years</option>
+            </select>
+          </div>
 
-          <input type="file" onChange={handleResumeUpload} />
+          {/* SKILLS */}
+          <div className="cd-form-group">
+            <label className="cd-form-label">Skills</label>
+            <input
+              type="text"
+              className="cd-input"
+              name="skills"
+              value={userData.skills}
+              onChange={handleChange}
+              placeholder="e.g. Python, SQL, React"
+            />
+          </div>
 
-          {uploading && <p className="cd-uploading">Uploading...</p>}
+          {/* BIO */}
+          <div className="cd-form-group cd-full-width">
+            <label className="cd-form-label">About You</label>
+            <textarea
+              className="cd-textarea"
+              name="bio"
+              value={userData.bio}
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* RESUME */}
+          <div className="cd-form-group cd-full-width cd-upload-card">
+            <label className="cd-form-label">Resume</label>
+
+            {userData.resume_url ? (
+              <button
+                className="cd-resume-btn"
+                onClick={() => window.open(userData.resume_url, "_blank")}
+              >
+                View Current Resume
+              </button>
+            ) : (
+              <p>No resume uploaded yet</p>
+            )}
+
+            <div className="cd-upload-box" onClick={() => document.getElementById("resumeUpload").click()}>
+              <div className="cd-upload-icon">📄</div>
+              <p className="cd-upload-text">Click to upload a new resume</p>
+              <input
+                id="resumeUpload"
+                type="file"
+                onChange={handleResumeUpload}
+                style={{ display: "none" }}
+              />
+            </div>
+
+            {uploading && <p>Uploading...</p>}
+          </div>
         </div>
 
         {/* SAVE BUTTON */}
         <button className="cd-save-btn" onClick={handleSave} disabled={saving}>
           {saving ? "Saving..." : "Save Changes"}
         </button>
+
       </div>
     </div>
   );
-}
+};
+
+export default Profile;

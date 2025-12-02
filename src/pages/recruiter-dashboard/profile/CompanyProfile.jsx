@@ -16,14 +16,11 @@ export default function CompanyProfile() {
     about: "",
   });
 
-  // ============================================================
-  // 1. FETCH COMPANY PROFILE FROM BACKEND
-  // ============================================================
+  // FETCH COMPANY PROFILE
   useEffect(() => {
     const fetchCompany = async () => {
       try {
         const res = await api.get("/api/profiles/recruiter/company/");
-
         setForm({
           companyName: res.data.company_name || "",
           industry: res.data.industry || "",
@@ -38,24 +35,19 @@ export default function CompanyProfile() {
         setLoading(false);
       }
     };
-
     fetchCompany();
   }, []);
 
-  // ============================================================
-  // 2. HANDLE FORM CHANGES
-  // ============================================================
+  // HANDLE INPUT
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  // ============================================================
-  // 3. SAVE COMPANY PROFILE
-  // ============================================================
+  // UPDATE COMPANY PROFILE
   const handleSave = async () => {
     setSaving(true);
 
     try {
-      await api.patch("/api/profiles/recruiter/company/update/", {
+      await api.patch("/api/profiles/recruiter/company/", {
         company_name: form.companyName,
         industry: form.industry,
         size: form.size,
@@ -75,12 +67,9 @@ export default function CompanyProfile() {
 
   if (loading) return <div className="rd-loading">Loading...</div>;
 
-  // ============================================================
-  // 4. UI (NO DESIGN CHANGES)
-  // ============================================================
+  // UI (NO DESIGN CHANGES)
   return (
     <div className="rd-company-profile-page">
-      
       <h2 className="rd-page-title">Company Profile</h2>
       <p className="rd-page-subtitle">
         Keep your company information updated for candidates to view.
@@ -89,7 +78,6 @@ export default function CompanyProfile() {
       <div className="rd-profile-card">
         <div className="rd-grid">
 
-          {/* Company Name */}
           <div className="rd-form-group">
             <label className="rd-label">Company Name</label>
             <input
@@ -102,7 +90,6 @@ export default function CompanyProfile() {
             />
           </div>
 
-          {/* Industry */}
           <div className="rd-form-group">
             <label className="rd-label">Industry Category</label>
             <input
@@ -115,7 +102,6 @@ export default function CompanyProfile() {
             />
           </div>
 
-          {/* Company Size */}
           <div className="rd-form-group">
             <label className="rd-label">Company Size</label>
             <input
@@ -128,7 +114,6 @@ export default function CompanyProfile() {
             />
           </div>
 
-          {/* Location */}
           <div className="rd-form-group">
             <label className="rd-label">Company Location</label>
             <input
@@ -141,7 +126,6 @@ export default function CompanyProfile() {
             />
           </div>
 
-          {/* Website */}
           <div className="rd-form-group">
             <label className="rd-label">Company Website</label>
             <input
@@ -154,7 +138,6 @@ export default function CompanyProfile() {
             />
           </div>
 
-          {/* About Company (full width) */}
           <div className="rd-form-group rd-full">
             <label className="rd-label">About Company</label>
             <textarea
@@ -167,7 +150,6 @@ export default function CompanyProfile() {
           </div>
         </div>
 
-        {/* SAVE BUTTON */}
         <button
           className="rd-save-btn"
           onClick={handleSave}

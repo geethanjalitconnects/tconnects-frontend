@@ -16,20 +16,26 @@ export default function BasicInformation() {
   });
 
   // ============================================================
-  // 1. LOAD RECRUITER PROFILE FROM BACKEND
+  // 1. LOAD USER DATA + RECRUITER PROFILE
   // ============================================================
   useEffect(() => {
-    const fetchProfile = async () => {
+    const loadData = async () => {
       try {
-        const res = await api.get("/api/profiles/recruiter/me/");
+        // 1️⃣ FETCH USER INFO (full_name & email from login)
+        const userRes = await api.get("/api/auth/me/");
+        const user = userRes.data;
+
+        // 2️⃣ FETCH RECRUITER BASIC PROFILE
+        const profileRes = await api.get("/api/profiles/recruiter/basic/");
 
         setFormData({
-          full_name: res.data.full_name || "",
-          email: res.data.email || "",
-          phone_number: res.data.phone_number || "",
-          position: res.data.position || "",
-          linkedin_url: res.data.linkedin_url || "",
+          full_name: user.full_name || "",
+          email: user.email || "",
+          phone_number: profileRes.data.phone_number || "",
+          position: profileRes.data.position || "",
+          linkedin_url: profileRes.data.linkedin_url || "",
         });
+
       } catch (err) {
         console.error("Failed to load recruiter profile:", err);
       } finally {
@@ -37,11 +43,11 @@ export default function BasicInformation() {
       }
     };
 
-    fetchProfile();
+    loadData();
   }, []);
 
   // ============================================================
-  // 2. HANDLE FORM INPUT
+  // 2. HANDLE INPUT CHANGE
   // ============================================================
   const handleChange = (e) => {
     setFormData({
@@ -57,7 +63,7 @@ export default function BasicInformation() {
     setSaving(true);
 
     try {
-      await api.patch("/api/profiles/recruiter/update/", {
+      await api.patch("/api/profiles/recruiter/basic/", {
         phone_number: formData.phone_number,
         position: formData.position,
         linkedin_url: formData.linkedin_url,
@@ -75,7 +81,7 @@ export default function BasicInformation() {
   if (loading) return <div className="rd-loading">Loading...</div>;
 
   // ============================================================
-  // UI (EXACT SAME DESIGN — NO CHANGES)
+  // 4. UI (NO CHANGES TO DESIGN — EXACT SAME STRUCTURE)
   // ============================================================
   return (
     <div className="rd-basic-info-page">
@@ -89,7 +95,7 @@ export default function BasicInformation() {
 
         <div className="rd-grid">
 
-          {/* FULL NAME (READ ONLY) */}
+          {/* FULL NAME (NON EDITABLE) */}
           <div className="rd-form-group">
             <label className="rd-label">Full Name</label>
             <input
@@ -100,7 +106,7 @@ export default function BasicInformation() {
             />
           </div>
 
-          {/* EMAIL (READ ONLY) */}
+          {/* EMAIL (NON EDITABLE) */}
           <div className="rd-form-group">
             <label className="rd-label">Company Email</label>
             <input
@@ -159,6 +165,7 @@ export default function BasicInformation() {
         >
           {saving ? "Saving…" : "Save Changes"}
         </button>
+
       </div>
     </div>
   );
