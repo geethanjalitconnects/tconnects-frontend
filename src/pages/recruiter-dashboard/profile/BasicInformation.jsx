@@ -1,4 +1,4 @@
-// BasicInformation.jsx — Recruiter Dashboard
+// BasicInformation.jsx — Recruiter Dashboard (Fixed)
 import React, { useEffect, useState } from "react";
 import api from "../../../config/api";
 import "../RecruiterDashboard.css";
@@ -21,19 +21,19 @@ export default function BasicInformation() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        // 1️⃣ FETCH USER INFO (full_name & email from login)
+        // 1️⃣ USER INFO (name + email)
         const userRes = await api.get("/api/auth/me/");
         const user = userRes.data;
 
-        // 2️⃣ FETCH RECRUITER BASIC PROFILE
+        // 2️⃣ RECRUITER BASIC PROFILE (backend fields)
         const profileRes = await api.get("/api/profiles/recruiter/basic/");
 
         setFormData({
           full_name: user.full_name || "",
           email: user.email || "",
           phone_number: profileRes.data.phone_number || "",
-          position: profileRes.data.position || "",
-          linkedin_url: profileRes.data.linkedin_url || "",
+          position: profileRes.data.position_in_company || "",
+          linkedin_url: profileRes.data.linkedin_profile || "",
         });
 
       } catch (err) {
@@ -65,8 +65,8 @@ export default function BasicInformation() {
     try {
       await api.patch("/api/profiles/recruiter/basic/", {
         phone_number: formData.phone_number,
-        position: formData.position,
-        linkedin_url: formData.linkedin_url,
+        position_in_company: formData.position,
+        linkedin_profile: formData.linkedin_url,
       });
 
       alert("Profile updated successfully!");
@@ -81,7 +81,7 @@ export default function BasicInformation() {
   if (loading) return <div className="rd-loading">Loading...</div>;
 
   // ============================================================
-  // 4. UI (NO CHANGES TO DESIGN — EXACT SAME STRUCTURE)
+  // 4. UI (STRUCTURE SAME)
   // ============================================================
   return (
     <div className="rd-basic-info-page">

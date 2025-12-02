@@ -1,4 +1,4 @@
-// CompanyProfile.jsx — Recruiter Dashboard Integration
+// CompanyProfile.jsx — Recruiter Dashboard Integration (Fixed)
 import React, { useEffect, useState } from "react";
 import api from "../../../config/api";
 import "../RecruiterDashboard.css";
@@ -21,14 +21,16 @@ export default function CompanyProfile() {
     const fetchCompany = async () => {
       try {
         const res = await api.get("/api/profiles/recruiter/company/");
+
         setForm({
           companyName: res.data.company_name || "",
-          industry: res.data.industry || "",
-          size: res.data.size || "",
-          location: res.data.location || "",
-          website: res.data.website || "",
-          about: res.data.about || "",
+          industry: res.data.industry_category || "",
+          size: res.data.company_size || "",
+          location: res.data.company_location || "",
+          website: res.data.company_website || "",
+          about: res.data.about_company || "",
         });
+
       } catch (err) {
         console.error("Failed to load company profile:", err);
       } finally {
@@ -49,11 +51,11 @@ export default function CompanyProfile() {
     try {
       await api.patch("/api/profiles/recruiter/company/", {
         company_name: form.companyName,
-        industry: form.industry,
-        size: form.size,
-        location: form.location,
-        website: form.website,
-        about: form.about,
+        industry_category: form.industry,
+        company_size: form.size,
+        company_location: form.location,
+        company_website: form.website,
+        about_company: form.about,
       });
 
       alert("Company profile updated successfully!");
@@ -67,7 +69,6 @@ export default function CompanyProfile() {
 
   if (loading) return <div className="rd-loading">Loading...</div>;
 
-  // UI (NO DESIGN CHANGES)
   return (
     <div className="rd-company-profile-page">
       <h2 className="rd-page-title">Company Profile</h2>
