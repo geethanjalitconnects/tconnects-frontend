@@ -948,10 +948,6 @@
   z-index: 2000;
 }
 
-.header-user-menu:hover .user-dropdown-menu {
-  display: block;
-}
-
 /* Dropdown Items */
 .user-dropdown-item {
   width: 100%;

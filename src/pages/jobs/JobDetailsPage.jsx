@@ -1,4 +1,5 @@
-// JobDetailsPage.jsx — FIXED SAVE ENDPOINT
+// JobDetailsPage.jsx — FULL VERSION WITH COMPANY PROFILE (UI UNCHANGED)
+
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../config/api";
@@ -9,15 +10,31 @@ const JobDetailsPage = () => {
   const { id } = useParams();
 
   const [job, setJob] = useState(null);
+  const [company, setCompany] = useState(null); // ⭐ NEW
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Fetch job details
+  // =============================
+  // 1) LOAD JOB DETAILS
+  // =============================
   useEffect(() => {
     const loadJob = async () => {
       try {
         const res = await api.get(`/api/jobs/${id}/`);
         setJob(res.data);
+
+        // ⭐ Fetch company details using recruiter_id
+        if (res.data.recruiter_id) {
+          try {
+            const companyRes = await api.get(
+              `/api/profiles/company/${res.data.recruiter_id}/`
+            );
+            setCompany(companyRes.data);
+          } catch (err) {
+            console.warn("Company profile not found");
+            setCompany(null);
+          }
+        }
       } catch (err) {
         console.error("Failed to load job:", err);
       } finally {
@@ -27,33 +44,33 @@ const JobDetailsPage = () => {
     loadJob();
   }, [id]);
 
-  // Check saved status
+  // =============================
+  // 2) CHECK SAVED STATUS
+  // =============================
   useEffect(() => {
-    const loadSavedStatus = async () => {
+    const loadSaved = async () => {
       try {
         const res = await api.get("/api/applications/saved-jobs/");
         const savedIds = res.data.map((i) => i.job.id);
         setSaved(savedIds.includes(parseInt(id)));
       } catch (err) {
-        console.error("Failed to check saved:", err);
+        console.error("Failed to load saved jobs:", err);
       }
     };
-    loadSavedStatus();
+    loadSaved();
   }, [id]);
 
-  // Save / Unsave Job
   const toggleSave = async () => {
     try {
       if (saved) {
         await api.delete(`/api/applications/saved-jobs/remove/${id}/`);
         setSaved(false);
       } else {
-        // FIXED ENDPOINT HERE:
         await api.post("/api/applications/saved-jobs/add/", { job: id });
         setSaved(true);
       }
     } catch (err) {
-      console.error("Error saving/unsaving:", err);
+      console.error("Save/Unsave failed:", err);
     }
   };
 
@@ -64,7 +81,118 @@ const JobDetailsPage = () => {
 
   return (
     <div className="jd-desktop-wrapper">
-      {/* ... ENTIRE UI EXACTLY AS BEFORE ... */}
+      <div className="jd-container">
+
+        {/* ======================================================
+                      JOB HEADER SECTION
+        ======================================================= */}
+        <div className="jd-header-card">
+          <div className="jd-header-left">
+            <h1 className="jd-title">{job.title}</h1>
+
+            <div className="jd-meta">
+              <span className="jd-badge">{job.category}</span>
+              <span className="jd-meta-item">{job.company_name}</span>
+              <span className="jd-meta-item">{job.location}</span>
+              <span className="jd-meta-item">{job.experience_range}</span>
+              <span className="jd-meta-item">{job.salary_range}</span>
+              <span className="jd-meta-item">{job.employment_type}</span>
+
+              {job.application_deadline && (
+                <span className="jd-meta-item">
+                  Deadline:{" "}
+                  {new Date(job.application_deadline).toLocaleDateString("en-IN")}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="jd-header-right">
+            <button className="jd-apply-btn" onClick={handleApplyNow}>
+              Apply Now
+            </button>
+
+            <button className="jd-save-btn" onClick={toggleSave}>
+              {saved ? "Unsave" : "Save Job"}
+            </button>
+          </div>
+        </div>
+
+        {/* ======================================================
+                        JOB DESCRIPTION
+        ======================================================= */}
+        <div className="jd-section">
+          <h2 className="jd-section-title">About the Job</h2>
+          <p className="jd-description">{job.full_description}</p>
+        </div>
+
+        {/* RESPONSIBILITIES */}
+        {job.responsibilities?.length > 0 && (
+          <div className="jd-section">
+            <h2 className="jd-section-title">Responsibilities</h2>
+            <ul className="jd-list">
+              {job.responsibilities.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* REQUIREMENTS */}
+        {job.requirements?.length > 0 && (
+          <div className="jd-section">
+            <h2 className="jd-section-title">Requirements</h2>
+            <ul className="jd-list">
+              {job.requirements.map((req, i) => (
+                <li key={i}>{req}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* SKILLS */}
+        <div className="jd-section">
+          <h2 className="jd-section-title">Skills Required</h2>
+          <div className="jd-skills">
+            {job.skills?.map((skill, i) => (
+              <span key={i} className="jd-skill">{skill}</span>
+            ))}
+          </div>
+        </div>
+
+        {/* ======================================================
+                       COMPANY PROFILE SECTION (NEW)
+        ======================================================= */}
+        {company && (
+          <div className="jd-section">
+            <h2 className="jd-section-title">Company Details</h2>
+
+            <div className="jd-company-box">
+              <p><strong>Company Name:</strong> {company.company_name}</p>
+
+              <p><strong>Industry:</strong> {company.industry_category || "Not provided"}</p>
+
+              <p><strong>Company Size:</strong> {company.company_size || "Not provided"}</p>
+
+              <p><strong>Location:</strong> {company.company_location || "Not provided"}</p>
+
+              {company.company_website && (
+                <p>
+                  <strong>Website:</strong>{" "}
+                  <a href={company.company_website} target="_blank" rel="noreferrer">
+                    {company.company_website}
+                  </a>
+                </p>
+              )}
+
+              {company.about_company && (
+                <p><strong>About Company:</strong> {company.about_company}</p>
+              )}
+            </div>
+          </div>
+        )}
+
+      </div>
     </div>
   );
 };

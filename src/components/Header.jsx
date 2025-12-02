@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { FaChevronDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import newLogo from "../assets/TconnectsNewLogo.png";
 import api from "../config/api";
 import "./Header.css";
-
 import { AuthContext } from "../context/AuthContext";
 
 const Header = () => {
@@ -13,11 +12,26 @@ const Header = () => {
   const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  // NEW: Dropdown state + reference
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const menuRef = useRef(null);
+
   // Scroll Effect
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // NEW: Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Close mobile menu
@@ -30,8 +44,10 @@ const Header = () => {
 
   // Logout
   const logoutUser = () => {
+    setDropdownOpen(false); // close dropdown before logout
+
     api.post("/api/auth/logout/").finally(() => {
-      setUser(null); // update global user state
+      setUser(null);
       navigate("/");
     });
   };
@@ -91,9 +107,12 @@ const Header = () => {
           <div className="right-section">
 
             {user ? (
-              // When USER is LOGGED IN
-              <div className="header-user-menu">
-
+              // USER LOGGED IN
+              <div
+                className="header-user-menu"
+                ref={menuRef}
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
                 {/* Avatar */}
                 <div className="user-avatar">
                   {user.full_name?.charAt(0)?.toUpperCase()}
@@ -104,10 +123,14 @@ const Header = () => {
                 </div>
 
                 {/* Dropdown */}
-                <div className="user-dropdown-menu">
+                <div
+                  className="user-dropdown-menu"
+                  style={{ display: dropdownOpen ? "block" : "none" }}
+                >
                   <button
                     className="user-dropdown-item"
                     onClick={() => {
+                      setDropdownOpen(false);
                       navigate(
                         user.role === "candidate"
                           ? "/candidate-dashboard"
@@ -127,7 +150,7 @@ const Header = () => {
                 </div>
               </div>
             ) : (
-              // When USER is NOT LOGGED IN
+              // NOT LOGGED IN
               <div className="auth-buttons">
                 <Link to="/register">
                   <button className="auth-btn register-btn">Register</button>
