@@ -1,4 +1,4 @@
-// ManageJobs.jsx — FULL WORKING (UI unchanged)
+// ManageJobs.jsx — CLEAN DASHBOARD CARD UI (Backend Fully Compatible)
 import React, { useEffect, useState } from "react";
 import api from "../../../config/api";
 import "../RecruiterDashboard.css";
@@ -7,10 +7,9 @@ export default function ManageJobs() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // LOAD JOBS (FIXED URL)
+  // LOAD JOBS
   const loadJobs = async () => {
     try {
-      // FIXED: Your backend does NOT have /my-jobs/
       const res = await api.get("/api/jobs/");
       setJobs(res.data);
     } catch (err) {
@@ -24,7 +23,7 @@ export default function ManageJobs() {
     loadJobs();
   }, []);
 
-  // DELETE A JOB
+  // DELETE JOB
   const deleteJob = async (jobId) => {
     if (!window.confirm("Are you sure you want to delete this job?")) return;
 
@@ -38,12 +37,10 @@ export default function ManageJobs() {
     }
   };
 
-  // UPDATE JOB STATUS (FIXED URL)
+  // UPDATE STATUS
   const updateStatus = async (jobId, newStatus) => {
     try {
-      // FIXED: Backend does NOT have /status/ endpoint
       await api.patch(`/api/jobs/${jobId}/`, { status: newStatus });
-
       alert("Status updated successfully!");
       loadJobs();
     } catch (err) {
@@ -59,71 +56,68 @@ export default function ManageJobs() {
       <h2 className="rd-page-title">Manage Jobs</h2>
       <p className="rd-page-subtitle">View, update or delete your posted jobs.</p>
 
-      <div className="rd-job-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Job Title</th>
-              <th>Category</th>
-              <th>Location</th>
-              <th>Type</th>
-              <th>Salary</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+      <div className="rd-job-list">
+        {jobs.length === 0 ? (
+          <p className="rd-empty">No jobs posted yet.</p>
+        ) : (
+          jobs.map((job) => (
+            <div key={job.id} className="rd-job-card">
+              
+              {/* LEFT SIDE - Job Info */}
+              <div className="rd-job-card-left">
+                <h3 className="rd-job-title">{job.title}</h3>
 
-          <tbody>
-            {jobs.length === 0 ? (
-              <tr>
-                <td colSpan="7" className="rd-empty">
-                  No jobs posted yet.
-                </td>
-              </tr>
-            ) : (
-              jobs.map((job) => (
-                <tr key={job.id}>
-                  <td>{job.title}</td>
-                  <td>{job.category}</td>
-                  <td>{job.location}</td>
-                  <td>{job.employment_type}</td>
-                  <td>{job.salary_range}</td>
+                <p className="rd-job-meta">
+                  <span>Category:</span> {job.category} &nbsp; | &nbsp;
+                  <span>Location:</span> {job.location} &nbsp; | &nbsp;
+                  <span>Type:</span> {job.employment_type} &nbsp; | &nbsp;
+                  <span>Salary:</span> {job.salary_range}
+                </p>
 
-                  <td>
-                    <select
-                      className="rd-status-dropdown"
-                      value={job.status}
-                      onChange={(e) =>
-                        updateStatus(job.id, e.target.value)
-                      }
-                    >
-                      <option value="Open">Open</option>
-                      <option value="Closed">Closed</option>
-                    </select>
-                  </td>
+                <span
+                  className={`rd-job-status ${
+                    job.status === "Open" ? "active" : "closed"
+                  }`}
+                >
+                  {job.status}
+                </span>
+              </div>
 
-                  <td>
-                    <button
-                      className="rd-delete-btn"
-                      onClick={() => deleteJob(job.id)}
-                    >
-                      Delete
-                    </button>
+              {/* RIGHT SIDE — Actions */}
+              <div className="rd-job-card-actions">
 
-                    <button
-                      className="rd-view-btn"
-                      onClick={() =>
-                        (window.location.href = `/recruiter-dashboard/jobs/edit-job/${job.id}`)
-                      }
-                    >
-                      Edit
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                {/* STATUS */}
+                <select
+                  className="rd-status-dropdown"
+                  value={job.status}
+                  onChange={(e) => updateStatus(job.id, e.target.value)}
+                >
+                  <option value="Open">Open</option>
+                  <option value="Closed">Closed</option>
+                </select>
+
+                {/* EDIT */}
+                <button
+                  className="rd-action-btn edit"
+                  onClick={() =>
+                    (window.location.href = `/recruiter-dashboard/jobs/edit-job/${job.id}`)
+                  }
+                >
+                  Edit
+                </button>
+
+                {/* DELETE */}
+                <button
+                  className="rd-action-btn delete"
+                  onClick={() => deleteJob(job.id)}
+                >
+                  Delete
+                </button>
+              </div>
+
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
