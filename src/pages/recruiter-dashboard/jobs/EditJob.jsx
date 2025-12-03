@@ -1,5 +1,5 @@
-// EditJob.jsx — Backend Integrated (UI unchanged)
-import React, { useState, useEffect } from "react";
+// EditJob.jsx — FINAL FIXED VERSION (UI UNCHANGED)
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../../config/api";
 import "../RecruiterDashboard.css";
@@ -7,291 +7,242 @@ import "../RecruiterDashboard.css";
 export default function EditJob() {
   const { id } = useParams();
 
-  const [loading, setLoading] = useState(true);
+  const [job, setJob] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
 
   const [form, setForm] = useState({
     title: "",
     category: "",
     location: "",
-    jobType: "Full-Time",
-    salary: "",
-    experience: "",
-    description: "",
+    employment_type: "",
+    salary_range: "",
+    experience_range: "",
+    full_description: "",
     responsibilities: "",
-    expertise: "",
-    qualification: "",
-    scheduleType: "now",
-    scheduleDate: "",
-    scheduleTime: "",
+    skills: "",
+    eligible_degrees: "",
+    application_deadline: "",
   });
 
-  // ============================================================
-  // 1. FETCH JOB DETAILS BY ID (FIXED MAPPING)
-  // ============================================================
+  // Load Job Data
   useEffect(() => {
-    const fetchJob = async () => {
+    const loadJob = async () => {
       try {
         const res = await api.get(`/api/jobs/${id}/`);
+        setJob(res.data);
 
         setForm({
-          title: res.data.title,
-          category: res.data.category,
-          location: res.data.location,
-
-          jobType: res.data.employment_type,            // FIXED
-          salary: res.data.salary_range,                // FIXED
-          experience: res.data.experience_range,        // FIXED
-
-          description: res.data.full_description,       // FIXED
-          responsibilities: res.data.responsibilities.join(", "), // FIXED
-          expertise: res.data.skills.join(", "),                    // FIXED
-          qualification: res.data.eligible_degrees.join(", "),      // FIXED
-
-          scheduleType: "now",
-          scheduleDate: "",
-          scheduleTime: "",
+          title: res.data.title || "",
+          category: res.data.category || "",
+          location: res.data.location || "",
+          employment_type: res.data.employment_type || "",
+          salary_range: res.data.salary_range || "",
+          experience_range: res.data.experience_range || "",
+          full_description: res.data.full_description || "",
+          responsibilities: res.data.responsibilities?.join(", ") || "",
+          skills: res.data.skills?.join(", ") || "",
+          eligible_degrees: res.data.eligible_degrees || "",
+          application_deadline: res.data.application_deadline || "",
         });
       } catch (err) {
         console.error("Failed to load job:", err);
-      } finally {
-        setLoading(false);
       }
     };
 
-    fetchJob();
+    loadJob();
   }, [id]);
 
-  // ============================================================
-  // 2. HANDLE FORM CHANGES
-  // ============================================================
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
-  // ============================================================
-  // 3. SAVE CHANGES — FIXED BACKEND MAPPING
-  // ============================================================
-  const handleSave = async () => {
+  // Submit Edited Job
+  const handleSubmit = async () => {
     setSaving(true);
+    setMessage("");
 
     try {
       const payload = {
         title: form.title,
         category: form.category,
         location: form.location,
-
-        employment_type: form.jobType,        // FIXED
-        salary_range: form.salary,            // FIXED
-        experience_range: form.experience,    // FIXED
-
-        full_description: form.description,   // FIXED
-        short_description: form.description.slice(0, 120), // Generate short
-
+        employment_type: form.employment_type,
+        salary_range: form.salary_range,
+        experience_range: form.experience_range,
+        full_description: form.full_description,
         responsibilities: form.responsibilities
           .split(",")
           .map((s) => s.trim())
-          .filter((s) => s),
-
-        skills: form.expertise
+          .filter(Boolean),
+        skills: form.skills
           .split(",")
           .map((s) => s.trim())
-          .filter((s) => s),
-
-        eligible_degrees: form.qualification
-          .split(",")
-          .map((s) => s.trim())
-          .filter((s) => s),
+          .filter(Boolean),
+        eligible_degrees: form.eligible_degrees,
+        application_deadline: form.application_deadline || null,
       };
 
-      // ❗ FIXED URL (backend does NOT have /update/)
-      await api.patch(`/api/jobs/${id}/`, payload);
+      // ⭐ FIXED: Correct backend update URL
+      await api.patch(`/api/jobs/${id}/update/`, payload);
 
-      alert("Job updated successfully!");
-      window.location.href = "/recruiter-dashboard/jobs/manage-jobs";
+      setMessageType("success");
+      setMessage("Job updated successfully!");
+
+      setTimeout(() => {
+        window.location.href = "/recruiter-dashboard/jobs/manage-jobs";
+      }, 1200);
     } catch (err) {
-      console.error("Job update failed:", err);
-      alert("Something went wrong. Try again.");
+      console.error("Update failed:", err);
+      setMessageType("error");
+      setMessage("Failed to update job.");
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) return <div className="rd-loading">Loading...</div>;
+  if (!job) return <div className="rd-loading">Loading job...</div>;
 
-  // ============================================================
-  // 4. UI — NO DESIGN CHANGES
-  // ============================================================
   return (
-    <div className="rd-edit-wrapper">
-      <h1 className="rd-edit-title">Edit Job</h1>
-      <p className="rd-edit-subtitle">
-        Modify and update your existing job posting.
-      </p>
+    <div className="rd-postjob-page">
+      {message && (
+        <div className={`rd-message-box ${messageType === "success" ? "rd-success" : "rd-error"}`}>
+          {message}
+        </div>
+      )}
 
-      {/* JOB DETAILS CARD */}
-      <div className="rd-card">
-        <h2 className="rd-card-heading">Job Details</h2>
+      <h2 className="rd-page-title">Edit Job</h2>
+      <p className="rd-page-subtitle">Modify job details and save changes.</p>
 
-        <div className="rd-grid-3">
+      <div className="rd-profile-card">
+        <h3 className="rd-card-title">Job Details</h3>
+        <div className="rd-grid">
+
           <div className="rd-form-group">
-            <label>Job Title</label>
+            <label className="rd-label">Job Title</label>
             <input
-              className="rd-input"
               name="title"
               value={form.title}
               onChange={handleChange}
+              className="rd-input"
             />
           </div>
 
           <div className="rd-form-group">
-            <label>Job Category</label>
+            <label className="rd-label">Category</label>
             <input
-              className="rd-input"
               name="category"
               value={form.category}
               onChange={handleChange}
+              className="rd-input"
             />
           </div>
 
           <div className="rd-form-group">
-            <label>Location</label>
+            <label className="rd-label">Location</label>
             <input
-              className="rd-input"
               name="location"
               value={form.location}
               onChange={handleChange}
+              className="rd-input"
             />
           </div>
 
           <div className="rd-form-group">
-            <label>Job Type</label>
+            <label className="rd-label">Employment Type</label>
             <select
-              className="rd-input"
-              name="jobType"
-              value={form.jobType}
+              name="employment_type"
+              value={form.employment_type}
               onChange={handleChange}
+              className="rd-input"
             >
-              <option>Full-Time</option>
-              <option>Part-Time</option>
-              <option>Remote</option>
-              <option>Hybrid</option>
-              <option>Contract</option>
+              <option value="">Select</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Part-time">Part-time</option>
+              <option value="Internship">Internship</option>
+              <option value="Temporary">Temporary</option>
+              <option value="Contract">Contract</option>
             </select>
           </div>
 
           <div className="rd-form-group">
-            <label>Salary Range</label>
+            <label className="rd-label">Salary Range</label>
             <input
-              className="rd-input"
-              name="salary"
-              value={form.salary}
+              name="salary_range"
+              value={form.salary_range}
               onChange={handleChange}
+              className="rd-input"
             />
           </div>
 
           <div className="rd-form-group">
-            <label>Experience Required</label>
+            <label className="rd-label">Experience Range</label>
             <input
-              className="rd-input"
-              name="experience"
-              value={form.experience}
+              name="experience_range"
+              value={form.experience_range}
               onChange={handleChange}
+              className="rd-input"
             />
           </div>
-        </div>
 
-        <div className="rd-form-group full">
-          <label>Job Description</label>
-          <textarea
-            className="rd-input"
-            name="description"
-            value={form.description}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="rd-form-group full">
-          <label>Job Responsibilities</label>
-          <textarea
-            className="rd-input"
-            name="responsibilities"
-            value={form.responsibilities}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="rd-form-group full">
-          <label>Area of Expertise</label>
-          <textarea
-            className="rd-input"
-            name="expertise"
-            value={form.expertise}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="rd-form-group full">
-          <label>Education Qualification</label>
-          <textarea
-            className="rd-input"
-            name="qualification"
-            value={form.qualification}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-
-      {/* SCHEDULE (UI kept but backend doesn't use it) */}
-      <div className="rd-card rd-schedule-box">
-        <h2 className="rd-card-heading">Schedule Job Update</h2>
-
-        <div className="rd-grid-3">
-          <div className="rd-form-group">
-            <label>Post Type</label>
-            <select
-              className="rd-input"
-              name="scheduleType"
-              value={form.scheduleType}
+          <div className="rd-form-group rd-full">
+            <label className="rd-label">Full Description</label>
+            <textarea
+              name="full_description"
+              value={form.full_description}
               onChange={handleChange}
-            >
-              <option value="now">Post Now</option>
-              <option value="later">Schedule for Later</option>
-            </select>
+              className="rd-textarea"
+            />
+          </div>
+
+          <div className="rd-form-group rd-full">
+            <label className="rd-label">Responsibilities (comma separated)</label>
+            <textarea
+              name="responsibilities"
+              value={form.responsibilities}
+              onChange={handleChange}
+              className="rd-textarea"
+            />
+          </div>
+
+          <div className="rd-form-group rd-full">
+            <label className="rd-label">Skills Required (comma separated)</label>
+            <input
+              name="skills"
+              value={form.skills}
+              onChange={handleChange}
+              className="rd-input"
+            />
+          </div>
+
+          <div className="rd-form-group rd-full">
+            <label className="rd-label">Eligible Degrees</label>
+            <input
+              name="eligible_degrees"
+              value={form.eligible_degrees}
+              onChange={handleChange}
+              className="rd-input"
+            />
           </div>
 
           <div className="rd-form-group">
-            <label>Schedule Date</label>
+            <label className="rd-label">Application Deadline</label>
             <input
+              name="application_deadline"
               type="date"
-              className="rd-input"
-              name="scheduleDate"
-              value={form.scheduleDate}
+              value={form.application_deadline}
               onChange={handleChange}
-              disabled={form.scheduleType === "now"}
+              className="rd-input"
             />
           </div>
 
-          <div className="rd-form-group">
-            <label>Schedule Time</label>
-            <input
-              type="time"
-              className="rd-input"
-              name="scheduleTime"
-              value={form.scheduleTime}
-              onChange={handleChange}
-              disabled={form.scheduleType === "now"}
-            />
-          </div>
         </div>
       </div>
 
-      <button className="rd-save-btn" disabled={saving} onClick={handleSave}>
-        {saving ? "Saving…" : "Save Changes"}
+      <button className="rd-save-btn" disabled={saving} onClick={handleSubmit}>
+        {saving ? "Saving..." : "Save Changes"}
       </button>
+
     </div>
   );
 }

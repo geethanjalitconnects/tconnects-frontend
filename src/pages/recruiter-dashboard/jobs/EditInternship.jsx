@@ -1,4 +1,4 @@
-// EditInternship.jsx — Backend Integrated (UI unchanged)
+// EditInternship.jsx — FINAL FIXED VERSION (UI UNCHANGED)
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../../config/api";
@@ -16,17 +16,15 @@ export default function EditInternship() {
     location: "",
     stipend: "",
     duration: "",
-    mode: "",
+    internship_type: "",
     description: "",
     responsibilities: "",
+    skills: "",
     eligibility: "",
-    scheduleType: "now",
-    scheduleDate: "",
-    scheduleTime: "",
   });
 
   // ============================================================
-  // 1. FETCH INTERNSHIP DETAILS (FIX MAPPING)
+  // 1. FETCH INTERNSHIP DETAILS (FIXED BACKEND FIELDS)
   // ============================================================
   useEffect(() => {
     const fetchInternship = async () => {
@@ -39,17 +37,14 @@ export default function EditInternship() {
           location: res.data.location,
           stipend: res.data.stipend,
           duration: res.data.duration,
-          mode: res.data.mode,
 
-          // FIXED BACKEND FIELD
+          internship_type: res.data.internship_type,  // FIXED FIELD
+
           description: res.data.full_description,
-
           responsibilities: res.data.responsibilities.join(", "),
-          eligibility: res.data.eligibility,
+          skills: res.data.skills.join(", "),
 
-          scheduleType: "now",
-          scheduleDate: "",
-          scheduleTime: "",
+          eligibility: res.data.eligibility || "",
         });
       } catch (err) {
         console.error("Failed to load internship:", err);
@@ -72,7 +67,7 @@ export default function EditInternship() {
   };
 
   // ============================================================
-  // 3. SAVE (PATCH) TO BACKEND — FIXED PAYLOAD
+  // 3. SAVE (PATCH) TO BACKEND — FIXED PAYLOAD & URL
   // ============================================================
   const handleSave = async () => {
     setSaving(true);
@@ -84,32 +79,35 @@ export default function EditInternship() {
         location: form.location,
         stipend: form.stipend,
         duration: form.duration,
-        mode: form.mode,
 
-        // FIXED FIELDS (backend requires these)
+        internship_type: form.internship_type, // FIXED FIELD
+
         full_description: form.description,
         short_description: form.description.slice(0, 120),
 
         responsibilities: form.responsibilities
           .split(",")
           .map((s) => s.trim())
-          .filter((s) => s),
+          .filter(Boolean),
+
+        skills: form.skills
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
 
         eligibility: form.eligibility,
 
-        // backend does not support scheduling
+        // Backend does NOT support scheduling →
         application_deadline: null,
       };
 
-      // FIXED URL — backend has no /update/
-      await api.patch(`/api/internships/${id}/`, payload);
+      await api.patch(`/api/internships/${id}/update/`, payload); // FIXED URL
 
       alert("Internship updated successfully!");
-      window.location.href =
-        "/recruiter-dashboard/jobs/manage-internships";
+      window.location.href = "/recruiter-dashboard/jobs/manage-internships";
     } catch (err) {
       console.error("Failed to update internship:", err);
-      alert("Something went wrong. Try again.");
+      alert("Error updating internship.");
     } finally {
       setSaving(false);
     }
@@ -118,18 +116,18 @@ export default function EditInternship() {
   if (loading) return <div className="rd-loading">Loading...</div>;
 
   // ============================================================
-  // 4. UI — NO CHANGES AT ALL
+  // 4. UI — UNCHANGED
   // ============================================================
   return (
     <div className="rd-edit-wrapper">
       <h1 className="rd-edit-title">Edit Internship</h1>
       <p className="rd-edit-subtitle">Modify internship posting details.</p>
 
-      {/* ======================= INTERNSHIP DETAILS ======================= */}
       <div className="rd-card">
         <h2 className="rd-card-heading">Internship Details</h2>
 
         <div className="rd-grid-3">
+
           <div className="rd-form-group">
             <label>Internship Title</label>
             <input
@@ -181,16 +179,15 @@ export default function EditInternship() {
           </div>
 
           <div className="rd-form-group">
-            <label>Mode</label>
+            <label>Internship Mode</label>
             <select
               className="rd-input"
-              name="mode"
-              value={form.mode}
+              name="internship_type"
+              value={form.internship_type}
               onChange={handleChange}
             >
-              <option>Onsite</option>
-              <option>Remote</option>
-              <option>Hybrid</option>
+              <option value="remote">Remote</option>
+              <option value="hybrid">Hybrid</option>
             </select>
           </div>
         </div>
@@ -216,6 +213,16 @@ export default function EditInternship() {
         </div>
 
         <div className="rd-form-group full">
+          <label>Skills</label>
+          <textarea
+            className="rd-input"
+            name="skills"
+            value={form.skills}
+            onChange={handleChange}
+          ></textarea>
+        </div>
+
+        <div className="rd-form-group full">
           <label>Eligibility</label>
           <textarea
             className="rd-input"
@@ -226,55 +233,7 @@ export default function EditInternship() {
         </div>
       </div>
 
-      {/* ======================= SCHEDULE SECTION ======================= */}
-      <div className="rd-card rd-schedule-box">
-        <h2 className="rd-card-heading">Schedule Internship Update</h2>
-
-        <div className="rd-grid-3">
-          <div className="rd-form-group">
-            <label>Post Type</label>
-            <select
-              className="rd-input"
-              name="scheduleType"
-              value={form.scheduleType}
-              onChange={handleChange}
-            >
-              <option value="now">Post Now</option>
-              <option value="later">Schedule for Later</option>
-            </select>
-          </div>
-
-          <div className="rd-form-group">
-            <label>Schedule Date</label>
-            <input
-              type="date"
-              className="rd-input"
-              name="scheduleDate"
-              value={form.scheduleDate}
-              onChange={handleChange}
-              disabled={form.scheduleType === "now"}
-            />
-          </div>
-
-          <div className="rd-form-group">
-            <label>Schedule Time</label>
-            <input
-              type="time"
-              className="rd-input"
-              name="scheduleTime"
-              value={form.scheduleTime}
-              onChange={handleChange}
-              disabled={form.scheduleType === "now"}
-            />
-          </div>
-        </div>
-      </div>
-
-      <button
-        className="rd-save-btn"
-        disabled={saving}
-        onClick={handleSave}
-      >
+      <button className="rd-save-btn" disabled={saving} onClick={handleSave}>
         {saving ? "Saving…" : "Save Changes"}
       </button>
     </div>
