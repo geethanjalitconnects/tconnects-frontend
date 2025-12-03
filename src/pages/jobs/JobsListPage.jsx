@@ -62,7 +62,7 @@ export default function JobsListPage() {
         await api.delete(`/api/applications/saved-jobs/remove/${id}/`);
         setSavedItems((prev) => prev.filter((x) => x !== id));
       } else {
-        await api.post("/api/applications/saved-jobs/add/", { job: id });
+        await api.post("/api/applications/saved-jobs/add/", { job_id: id });
         setSavedItems((prev) => [...prev, id]);
       }
     } catch (err) {

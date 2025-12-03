@@ -1,4 +1,4 @@
-// JobDetailsPage.jsx — FINAL SEO VERSION (UI UNCHANGED)
+// JobDetailsPage.jsx — FINAL with Applied Status + Save Job Integration
 
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,16 +7,15 @@ import "./JobDetailsPage.css";
 
 const JobDetailsPage = () => {
   const navigate = useNavigate();
-  
-  // ⭐ We now read slug instead of id
   const { slug } = useParams();
 
-  // ⭐ Extract job ID from the slug (last portion)
+  // Extract job ID from slug (e.g. risk-analyst-5 → 5)
   const id = slug.split("-").pop();
 
   const [job, setJob] = useState(null);
   const [company, setCompany] = useState(null);
   const [saved, setSaved] = useState(false);
+  const [applied, setApplied] = useState(false); // ⭐ NEW
   const [loading, setLoading] = useState(true);
 
   // =============================
@@ -28,7 +27,7 @@ const JobDetailsPage = () => {
         const res = await api.get(`/api/jobs/${id}/`);
         setJob(res.data);
 
-        // Load company profile using recruiter_id
+        // Load company profile
         if (res.data.recruiter_id) {
           try {
             const companyRes = await api.get(
@@ -66,7 +65,24 @@ const JobDetailsPage = () => {
   }, [id]);
 
   // =============================
-  // 3) SAVE / UNSAVE
+  // 3) LOAD APPLIED STATUS ⭐ NEW
+  // =============================
+  useEffect(() => {
+    const loadApplied = async () => {
+      try {
+        const res = await api.get("/api/applications/job/applied/");
+        const appliedIds = res.data.map((a) => a.job_id); // backend now returns job_id
+        setApplied(appliedIds.includes(Number(id)));
+      } catch (err) {
+        console.error("Failed to load applied status:", err);
+      }
+    };
+
+    loadApplied();
+  }, [id]);
+
+  // =============================
+  // 4) SAVE / UNSAVE
   // =============================
   const toggleSave = async () => {
     try {
@@ -74,7 +90,7 @@ const JobDetailsPage = () => {
         await api.delete(`/api/applications/saved-jobs/remove/${id}/`);
         setSaved(false);
       } else {
-        await api.post("/api/applications/saved-jobs/add/", { job: id });
+        await api.post("/api/applications/saved-jobs/add/", { job_id: id });
         setSaved(true);
       }
     } catch (err) {
@@ -82,8 +98,12 @@ const JobDetailsPage = () => {
     }
   };
 
- const handleApplyNow = () => navigate(`/apply?id=${id}`);
-
+  // =============================
+  // 5) APPLY NOW
+  // =============================
+  const handleApplyNow = () => {
+    navigate(`/apply?id=${id}`);
+  };
 
   if (loading) return <div className="jd-loading">Loading job…</div>;
   if (!job) return <div className="jd-error">Job not found.</div>;
@@ -93,7 +113,7 @@ const JobDetailsPage = () => {
       <div className="jd-container">
 
         {/* ======================================================
-                      JOB HEADER SECTION
+                        JOB HEADER SECTION
         ======================================================= */}
         <div className="jd-header-card">
           <div className="jd-header-left">
@@ -117,10 +137,17 @@ const JobDetailsPage = () => {
           </div>
 
           <div className="jd-header-right">
-            <button className="jd-apply-btn" onClick={handleApplyNow}>
-              Apply Now
+
+            {/* ⭐ APPLY BUTTON WITH NEW LOGIC */}
+            <button
+              className="jd-apply-btn"
+              disabled={applied}
+              onClick={!applied ? handleApplyNow : null}
+            >
+              {applied ? "Applied ✓" : "Apply Now"}
             </button>
 
+            {/* SAVE / SAVED */}
             <button className="jd-save-btn" onClick={toggleSave}>
               {saved ? "Saved" : "Save Job"}
             </button>
@@ -170,41 +197,35 @@ const JobDetailsPage = () => {
         </div>
 
         {/* ======================================================
-                       COMPANY PROFILE SECTION
+                    COMPANY DETAILS SECTION
         ======================================================= */}
-       {company && (
-  <div className="jd-section-card">
-    <h2 className="jd-section-title">Company Details</h2>
+        {company && (
+          <div className="jd-section-card">
+            <h2 className="jd-section-title">Company Details</h2>
 
-    <div className="jd-company-grid">
-      <p><strong>Company Name:</strong> {company.company_name}</p>
-      <p><strong>Industry:</strong> {company.industry_category || "Not specified"}</p>
-      <p><strong>Company Size:</strong> {company.company_size || "Not specified"}</p>
-      <p><strong>Location:</strong> {company.company_location || "Not specified"}</p>
+            <div className="jd-company-grid">
+              <p><strong>Company Name:</strong> {company.company_name}</p>
+              <p><strong>Industry:</strong> {company.industry_category || "Not specified"}</p>
+              <p><strong>Company Size:</strong> {company.company_size || "Not specified"}</p>
+              <p><strong>Location:</strong> {company.company_location || "Not specified"}</p>
 
-      {company.company_website && (
-        <p>
-          <strong>Website:</strong>{" "}
-          <a
-            href={company.company_website}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {company.company_website}
-          </a>
-        </p>
-      )}
-    </div>
+              {company.company_website && (
+                <p>
+                  <strong>Website:</strong>{" "}
+                  <a href={company.company_website} target="_blank" rel="noreferrer">
+                    {company.company_website}
+                  </a>
+                </p>
+              )}
+            </div>
 
-    {company.about_company && (
-      <p className="jd-company-about">
-        <strong>About Company:</strong> {company.about_company}
-      </p>
-    )}
-  </div>
-)}
-
-
+            {company.about_company && (
+              <p className="jd-company-about">
+                <strong>About Company:</strong> {company.about_company}
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

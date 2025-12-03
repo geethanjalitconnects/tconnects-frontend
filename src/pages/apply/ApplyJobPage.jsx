@@ -26,7 +26,8 @@ const ApplyJobPage = () => {
           location: res.data.location,
           skills: res.data.skills,
           bio: res.data.bio,
-          resume: res.data.resume, // URL
+          resume: res.data.resume_url || res.data.resume,
+
         });
       } catch (err) {
         console.error("Failed to load profile:", err);
