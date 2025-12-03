@@ -101,12 +101,18 @@ function App() {
 
           {/* JOBS */}
           <Route path="/jobs" element={<JobsListPage />} />
-          <Route path="/jobs/:id" element={<JobDetailsPage />} />
+
+          {/* ⭐ FIXED: SLUG VERSION (ONLY CHANGE YOU ASKED FOR) */}
+          <Route path="/jobs/:slug" element={<JobDetailsPage />} />
+
+          {/* APPLY JOB */}
           <Route path="/apply-job" element={<ApplyJobPage />} />
 
           {/* INTERNSHIPS */}
           <Route path="/internships" element={<InternshipsListPage />} />
           <Route path="/internships/:id" element={<InternshipDetailsPage />} />
+
+          {/* APPLY INTERNSHIP */}
           <Route path="/apply-internship" element={<ApplyInternshipPage />} />
 
           {/* ==================== CANDIDATE DASHBOARD ==================== */}
