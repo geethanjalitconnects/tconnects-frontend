@@ -548,6 +548,41 @@ body, html {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 120, 120, 0.3);
 }
+.cd-required {
+  color: red;
+  margin-left: 4px;
+  font-weight: bold;
+}
+
+.cd-toast {
+  background: #0f7173;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  position: fixed;
+  top: 90px;
+  right: 20px;
+  z-index: 999;
+  box-shadow: 0 4px 12px rgba(0, 80, 80, 0.3);
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; }
+}
+
+.cd-resume-btn {
+  padding: 12px 18px;
+  background: #0f7173;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  margin-bottom: 12px;
+}
 
 /* ---------------- APPLIED JOBS PAGE ---------------- */
 .cd-applied {
