@@ -68,7 +68,8 @@ const InternshipDetailsPage = () => {
     }
   };
 
-  const handleApplyNow = () => navigate(`/apply-internship/${id}`);
+  const handleApplyNow = () => navigate(`/apply-internship?id=${id}`);
+
 
   if (loading) return <div className="jd-loading">Loading internship…</div>;
   if (!internship) return <div className="jd-error">Internship not found.</div>;

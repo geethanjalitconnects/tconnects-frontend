@@ -20,7 +20,7 @@ const ApplyInternshipPage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await api.get("/api/profiles/me/");
+        const res = await api.get("/api/profiles/candidate/me/");
         setUser({
           name: res.data.full_name,
           email: res.data.email,
