@@ -1,12 +1,12 @@
-// ApplyInternshipPage.jsx
+// ApplyInternshipPage.jsx — FIXED (resume filename shown)
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import api from "../../config/api"; // ✅ Using your global Axios instance
-import "./ApplyJobPage.css"; // Using same CSS (correct)
+import api from "../../config/api"; 
+import "./ApplyJobPage.css"; 
 
 const ApplyInternshipPage = () => {
   const [searchParams] = useSearchParams();
-  const internshipId = searchParams.get("id"); // 📌 Get internship ID from URL
+  const internshipId = searchParams.get("id");
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -14,22 +14,22 @@ const ApplyInternshipPage = () => {
   const [user, setUser] = useState(null);
   const [popup, setPopup] = useState(false);
 
-  // ============================================================
-  // 1. FETCH CANDIDATE PROFILE FROM BACKEND
-  // ============================================================
+  // FETCH CANDIDATE PROFILE
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const res = await api.get("/api/profiles/candidate/me/");
+
         setUser({
-          name: res.data.full_name,
-          email: res.data.email,
+          name: res.data.user.full_name,
+          email: res.data.user.email,
           phone: res.data.phone_number,
           location: res.data.location,
           skills: res.data.skills,
           bio: res.data.bio,
-          resume: res.data.resume_url,
+          resume: res.data.resume,   // URL
         });
+
       } catch (err) {
         console.error("Failed to load profile:", err);
       } finally {
@@ -40,9 +40,7 @@ const ApplyInternshipPage = () => {
     fetchProfile();
   }, []);
 
-  // ============================================================
-  // 2. SUBMIT INTERNSHIP APPLICATION
-  // ============================================================
+  // SUBMIT APPLICATION
   const handleSubmit = async () => {
     if (!internshipId) {
       alert("Invalid internship ID");
@@ -63,6 +61,7 @@ const ApplyInternshipPage = () => {
         setPopup(false);
         window.close();
       }, 1800);
+
     } catch (err) {
       console.error("Application failed:", err);
       alert("Something went wrong. Please try again.");
@@ -71,19 +70,13 @@ const ApplyInternshipPage = () => {
     }
   };
 
-  // ============================================================
-  // UI
-  // ============================================================
-
   if (loading) return <div className="apply-loading">Loading...</div>;
 
   return (
     <div className="apply-wrapper">
       <div className="apply-container">
-
         <h1 className="apply-title">Quick Profile Review</h1>
 
-        {/* Profile Card */}
         <div className="apply-card">
 
           <div className="apply-row">
@@ -120,14 +113,12 @@ const ApplyInternshipPage = () => {
             <span className="apply-value">{user?.bio}</span>
           </div>
 
+          {/* RESUME NAME DISPLAY */}
           <div className="apply-row">
             <span className="apply-label">Resume</span>
-            <button
-              className="resume-btn"
-              onClick={() => window.open(user?.resume, "_blank")}
-            >
-              View Resume
-            </button>
+            <span className="apply-value">
+              {user?.resume ? user.resume.split("/").pop() : "No resume uploaded"}
+            </span>
           </div>
 
         </div>

@@ -1,4 +1,4 @@
-// ApplyJobPage.jsx — FIXED (UI unchanged)
+// ApplyJobPage.jsx — FIXED
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import api from "../../config/api";
@@ -14,7 +14,7 @@ const ApplyJobPage = () => {
   const [user, setUser] = useState(null);
   const [popup, setPopup] = useState(false);
 
-  // FETCH CANDIDATE PROFILE (FIXED URL)
+  // FETCH CANDIDATE PROFILE
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -26,7 +26,7 @@ const ApplyJobPage = () => {
           location: res.data.location,
           skills: res.data.skills,
           bio: res.data.bio,
-          resume: res.data.resume,
+          resume: res.data.resume, // URL
         });
       } catch (err) {
         console.error("Failed to load profile:", err);
@@ -38,7 +38,7 @@ const ApplyJobPage = () => {
     fetchProfile();
   }, []);
 
-  // APPLY FOR JOB
+  // SUBMIT APPLICATION
   const handleSubmit = async () => {
     if (!jobId) return alert("Invalid Job ID");
 
@@ -56,7 +56,6 @@ const ApplyJobPage = () => {
         setPopup(false);
         window.close();
       }, 1800);
-
     } catch (err) {
       console.error("Application failed:", err);
       alert("Something went wrong. Please try again.");
@@ -97,7 +96,9 @@ const ApplyJobPage = () => {
             <span className="apply-label">Skills</span>
             <div className="apply-tags">
               {user?.skills?.map((s, i) => (
-                <span key={i} className="apply-tag">{s}</span>
+                <span key={i} className="apply-tag">
+                  {s}
+                </span>
               ))}
             </div>
           </div>
@@ -107,11 +108,12 @@ const ApplyJobPage = () => {
             <span className="apply-value">{user?.bio}</span>
           </div>
 
+          {/* RESUME NAME DISPLAY */}
           <div className="apply-row">
             <span className="apply-label">Resume</span>
-            <button className="resume-btn" onClick={() => window.open(user?.resume, "_blank")}>
-              View Resume
-            </button>
+            <span className="apply-value">
+              {user?.resume ? user.resume.split("/").pop() : "No resume uploaded"}
+            </span>
           </div>
         </div>
 

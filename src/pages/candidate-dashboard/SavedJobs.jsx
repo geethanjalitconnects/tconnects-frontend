@@ -13,7 +13,7 @@ export default function SavedJobs() {
   useEffect(() => {
     const fetchSavedJobs = async () => {
       try {
-        const res = await api.get("/api/saved-jobs/");
+        const res = await api.get("/api/applications/saved-jobs/");
         setSavedJobs(res.data);
       } catch (err) {
         console.error("Failed to fetch saved jobs:", err);
@@ -30,7 +30,7 @@ export default function SavedJobs() {
   // ============================================================
   const removeJob = async (jobId) => {
     try {
-      await api.delete(`/api/saved-jobs/remove/${jobId}/`);
+      await api.delete(`/api/applications/saved-jobs/remove/${jobId}/`);
       setSavedJobs(savedJobs.filter((job) => job.job.id !== jobId));
     } catch (err) {
       console.error("Failed to remove saved job:", err);

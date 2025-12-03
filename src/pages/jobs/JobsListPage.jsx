@@ -133,7 +133,7 @@ export default function JobsListPage() {
               className="save-btn"
               onClick={() => toggleSave(job.id)}
             >
-              {isSaved(job.id) ? "Unsave" : "Save Job"}
+              {isSaved(job.id) ? "Saved" : "Save Job"}
             </button>
           </div>
         </div>

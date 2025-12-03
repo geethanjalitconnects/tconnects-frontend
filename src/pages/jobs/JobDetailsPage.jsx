@@ -122,7 +122,7 @@ const JobDetailsPage = () => {
             </button>
 
             <button className="jd-save-btn" onClick={toggleSave}>
-              {saved ? "Unsave" : "Save Job"}
+              {saved ? "Saved" : "Save Job"}
             </button>
           </div>
         </div>
