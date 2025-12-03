@@ -172,34 +172,34 @@ const JobDetailsPage = () => {
                        COMPANY PROFILE SECTION
         ======================================================= */}
         {company && (
-          <div className="jd-section">
-            <h2 className="jd-section-title">Company Details</h2>
+  <div className="jd-section">
+    <h2 className="jd-section-title">Company Details</h2>
 
-            <div className="jd-company-box">
-              <p><strong>Company Name:</strong> {company.company_name}</p>
-              <p><strong>Industry:</strong> {company.industry_category || "Not specified"}</p>
-              <p><strong>Company Size:</strong> {company.company_size || "Not specified"}</p>
-              <p><strong>Location:</strong> {company.company_location || "Not specified"}</p>
+    <div className="jd-company-box">
+      <p><strong>Company Name:</strong> {company.company_name}</p>
+      <p><strong>Industry:</strong> {company.industry_category || "Not specified"}</p>
+      <p><strong>Company Size:</strong> {company.company_size || "Not specified"}</p>
+      <p><strong>Location:</strong> {company.company_location || "Not specified"}</p>
 
-              {company.company_website && (
-                <p>
-                  <strong>Website:</strong>{" "}
-                  <a
-                    href={company.company_website}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {company.company_website}
-                  </a>
-                </p>
-              )}
+      {company.company_website && (
+        <p>
+          <strong>Website:</strong>{" "}
+          <a
+            href={company.company_website}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {company.company_website}
+          </a>
+        </p>
+      )}
 
-              {company.about_company && (
-                <p><strong>About Company:</strong> {company.about_company}</p>
-              )}
-            </div>
-          </div>
-        )}
+      {company.about_company && (
+        <p><strong>About Company:</strong> {company.about_company}</p>
+      )}
+    </div>
+  </div>
+)}
 
       </div>
     </div>
