@@ -106,7 +106,7 @@ function App() {
           <Route path="/jobs/:slug" element={<JobDetailsPage />} />
 
           {/* APPLY JOB */}
-          <Route path="/apply-job" element={<ApplyJobPage />} />
+          <Route path="/apply" element={<ApplyJobPage />} />
 
           {/* INTERNSHIPS */}
           <Route path="/internships" element={<InternshipsListPage />} />

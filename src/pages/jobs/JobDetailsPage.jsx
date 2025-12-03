@@ -82,7 +82,8 @@ const JobDetailsPage = () => {
     }
   };
 
-  const handleApplyNow = () => navigate(`/apply-job/${id}`);
+ const handleApplyNow = () => navigate(`/apply?id=${id}`);
+
 
   if (loading) return <div className="jd-loading">Loading job…</div>;
   if (!job) return <div className="jd-error">Job not found.</div>;
