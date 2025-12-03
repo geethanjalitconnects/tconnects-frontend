@@ -1,7 +1,7 @@
 // src/pages/candidate-dashboard/Profile.jsx
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
-import "./CandidateDashboard.css";
+import "./CandidateDashboard.css";  // keep same CSS
 
 export default function Profile() {
   const [loading, setLoading] = useState(true);
@@ -109,18 +109,19 @@ export default function Profile() {
   if (loading) return <div className="cd-loading">Loading profile...</div>;
 
   return (
-    <div className="cd-profile-page">
-      <h2 className="cd-title">My Profile</h2>
-      <p className="cd-subtitle">Manage your candidate profile information.</p>
+    <div className="cd-main">
 
-      <div className="cd-card">
-        <h3 className="cd-card-title">Personal Information</h3>
+      {/* PAGE HEADER */}
+      <h2 className="cd-title">Profile Information</h2>
+      <p className="cd-subtitle">Keep your details updated so companies can reach you easily.</p>
 
-        <div className="cd-grid">
-          
-          {/* FULL NAME — DISPLAY ONLY */}
+      {/* PROFILE CARD */}
+      <div className="cd-profile-card">
+        <div className="cd-form-grid">
+
+          {/* FULL NAME (Disabled) */}
           <div className="cd-form-group">
-            <label className="cd-label">Full Name</label>
+            <label className="cd-form-label">Full Name</label>
             <input
               type="text"
               className="cd-input"
@@ -129,9 +130,9 @@ export default function Profile() {
             />
           </div>
 
-          {/* EMAIL — DISPLAY ONLY */}
+          {/* EMAIL (Disabled) */}
           <div className="cd-form-group">
-            <label className="cd-label">Email</label>
+            <label className="cd-form-label">Email Address</label>
             <input
               type="text"
               className="cd-input"
@@ -142,38 +143,40 @@ export default function Profile() {
 
           {/* PHONE */}
           <div className="cd-form-group">
-            <label className="cd-label">Phone Number</label>
+            <label className="cd-form-label">Phone Number</label>
             <input
               type="text"
               className="cd-input"
               name="phone_number"
               value={userData.phone_number}
               onChange={handleChange}
+              placeholder="Enter phone number"
             />
           </div>
 
           {/* LOCATION */}
           <div className="cd-form-group">
-            <label className="cd-label">Location</label>
+            <label className="cd-form-label">Location</label>
             <input
               type="text"
               className="cd-input"
               name="location"
               value={userData.location}
               onChange={handleChange}
+              placeholder="City, Country"
             />
           </div>
 
           {/* EXPERIENCE */}
           <div className="cd-form-group">
-            <label className="cd-label">Experience Level</label>
+            <label className="cd-form-label">Experience Level</label>
             <select
               className="cd-input"
               name="experience"
               value={userData.experience}
               onChange={handleChange}
             >
-              <option value="">Select experience</option>
+              <option value="">Select</option>
               <option value="Fresher">Fresher</option>
               <option value="1-2 years">1–2 years</option>
               <option value="3-5 years">3–5 years</option>
@@ -182,38 +185,40 @@ export default function Profile() {
           </div>
 
           {/* SKILLS */}
-          <div className="cd-form-group cd-full">
-            <label className="cd-label">Skills (Comma-separated)</label>
+          <div className="cd-form-group cd-full-width">
+            <label className="cd-form-label">Skills</label>
             <input
               type="text"
               className="cd-input"
               name="skills"
               value={userData.skills}
               onChange={handleChange}
+              placeholder="Java, Python, Design..."
             />
           </div>
 
           {/* BIO */}
-          <div className="cd-form-group cd-full">
-            <label className="cd-label">Bio</label>
+          <div className="cd-form-group cd-full-width">
+            <label className="cd-form-label">Bio</label>
             <textarea
-              className="cd-input"
+              className="cd-textarea"
               name="bio"
               value={userData.bio}
               onChange={handleChange}
+              placeholder="Write something about yourself..."
             ></textarea>
           </div>
 
-          {/* RESUME SECTION */}
-          <div className="cd-form-group cd-full">
-            <label className="cd-label">Resume</label>
+          {/* RESUME */}
+          <div className="cd-form-group cd-full-width">
+            <label className="cd-form-label">Resume</label>
 
-            <div className="cd-resume-box">
-              {userData.resume_name ? (
-                <p className="cd-resume-name">{userData.resume_name}</p>
-              ) : (
-                <p className="cd-resume-placeholder">No resume uploaded yet</p>
-              )}
+            <div className="cd-upload-box">
+              <p className="cd-upload-text">
+                {userData.resume_name
+                  ? userData.resume_name
+                  : "No resume uploaded"}
+              </p>
 
               <input
                 type="file"
@@ -226,11 +231,7 @@ export default function Profile() {
         </div>
 
         {/* SAVE BUTTON */}
-        <button
-          className="cd-save-btn"
-          onClick={handleSave}
-          disabled={saving}
-        >
+        <button className="cd-save-btn" onClick={handleSave} disabled={saving}>
           {saving ? "Saving..." : "Save Changes"}
         </button>
       </div>
