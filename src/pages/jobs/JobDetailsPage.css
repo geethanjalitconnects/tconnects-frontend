@@ -175,3 +175,53 @@
   font-size: 15px;
   color: #064e53;
 }
+/* ===========================================
+   FIX: Card Design for Job Description Sections
+=========================================== */
+
+/* Convert About Job, Responsibilities, Skills into Cards */
+.jd-section {
+  background: #ffffff;
+  padding: 28px;
+  border-radius: 14px;
+  margin-bottom: 26px;
+  box-shadow: 0 3px 10px rgba(0, 70, 70, 0.08);
+}
+
+/* Section Titles (Already good but enhancing spacing) */
+.jd-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #064e53;
+  margin-bottom: 16px;
+}
+
+/* Paragraph inside section */
+.jd-description {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #0f6f78;
+}
+
+/* List spacing */
+.jd-section ul.jd-list li {
+  margin-bottom: 10px;
+}
+
+/* Skills tags layout */
+.jd-skills,
+.jd-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Individual skill tag */
+.jd-skill,
+.jd-tag {
+  background: #e0f7f7;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+  color: #0b5b5b;
+}
