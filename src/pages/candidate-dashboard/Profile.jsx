@@ -1,7 +1,7 @@
 // src/pages/candidate-dashboard/Profile.jsx
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
-import "./CandidateDashboard.css";  // keep same CSS
+import "./CandidateDashboard.css";
 
 export default function Profile() {
   const [loading, setLoading] = useState(true);
@@ -20,13 +20,16 @@ export default function Profile() {
     resume_name: "",
   });
 
+  // ============================
+  // LOAD PROFILE FROM BACKEND
+  // ============================
   useEffect(() => {
     const loadProfile = async () => {
       try {
         const res = await api.get("/api/profiles/candidate/me/");
 
-        const resumeFileName = res.data.resume
-          ? res.data.resume.split("/").pop()
+        const resumeFileName = res.data.resume_url
+          ? res.data.resume_url.split("/").pop()
           : "";
 
         setUserData({
@@ -37,7 +40,7 @@ export default function Profile() {
           experience: res.data.experience_level || "",
           skills: res.data.skills ? res.data.skills.join(", ") : "",
           bio: res.data.bio || "",
-          resume_url: res.data.resume || "",
+          resume_url: res.data.resume_url || "",
           resume_name: resumeFileName,
         });
       } catch (err) {
@@ -54,14 +57,24 @@ export default function Profile() {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
+  // ============================
+  // SAVE PROFILE FIXED
+  // ============================
   const handleSave = async () => {
     setSaving(true);
     try {
       await api.patch("/api/profiles/candidate/me/", {
         phone_number: userData.phone_number,
         location: userData.location,
-        experience_level: userData.experience,
-        skills: userData.skills.split(",").map((s) => s.trim()),
+
+        // ⭐ FIX — Only send experience if user selected something
+        ...(userData.experience && { experience_level: userData.experience }),
+
+        skills: userData.skills
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+
         bio: userData.bio,
       });
 
@@ -73,6 +86,9 @@ export default function Profile() {
     setSaving(false);
   };
 
+  // ============================
+  // RESUME UPLOAD FIXED
+  // ============================
   const handleResumeUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -89,12 +105,15 @@ export default function Profile() {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      const uploadedName = res.data.resume.split("/").pop();
+      // ⭐ FIX — Safe split + correct backend key "resume_url"
+      const resumeName = res.data.resume_url
+        ? res.data.resume_url.split("/").pop()
+        : "";
 
       setUserData((prev) => ({
         ...prev,
-        resume_url: res.data.resume,
-        resume_name: uploadedName,
+        resume_url: res.data.resume_url,
+        resume_name: resumeName,
       }));
 
       alert("Resume uploaded successfully!");
@@ -108,18 +127,21 @@ export default function Profile() {
 
   if (loading) return <div className="cd-loading">Loading profile...</div>;
 
+  // ============================
+  // UI RENDER
+  // ============================
   return (
     <div className="cd-main">
 
-      {/* PAGE HEADER */}
       <h2 className="cd-title">Profile Information</h2>
-      <p className="cd-subtitle">Keep your details updated so companies can reach you easily.</p>
+      <p className="cd-subtitle">
+        Keep your details updated so companies can reach you easily.
+      </p>
 
-      {/* PROFILE CARD */}
       <div className="cd-profile-card">
         <div className="cd-form-grid">
 
-          {/* FULL NAME (Disabled) */}
+          {/* FULL NAME (disabled) */}
           <div className="cd-form-group">
             <label className="cd-form-label">Full Name</label>
             <input
@@ -130,7 +152,7 @@ export default function Profile() {
             />
           </div>
 
-          {/* EMAIL (Disabled) */}
+          {/* EMAIL (disabled) */}
           <div className="cd-form-group">
             <label className="cd-form-label">Email Address</label>
             <input
@@ -193,7 +215,7 @@ export default function Profile() {
               name="skills"
               value={userData.skills}
               onChange={handleChange}
-              placeholder="Java, Python, Design..."
+              placeholder="Java, SQL, Communication..."
             />
           </div>
 
@@ -209,15 +231,13 @@ export default function Profile() {
             ></textarea>
           </div>
 
-          {/* RESUME */}
+          {/* RESUME UPLOAD */}
           <div className="cd-form-group cd-full-width">
             <label className="cd-form-label">Resume</label>
-
             <div className="cd-upload-box">
+
               <p className="cd-upload-text">
-                {userData.resume_name
-                  ? userData.resume_name
-                  : "No resume uploaded"}
+                {userData.resume_name || "No resume uploaded"}
               </p>
 
               <input
@@ -228,6 +248,7 @@ export default function Profile() {
               />
             </div>
           </div>
+
         </div>
 
         {/* SAVE BUTTON */}
