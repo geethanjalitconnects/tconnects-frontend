@@ -1,7 +1,7 @@
 // src/pages/candidate-dashboard/Profile.jsx
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
-import "./Profile.css";
+import "./CandidateDashboard.css";
 
 export default function Profile() {
   const [loading, setLoading] = useState(true);
