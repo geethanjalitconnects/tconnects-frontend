@@ -126,6 +126,15 @@ const InternshipDetailsPage = () => {
             {internship.skills?.map((skill, i) => <span key={i} className="jd-skill">{skill}</span>)}
           </div>
         </div>
+        {/* APPLICATION DEADLINE */}
+{internship.application_deadline && (
+  <div className="jd-section">
+    <h2 className="jd-section-title">Application Deadline</h2>
+    <p className="jd-description">
+      {new Date(internship.application_deadline).toLocaleDateString("en-IN")}
+    </p>
+  </div>
+)}
 
         {/* COMPANY PROFILE SECTION (fetched via recruiter_id) */}
         {company && (
