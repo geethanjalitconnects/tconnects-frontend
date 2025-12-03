@@ -150,12 +150,12 @@ export default function PostInternship() {
 
           <div className="rd-form-group">
             <label className="rd-label">Internship Title</label>
-            <input name="title" value={form.title} onChange={handleChange} className="rd-input" placeholder="e.g., Web Developer Intern" />
+            <input name="title" value={form.title} onChange={handleChange} className="rd-input" placeholder="e.g., Risk Analyst Intern, Financial Risk Intern, Operational Risk Intern"  />
           </div>
 
           <div className="rd-form-group">
             <label className="rd-label">Category</label>
-            <input name="category" value={form.category} onChange={handleChange} className="rd-input" placeholder="Finance, Marketing, Tech..." />
+            <input name="category" value={form.category} onChange={handleChange} className="rd-input" placeholder="Risk Management, Financial Risk, Operational Risk, Compliance Risk"  />
           </div>
 
           <div className="rd-form-group">
@@ -183,7 +183,7 @@ export default function PostInternship() {
 
           <div className="rd-form-group rd-full">
             <label className="rd-label">Description</label>
-            <textarea name="description" value={form.description} onChange={handleChange} className="rd-textarea" placeholder="Describe the internship..." />
+            <textarea name="description" value={form.description} onChange={handleChange} className="rd-textarea" placeholder="Describe the internship: assisting in risk analysis, preparing reports, monitoring KRIs, validating data, supporting audits..." />
           </div>
 
           <div className="rd-form-group rd-full">
@@ -193,7 +193,7 @@ export default function PostInternship() {
 
           <div className="rd-form-group rd-full">
             <label className="rd-label">Skills Required (comma separated)</label>
-            <input name="skills" value={form.skills} onChange={handleChange} className="rd-input" placeholder="Excel, SQL, Research" />
+            <input name="skills" value={form.skills} onChange={handleChange} className="rd-input" placeholder="Excel, SQL, Power BI, Risk Analysis, Data Interpretation, Reporting"  />
           </div>
 
           <div className="rd-form-group rd-full">
