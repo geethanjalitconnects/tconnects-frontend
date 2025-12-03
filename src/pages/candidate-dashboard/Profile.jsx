@@ -58,9 +58,15 @@ const Profile = () => {
 
   // SAVE PROFILE
   const handleSave = async () => {
-    // Required fields validation
-    if (!userData.phone_number || !userData.location || !userData.experience || !userData.skills) {
-      showToast("Please fill all required fields.");
+    // Required fields validation INCLUDING resume
+    if (
+      !userData.phone_number ||
+      !userData.location ||
+      !userData.experience ||
+      !userData.skills ||
+      !userData.resume_url
+    ) {
+      showToast("Please fill all required fields including resume.");
       return;
     }
 
@@ -111,7 +117,6 @@ const Profile = () => {
 
   return (
     <div className="cd-profile">
-
       {toast && <div className="cd-toast">{toast}</div>}
 
       <div className="cd-section-header">
@@ -122,9 +127,7 @@ const Profile = () => {
       </div>
 
       <div className="cd-profile-card">
-
         <div className="cd-form-grid">
-
           <div className="cd-form-group">
             <label className="cd-form-label">Full Name</label>
             <input
@@ -173,19 +176,20 @@ const Profile = () => {
             <label className="cd-form-label">
               Experience Level <span className="cd-required">*</span>
             </label>
+
             <select
-              className="cd-input"
               name="experience"
+              className="cd-input"
               value={userData.experience}
               onChange={handleChange}
               required
             >
               <option value="">Select Experience</option>
-              <option value="Fresher">Fresher</option>
-              <option value="1 year">1 year</option>
-              <option value="2 years">2 years</option>
-              <option value="3 years">3 years</option>
-              <option value="4+ years">4+ years</option>
+              <option value="fresher">Fresher</option>
+              <option value="1_year">1 year</option>
+              <option value="2_years">2 years</option>
+              <option value="3_years">3 years</option>
+              <option value="4_plus">4+ years</option>
             </select>
           </div>
 
@@ -215,15 +219,14 @@ const Profile = () => {
           </div>
 
           <div className="cd-form-group cd-full-width cd-upload-card">
-            <label className="cd-form-label">Resume</label>
+            <label className="cd-form-label">
+              Resume <span className="cd-required">*</span>
+            </label>
 
             {userData.resume_url ? (
-              <button
-                className="cd-resume-btn"
-                onClick={() => window.open(userData.resume_url, "_blank")}
-              >
-                View Resume
-              </button>
+              <p className="cd-resume-name">
+                {userData.resume_url.split("/").pop()}
+              </p>
             ) : (
               <p className="cd-missing-resume">No resume uploaded</p>
             )}
@@ -233,11 +236,14 @@ const Profile = () => {
               onClick={() => document.getElementById("resumeUpload").click()}
             >
               <div className="cd-upload-icon">📄</div>
-              <p className="cd-upload-text">Click to upload resume</p>
+              <p className="cd-upload-text">
+                {userData.resume_url ? "Upload New Resume" : "Click to upload resume"}
+              </p>
               <input
                 id="resumeUpload"
                 type="file"
                 onChange={handleResumeUpload}
+                required={!userData.resume_url} // RESUME REQUIRED ONLY IF NOT UPLOADED
                 style={{ display: "none" }}
               />
             </div>
@@ -249,7 +255,6 @@ const Profile = () => {
         <button className="cd-save-btn" onClick={handleSave} disabled={saving}>
           {saving ? "Saving..." : "Save Changes"}
         </button>
-
       </div>
     </div>
   );
