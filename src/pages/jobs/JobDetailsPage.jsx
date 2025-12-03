@@ -1,4 +1,4 @@
-// JobDetailsPage.jsx — FULL VERSION WITH COMPANY PROFILE (UI UNCHANGED)
+// JobDetailsPage.jsx — FINAL SEO VERSION (UI UNCHANGED)
 
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,10 +7,15 @@ import "./JobDetailsPage.css";
 
 const JobDetailsPage = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  
+  // ⭐ We now read slug instead of id
+  const { slug } = useParams();
+
+  // ⭐ Extract job ID from the slug (last portion)
+  const id = slug.split("-").pop();
 
   const [job, setJob] = useState(null);
-  const [company, setCompany] = useState(null); // ⭐ NEW
+  const [company, setCompany] = useState(null);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -23,7 +28,7 @@ const JobDetailsPage = () => {
         const res = await api.get(`/api/jobs/${id}/`);
         setJob(res.data);
 
-        // ⭐ Fetch company details using recruiter_id
+        // Load company profile using recruiter_id
         if (res.data.recruiter_id) {
           try {
             const companyRes = await api.get(
@@ -31,8 +36,7 @@ const JobDetailsPage = () => {
             );
             setCompany(companyRes.data);
           } catch (err) {
-            console.warn("Company profile not found");
-            setCompany(null);
+            console.warn("No public company profile");
           }
         }
       } catch (err) {
@@ -41,11 +45,12 @@ const JobDetailsPage = () => {
         setLoading(false);
       }
     };
+
     loadJob();
   }, [id]);
 
   // =============================
-  // 2) CHECK SAVED STATUS
+  // 2) LOAD SAVED STATUS
   // =============================
   useEffect(() => {
     const loadSaved = async () => {
@@ -54,12 +59,15 @@ const JobDetailsPage = () => {
         const savedIds = res.data.map((i) => i.job.id);
         setSaved(savedIds.includes(parseInt(id)));
       } catch (err) {
-        console.error("Failed to load saved jobs:", err);
+        console.error("Failed to load saved jobs");
       }
     };
     loadSaved();
   }, [id]);
 
+  // =============================
+  // 3) SAVE / UNSAVE
+  // =============================
   const toggleSave = async () => {
     try {
       if (saved) {
@@ -70,7 +78,7 @@ const JobDetailsPage = () => {
         setSaved(true);
       }
     } catch (err) {
-      console.error("Save/Unsave failed:", err);
+      console.error("Failed to update saved jobs");
     }
   };
 
@@ -161,7 +169,7 @@ const JobDetailsPage = () => {
         </div>
 
         {/* ======================================================
-                       COMPANY PROFILE SECTION (NEW)
+                       COMPANY PROFILE SECTION
         ======================================================= */}
         {company && (
           <div className="jd-section">
@@ -169,17 +177,18 @@ const JobDetailsPage = () => {
 
             <div className="jd-company-box">
               <p><strong>Company Name:</strong> {company.company_name}</p>
-
-              <p><strong>Industry:</strong> {company.industry_category || "Not provided"}</p>
-
-              <p><strong>Company Size:</strong> {company.company_size || "Not provided"}</p>
-
-              <p><strong>Location:</strong> {company.company_location || "Not provided"}</p>
+              <p><strong>Industry:</strong> {company.industry_category || "Not specified"}</p>
+              <p><strong>Company Size:</strong> {company.company_size || "Not specified"}</p>
+              <p><strong>Location:</strong> {company.company_location || "Not specified"}</p>
 
               {company.company_website && (
                 <p>
                   <strong>Website:</strong>{" "}
-                  <a href={company.company_website} target="_blank" rel="noreferrer">
+                  <a
+                    href={company.company_website}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
                     {company.company_website}
                   </a>
                 </p>
