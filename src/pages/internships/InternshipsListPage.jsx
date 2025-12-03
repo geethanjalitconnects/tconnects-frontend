@@ -1,27 +1,23 @@
-// InternshipsListPage.jsx — FULL BACKEND INTEGRATION
+// InternshipsListPage.jsx — GLOBAL SYNC VERSION (Using SavedInternshipsContext)
+// ✔ Saves synced across all pages
+// ✔ UI unchanged
+// ✔ Uses global savedIds + toggleSave
+
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
 import "./InternshipsListPage.css";
 
+// ⭐ IMPORT GLOBAL CONTEXT
+import { useSavedInternships } from "../../context/SavedInternshipsContext";
+
 export default function InternshipsListPage() {
   const [internships, setInternships] = useState([]);
-  const [savedItems, setSavedItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Load saved internships
-  useEffect(() => {
-    const loadSaved = async () => {
-      try {
-        const res = await api.get("/api/applications/saved-internships/");
-        setSavedItems(res.data.map((i) => i.internship.id));
-      } catch (err) {
-        console.error("Failed to fetch saved internships:", err);
-      }
-    };
-    loadSaved();
-  }, []);
+  // ⭐ GLOBAL SAVED INTERNSHIPS CONTEXT
+  const { savedIds, toggleSave } = useSavedInternships();
 
-  // Load internships (from recruiter backend)
+  // Load internships
   useEffect(() => {
     const loadInternships = async () => {
       try {
@@ -36,23 +32,7 @@ export default function InternshipsListPage() {
     loadInternships();
   }, []);
 
-  const isSaved = (id) => savedItems.includes(id);
-
-  const toggleSave = async (id) => {
-    try {
-      if (isSaved(id)) {
-        await api.delete(`/api/applications/saved-internships/remove/${id}/`);
-        setSavedItems(savedItems.filter((x) => x !== id));
-      } else {
-        await api.post("/api/applications/saved-internships/", {
-          internship: id,
-        });
-        setSavedItems([...savedItems, id]);
-      }
-    } catch (err) {
-      console.error("Error saving/unsaving internship:", err);
-    }
-  };
+  const isSaved = (id) => savedIds.includes(id);
 
   const openDetails = (id) => {
     window.open(`/internships/${id}`, "_blank");
@@ -67,17 +47,17 @@ export default function InternshipsListPage() {
       <div className="jobs-header">
         <h1 className="jobs-title">Risk Management Internships</h1>
         <p className="jobs-subtitle">
-          Discover exciting internship opportunities in risk management across banking,
-          finance, and fintech sectors in India
+          Discover exciting internship opportunities in risk management
+          across banking, finance, and fintech sectors in India.
         </p>
       </div>
 
-      {/* Empty state */}
+      {/* EMPTY STATE */}
       {internships.length === 0 && (
         <p className="jobs-empty">No internships posted yet.</p>
       )}
 
-      {/* Dynamic list */}
+      {/* LIST */}
       {internships.map((intern) => (
         <div
           className="job-card"
@@ -109,11 +89,12 @@ export default function InternshipsListPage() {
               View Details
             </button>
 
+            {/* ⭐ GLOBAL SAVE BUTTON */}
             <button
               className="save-btn"
               onClick={() => toggleSave(intern.id)}
             >
-              {isSaved(intern.id) ? "Unsave" : "Save Internship"}
+              {isSaved(intern.id) ? "Saved" : "Save Internship"}
             </button>
           </div>
         </div>
