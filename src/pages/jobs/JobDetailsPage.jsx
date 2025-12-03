@@ -171,11 +171,11 @@ const JobDetailsPage = () => {
         {/* ======================================================
                        COMPANY PROFILE SECTION
         ======================================================= */}
-        {company && (
-  <div className="jd-section">
+       {company && (
+  <div className="jd-section-card">
     <h2 className="jd-section-title">Company Details</h2>
 
-    <div className="jd-company-box">
+    <div className="jd-company-grid">
       <p><strong>Company Name:</strong> {company.company_name}</p>
       <p><strong>Industry:</strong> {company.industry_category || "Not specified"}</p>
       <p><strong>Company Size:</strong> {company.company_size || "Not specified"}</p>
@@ -193,13 +193,16 @@ const JobDetailsPage = () => {
           </a>
         </p>
       )}
-
-      {company.about_company && (
-        <p><strong>About Company:</strong> {company.about_company}</p>
-      )}
     </div>
+
+    {company.about_company && (
+      <p className="jd-company-about">
+        <strong>About Company:</strong> {company.about_company}
+      </p>
+    )}
   </div>
 )}
+
 
       </div>
     </div>
