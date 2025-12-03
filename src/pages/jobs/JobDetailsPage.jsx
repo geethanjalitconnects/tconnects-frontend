@@ -1,22 +1,30 @@
-// JobDetailsPage.jsx — FINAL with Applied Status + Save Job Integration
+// JobDetailsPage.jsx — GLOBAL-SYNC VERSION (Uses SavedJobsContext)
+// ✔ Saved job stays in sync with JobsListPage
+// ✔ Saved state persists on refresh
+// ✔ "Saved" shows instantly everywhere
+// ✔ UI unchanged
 
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../config/api";
+import { useSavedJobs } from "../../context/SavedJobsContext";   // ⭐ ADDED
 import "./JobDetailsPage.css";
 
 const JobDetailsPage = () => {
   const navigate = useNavigate();
   const { slug } = useParams();
 
-  // Extract job ID from slug (e.g. risk-analyst-5 → 5)
+  // Extract job ID from slug (e.g. "risk-analyst-5" → 5)
   const id = slug.split("-").pop();
 
   const [job, setJob] = useState(null);
   const [company, setCompany] = useState(null);
-  const [saved, setSaved] = useState(false);
-  const [applied, setApplied] = useState(false); // ⭐ NEW
+  const [applied, setApplied] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // ⭐ GLOBAL SAVED JOB CONTEXT
+  const { savedIds, toggleSave } = useSavedJobs();
+  const saved = savedIds.includes(Number(id));
 
   // =============================
   // 1) LOAD JOB DETAILS
@@ -49,29 +57,13 @@ const JobDetailsPage = () => {
   }, [id]);
 
   // =============================
-  // 2) LOAD SAVED STATUS
-  // =============================
-  useEffect(() => {
-    const loadSaved = async () => {
-      try {
-        const res = await api.get("/api/applications/saved-jobs/");
-        const savedIds = res.data.map((i) => i.job.id);
-        setSaved(savedIds.includes(parseInt(id)));
-      } catch (err) {
-        console.error("Failed to load saved jobs");
-      }
-    };
-    loadSaved();
-  }, [id]);
-
-  // =============================
-  // 3) LOAD APPLIED STATUS ⭐ NEW
+  // 2) LOAD APPLIED STATUS
   // =============================
   useEffect(() => {
     const loadApplied = async () => {
       try {
         const res = await api.get("/api/applications/job/applied/");
-        const appliedIds = res.data.map((a) => a.job_id); // backend now returns job_id
+        const appliedIds = res.data.map((a) => a.job_id);
         setApplied(appliedIds.includes(Number(id)));
       } catch (err) {
         console.error("Failed to load applied status:", err);
@@ -82,27 +74,17 @@ const JobDetailsPage = () => {
   }, [id]);
 
   // =============================
-  // 4) SAVE / UNSAVE
-  // =============================
-  const toggleSave = async () => {
-    try {
-      if (saved) {
-        await api.delete(`/api/applications/saved-jobs/remove/${id}/`);
-        setSaved(false);
-      } else {
-        await api.post("/api/applications/saved-jobs/add/", { job_id: id });
-        setSaved(true);
-      }
-    } catch (err) {
-      console.error("Failed to update saved jobs");
-    }
-  };
-
-  // =============================
-  // 5) APPLY NOW
+  // 3) APPLY NOW
   // =============================
   const handleApplyNow = () => {
     navigate(`/apply?id=${id}`);
+  };
+
+  // =============================
+  // 4) SAVE / UNSAVE (GLOBAL)
+  // =============================
+  const handleToggleSave = async () => {
+    await toggleSave(Number(id)); // ⭐ Global action
   };
 
   if (loading) return <div className="jd-loading">Loading job…</div>;
@@ -112,9 +94,7 @@ const JobDetailsPage = () => {
     <div className="jd-desktop-wrapper">
       <div className="jd-container">
 
-        {/* ======================================================
-                        JOB HEADER SECTION
-        ======================================================= */}
+        {/* ====================== JOB HEADER ====================== */}
         <div className="jd-header-card">
           <div className="jd-header-left">
             <h1 className="jd-title">{job.title}</h1>
@@ -138,7 +118,7 @@ const JobDetailsPage = () => {
 
           <div className="jd-header-right">
 
-            {/* ⭐ APPLY BUTTON WITH NEW LOGIC */}
+            {/* ⭐ APPLY BUTTON */}
             <button
               className="jd-apply-btn"
               disabled={applied}
@@ -147,16 +127,17 @@ const JobDetailsPage = () => {
               {applied ? "Applied ✓" : "Apply Now"}
             </button>
 
-            {/* SAVE / SAVED */}
-            <button className="jd-save-btn" onClick={toggleSave}>
+            {/* ⭐ GLOBAL SAVE BUTTON */}
+            <button
+              className="jd-save-btn"
+              onClick={handleToggleSave}
+            >
               {saved ? "Saved" : "Save Job"}
             </button>
           </div>
         </div>
 
-        {/* ======================================================
-                        JOB DESCRIPTION
-        ======================================================= */}
+        {/* ====================== JOB DESCRIPTION ====================== */}
         <div className="jd-section">
           <h2 className="jd-section-title">About the Job</h2>
           <p className="jd-description">{job.full_description}</p>
@@ -196,9 +177,7 @@ const JobDetailsPage = () => {
           </div>
         </div>
 
-        {/* ======================================================
-                    COMPANY DETAILS SECTION
-        ======================================================= */}
+        {/* ====================== COMPANY DETAILS ====================== */}
         {company && (
           <div className="jd-section-card">
             <h2 className="jd-section-title">Company Details</h2>

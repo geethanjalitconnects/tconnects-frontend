@@ -4,6 +4,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 /* AUTH CONTEXT */
 import { AuthProvider } from "./context/AuthContext";
+import { SavedJobsProvider } from "./context/SavedJobsContext";
 
 /* PUBLIC COMPONENTS */
 import Header from "./components/Header";
@@ -88,93 +89,95 @@ function App() {
 
   return (
     <AuthProvider>
-      <div>
-        <Header />
+      {/* ⭐ Wrap ENTIRE APP inside SavedJobsProvider */}
+      <SavedJobsProvider>
+        <div>
+          <Header />
 
-        <Routes>
+          <Routes>
 
-          {/* PUBLIC ROUTES */}
-          <Route path="/" element={<HomePage onCategoryClick={setModalCategory} />} />
-          <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegistrationPage />} />
+            {/* PUBLIC ROUTES */}
+            <Route path="/" element={<HomePage onCategoryClick={setModalCategory} />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegistrationPage />} />
 
-          {/* JOBS */}
-          <Route path="/jobs" element={<JobsListPage />} />
+            {/* JOBS */}
+            <Route path="/jobs" element={<JobsListPage />} />
+            <Route path="/jobs/:slug" element={<JobDetailsPage />} />
 
-          {/* ⭐ FIXED: SLUG VERSION (ONLY CHANGE YOU ASKED FOR) */}
-          <Route path="/jobs/:slug" element={<JobDetailsPage />} />
+            {/* APPLY JOB */}
+            <Route path="/apply" element={<ApplyJobPage />} />
 
-          {/* APPLY JOB */}
-          <Route path="/apply" element={<ApplyJobPage />} />
+            {/* INTERNSHIPS */}
+            <Route path="/internships" element={<InternshipsListPage />} />
+            <Route path="/internships/:id" element={<InternshipDetailsPage />} />
 
-          {/* INTERNSHIPS */}
-          <Route path="/internships" element={<InternshipsListPage />} />
-          <Route path="/internships/:id" element={<InternshipDetailsPage />} />
+            {/* APPLY INTERNSHIP */}
+            <Route path="/apply-internship" element={<ApplyInternshipPage />} />
 
-          {/* APPLY INTERNSHIP */}
-          <Route path="/apply-internship" element={<ApplyInternshipPage />} />
+            {/* ==================== CANDIDATE DASHBOARD ==================== */}
+            <Route path="/candidate-dashboard/*" element={<CandidateDashboardLayout />}>
+              <Route index element={<Overview />} />
+              <Route path="overview" element={<Overview />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="applied-jobs" element={<AppliedJobs />} />
+              <Route path="applied-internships" element={<AppliedInternships />} />
+              <Route path="saved-jobs" element={<SavedJobs />} />
+              <Route path="saved-internships" element={<SavedInternships />} />
+              <Route path="messages" element={<Messages />} />
+              <Route path="courses" element={<Courses />} />
 
-          {/* ==================== CANDIDATE DASHBOARD ==================== */}
-          <Route path="/candidate-dashboard/*" element={<CandidateDashboardLayout />}>
-            <Route index element={<Overview />} />
-            <Route path="overview" element={<Overview />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="applied-jobs" element={<AppliedJobs />} />
-            <Route path="applied-internships" element={<AppliedInternships />} />
-            <Route path="saved-jobs" element={<SavedJobs />} />
-            <Route path="saved-internships" element={<SavedInternships />} />
-            <Route path="messages" element={<Messages />} />
-            <Route path="courses" element={<Courses />} />
+              {/* Freelancer Nested */}
+              <Route path="freelancer/overview" element={<FreelancerOverview />} />
+              <Route path="freelancer/basic-information" element={<FreelancerBasicInfo />} />
+              <Route path="freelancer/professional-details" element={<FreelancerProfessionalDetails />} />
+              <Route path="freelancer/education" element={<FreelancerEducation />} />
+              <Route path="freelancer/availability" element={<FreelancerAvailability />} />
+              <Route path="freelancer/payment-method" element={<FreelancerPayment />} />
+              <Route path="freelancer/social-links" element={<FreelancerSocialLinks />} />
+              <Route path="freelancer/profile-preview" element={<FreelancerProfilePreview />} />
+            </Route>
 
-            {/* Freelancer Nested */}
-            <Route path="freelancer/overview" element={<FreelancerOverview />} />
-            <Route path="freelancer/basic-information" element={<FreelancerBasicInfo />} />
-            <Route path="freelancer/professional-details" element={<FreelancerProfessionalDetails />} />
-            <Route path="freelancer/education" element={<FreelancerEducation />} />
-            <Route path="freelancer/availability" element={<FreelancerAvailability />} />
-            <Route path="freelancer/payment-method" element={<FreelancerPayment />} />
-            <Route path="freelancer/social-links" element={<FreelancerSocialLinks />} />
-            <Route path="freelancer/profile-preview" element={<FreelancerProfilePreview />} />
-          </Route>
+            {/* ==================== RECRUITER DASHBOARD ==================== */}
+            <Route path="/recruiter-dashboard/*" element={<RecruiterDashboardLayout />}>
+              <Route index element={<RecruiterOverview />} />
+              <Route path="overview" element={<RecruiterOverview />} />
 
-          {/* ==================== RECRUITER DASHBOARD ==================== */}
-          <Route path="/recruiter-dashboard/*" element={<RecruiterDashboardLayout />}>
-            <Route index element={<RecruiterOverview />} />
-            <Route path="overview" element={<RecruiterOverview />} />
+              {/* Profile */}
+              <Route path="profile/basic-info" element={<BasicInformation />} />
+              <Route path="profile/company-profile" element={<CompanyProfile />} />
 
-            {/* Profile */}
-            <Route path="profile/basic-info" element={<BasicInformation />} />
-            <Route path="profile/company-profile" element={<CompanyProfile />} />
+              {/* Jobs */}
+              <Route path="jobs/post-job" element={<PostJob />} />
+              <Route path="jobs/post-internship" element={<PostInternship />} />
+              <Route path="jobs/manage-jobs" element={<ManageJobs />} />
+              <Route path="jobs/manage-internships" element={<ManageInternships />} />
 
-            {/* Jobs */}
-            <Route path="jobs/post-job" element={<PostJob />} />
-            <Route path="jobs/post-internship" element={<PostInternship />} />
-            <Route path="jobs/manage-jobs" element={<ManageJobs />} />
-            <Route path="jobs/manage-internships" element={<ManageInternships />} />
+              {/* Edit */}
+              <Route path="jobs/edit-job/:id" element={<EditJob />} />
+              <Route path="jobs/edit-internship/:id" element={<EditInternship />} />
 
-            {/* Edit */}
-            <Route path="jobs/edit-job/:id" element={<EditJob />} />
-            <Route path="jobs/edit-internship/:id" element={<EditInternship />} />
+              {/* Applications */}
+              <Route path="applications/jobs" element={<JobApplications />} />
+              <Route path="applications/internships" element={<InternshipApplications />} />
+            </Route>
 
-            {/* Applications */}
-            <Route path="applications/jobs" element={<JobApplications />} />
-            <Route path="applications/internships" element={<InternshipApplications />} />
-          </Route>
+            {/* FALLBACK */}
+            <Route path="*" element={<HomePage />} />
 
-          {/* FALLBACK */}
-          <Route path="*" element={<HomePage />} />
+          </Routes>
 
-        </Routes>
-
-        {/* RISK CATEGORY MODAL */}
-        {modalCategory && (
-          <RiskCategoryModal
-            category={modalCategory}
-            onClose={() => setModalCategory(null)}
-          />
-        )}
-      </div>
+          {/* RISK CATEGORY MODAL */}
+          {modalCategory && (
+            <RiskCategoryModal
+              category={modalCategory}
+              onClose={() => setModalCategory(null)}
+            />
+          )}
+        </div>
+      </SavedJobsProvider>
+      {/* ⭐ Provider ends here */}
     </AuthProvider>
   );
 }

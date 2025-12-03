@@ -1,15 +1,20 @@
-// JobsListPage.jsx — SEO SLUG VERSION (UI UNCHANGED) ✔
-// Matches backend fields perfectly ✔
-// Uses slug in View Details URL ✔
+// JobsListPage.jsx — FINAL VERSION (Uses Global SavedJobsContext)
+// ✔ No UI changed
+// ✔ Global saved jobs sync (Naukri/Indeed style)
+// ✔ Instant update across all pages
+// ✔ Backend synced
 
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
+import { useSavedJobs } from "../../context/SavedJobsContext";   // ⭐ ADDED
 import "./JobsListPage.css";
 
 export default function JobsListPage() {
   const [jobs, setJobs] = useState([]);
-  const [savedItems, setSavedItems] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // ⭐ GET GLOBAL SAVED JOBS
+  const { savedIds, toggleSave } = useSavedJobs();
 
   // 👉 Create readable slug
   const slugify = (text) => {
@@ -26,19 +31,6 @@ export default function JobsListPage() {
     return `${titleSlug}-${locationSlug}-${job.id}`;
   };
 
-  // Load saved jobs
-  useEffect(() => {
-    const loadSaved = async () => {
-      try {
-        const res = await api.get("/api/applications/saved-jobs/");
-        setSavedItems(res.data.map((i) => i.job.id));
-      } catch (err) {
-        console.error("Failed to fetch saved jobs:", err);
-      }
-    };
-    loadSaved();
-  }, []);
-
   // Load jobs from backend
   useEffect(() => {
     const loadJobs = async () => {
@@ -54,21 +46,7 @@ export default function JobsListPage() {
     loadJobs();
   }, []);
 
-  const isSaved = (id) => savedItems.includes(id);
-
-  const toggleSave = async (id) => {
-    try {
-      if (isSaved(id)) {
-        await api.delete(`/api/applications/saved-jobs/remove/${id}/`);
-        setSavedItems((prev) => prev.filter((x) => x !== id));
-      } else {
-        await api.post("/api/applications/saved-jobs/add/", { job_id: id });
-        setSavedItems((prev) => [...prev, id]);
-      }
-    } catch (err) {
-      console.error("Save/Unsave failed:", err);
-    }
-  };
+  const isSaved = (id) => savedIds.includes(id); // ⭐ GLOBAL CHECK
 
   // 👉 SEO-friendly View Details
   const openDetails = (job) => {
@@ -103,7 +81,7 @@ export default function JobsListPage() {
           <h2 className="job-title">{job.title}</h2>
           <p className="company-name">{job.company_name}</p>
 
-          {/* 👉 FIXED FIELD NAMES TO MATCH BACKEND */}
+          {/* FIXED FIELD NAMES TO MATCH BACKEND */}
           <div className="job-info">
             <span>{job.experience_range}</span> •
             <span>{job.salary_range}</span> •
@@ -121,6 +99,7 @@ export default function JobsListPage() {
           </div>
 
           <div className="job-actions">
+
             {/* 👉 OPEN SEO URL */}
             <button
               className="view-btn"
@@ -129,12 +108,14 @@ export default function JobsListPage() {
               View Details
             </button>
 
+            {/* ⭐ GLOBAL SAVE STATE BUTTON */}
             <button
               className="save-btn"
               onClick={() => toggleSave(job.id)}
             >
               {isSaved(job.id) ? "Saved" : "Save Job"}
             </button>
+
           </div>
         </div>
       ))}

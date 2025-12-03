@@ -1,14 +1,22 @@
-// SavedJobs.jsx — Backend Integrated
+// SavedJobs.jsx — GLOBAL SYNC VERSION (Uses SavedJobsContext)
+// ✔ Syncs instantly with JobsListPage + JobDetailsPage
+// ✔ Removal updates global context + local list
+// ✔ UI unchanged
+
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
+import { useSavedJobs } from "../../context/SavedJobsContext";   // ⭐ ADDED
 import "./CandidateDashboard.css";
 
 export default function SavedJobs() {
   const [savedJobs, setSavedJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // ⭐ GLOBAL CONTEXT
+  const { toggleSave, savedIds } = useSavedJobs();
+
   // ============================================================
-  // 1. LOAD SAVED JOBS
+  // 1. LOAD SAVED JOBS (FULL DETAILS)
   // ============================================================
   useEffect(() => {
     const fetchSavedJobs = async () => {
@@ -23,15 +31,17 @@ export default function SavedJobs() {
     };
 
     fetchSavedJobs();
-  }, []);
+  }, [savedIds]); 
+  // ⭐ When savedIds changes, reload details
+  // This keeps dashboard always accurate
 
   // ============================================================
-  // 2. REMOVE SAVED JOB
+  // 2. REMOVE SAVED JOB — GLOBAL + LOCAL UI
   // ============================================================
   const removeJob = async (jobId) => {
     try {
-      await api.delete(`/api/applications/saved-jobs/remove/${jobId}/`);
-      setSavedJobs(savedJobs.filter((job) => job.job.id !== jobId));
+      await toggleSave(jobId); // ⭐ GLOBAL SAVE/UNSAVE
+      setSavedJobs((prev) => prev.filter((job) => job.job.id !== jobId)); // remove instantly from UI
     } catch (err) {
       console.error("Failed to remove saved job:", err);
     }
