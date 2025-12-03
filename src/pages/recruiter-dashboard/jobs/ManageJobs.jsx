@@ -52,73 +52,71 @@ export default function ManageJobs() {
   if (loading) return <div className="rd-loading">Loading jobs...</div>;
 
   return (
-    <div className="rd-managejobs-page">
-      <h2 className="rd-page-title">Manage Jobs</h2>
-      <p className="rd-page-subtitle">View, update or delete your posted jobs.</p>
+  <div className="rd-managejobs-page">
+    <h2 className="rd-page-title">Manage Jobs</h2>
+    <p className="rd-page-subtitle">View, update or delete your posted jobs.</p>
 
-      <div className="rd-job-list">
-        {jobs.length === 0 ? (
-          <p className="rd-empty">No jobs posted yet.</p>
-        ) : (
-          jobs.map((job) => (
-            <div key={job.id} className="rd-job-card">
-              
-              {/* LEFT SIDE - Job Info */}
-              <div className="rd-job-card-left">
-                <h3 className="rd-job-title">{job.title}</h3>
+    <div className="rd-job-list">
+      {jobs.length === 0 ? (
+        <p className="rd-empty">No jobs posted yet.</p>
+      ) : (
+        jobs.map((job) => (
+          <div key={job.id} className="rd-job-card">
 
-                <p className="rd-job-meta">
-                  <span>Category:</span> {job.category} &nbsp; | &nbsp;
-                  <span>Location:</span> {job.location} &nbsp; | &nbsp;
-                  <span>Type:</span> {job.employment_type} &nbsp; | &nbsp;
-                  <span>Salary:</span> {job.salary_range}
-                </p>
+            {/* LEFT SECTION */}
+            <div className="rd-job-card-left">
+              <h3 className="rd-job-title">{job.title}</h3>
 
-                <span
-                  className={`rd-job-status ${
-                    job.status === "Open" ? "active" : "closed"
-                  }`}
-                >
-                  {job.status}
-                </span>
-              </div>
+              <p className="rd-job-meta">
+                <span>Category:</span> {job.category} &nbsp; | &nbsp;
+                <span>Location:</span> {job.location} &nbsp; | &nbsp;
+                <span>Type:</span> {job.employment_type} &nbsp; | &nbsp;
+                <span>Salary:</span> {job.salary_range}
+              </p>
 
-              {/* RIGHT SIDE — Actions */}
-              <div className="rd-job-card-actions">
+              <span
+                className={`rd-job-status ${
+                  job.status === "Open" ? "active" : "closed"
+                }`}
+              >
+                {job.status}
+              </span>
+            </div>
 
-                {/* STATUS */}
-                <select
-                  className="rd-status-dropdown"
-                  value={job.status}
-                  onChange={(e) => updateStatus(job.id, e.target.value)}
-                >
-                  <option value="Open">Open</option>
-                  <option value="Closed">Closed</option>
-                </select>
+            {/* RIGHT SECTION (ACTIONS) */}
+            <div className="rd-job-card-actions">
 
-                {/* EDIT */}
-                <button
-                  className="rd-action-btn edit"
-                  onClick={() =>
-                    (window.location.href = `/recruiter-dashboard/jobs/edit-job/${job.id}`)
-                  }
-                >
-                  Edit
-                </button>
+              <select
+                className="rd-status-dropdown"
+                value={job.status}
+                onChange={(e) => updateStatus(job.id, e.target.value)}
+              >
+                <option value="Open">Open</option>
+                <option value="Closed">Closed</option>
+              </select>
 
-                {/* DELETE */}
-                <button
-                  className="rd-action-btn delete"
-                  onClick={() => deleteJob(job.id)}
-                >
-                  Delete
-                </button>
-              </div>
+              <button
+                className="rd-action-btn edit"
+                onClick={() =>
+                  (window.location.href = `/recruiter-dashboard/jobs/edit-job/${job.id}`)
+                }
+              >
+                Edit
+              </button>
+
+              <button
+                className="rd-action-btn delete"
+                onClick={() => deleteJob(job.id)}
+              >
+                Delete
+              </button>
 
             </div>
-          ))
-        )}
-      </div>
+          </div>
+        ))
+      )}
     </div>
-  );
+  </div>
+);
+
 }
