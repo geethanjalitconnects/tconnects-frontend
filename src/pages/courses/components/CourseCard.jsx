@@ -1,7 +1,15 @@
 import React from "react";
 import "../styles/CoursesList.css";
 
-const CourseCard = ({ title, instructor, thumbnail, rating, price }) => {
+const CourseCard = ({
+  id,
+  slug,
+  title,
+  instructor,
+  thumbnail,
+  rating,
+  price,
+}) => {
   return (
     <div className="course-card">
 
@@ -22,7 +30,15 @@ const CourseCard = ({ title, instructor, thumbnail, rating, price }) => {
           <span className="course-card-price">{price}</span>
         </div>
 
-        <button className="course-view-btn">View Details</button>
+        {/* VIEW DETAILS — Opens in new tab */}
+        <button
+          className="course-view-btn"
+          onClick={() =>
+            window.open(`/course/${slug}/${id}`, "_blank")
+          }
+        >
+          View Details
+        </button>
       </div>
 
     </div>

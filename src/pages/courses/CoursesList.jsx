@@ -6,7 +6,7 @@ const CoursesList = () => {
   const [search, setSearch] = useState("");
   const [courseType, setCourseType] = useState("all");
 
-  // Temporary Data — We'll replace with backend later
+  // 🔹 TEMPORARY SAMPLE DATA (Replace with backend later)
   const sampleCourses = [
     {
       id: 1,
@@ -28,19 +28,23 @@ const CoursesList = () => {
     },
   ];
 
+  // 🔹 Slug function
+  const slugify = (text) =>
+    text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
   return (
     <div className="courses-page">
 
-      {/* ================= HERO SECTION ================= */}
+      {/* ================= HERO ================= */}
       <div className="courses-hero">
         <h1>Risk Management Courses</h1>
         <p>Explore risk management programs designed for your career growth.</p>
       </div>
 
-      {/* ================= SEARCH + FILTER SECTION ================= */}
+      {/* ================= SEARCH + FILTERS ================= */}
       <div className="courses-search-area">
 
-        {/* Search Bar */}
+        {/* Search Input */}
         <input
           type="text"
           placeholder="Search for courses..."
@@ -49,7 +53,7 @@ const CoursesList = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        {/* Filter Buttons (Pills) */}
+        {/* Filter Pills */}
         <div className="courses-filter-pills">
           <button
             className={courseType === "all" ? "pill active" : "pill"}
@@ -77,19 +81,25 @@ const CoursesList = () => {
       {/* ================= COURSES GRID ================= */}
       <div className="courses-grid">
         {sampleCourses
-          .filter(course =>
+          .filter((course) =>
             courseType === "all" || course.type === courseType
           )
-          .map(course => (
-            <CourseCard
-              key={course.id}
-              title={course.title}
-              instructor={course.instructor}
-              thumbnail={course.thumbnail}
-              price={course.price}
-              rating={course.rating}
-            />
-          ))}
+          .map((course) => {
+            const slug = slugify(course.title);
+
+            return (
+              <CourseCard
+                key={course.id}
+                id={course.id}
+                slug={slug}
+                title={course.title}
+                instructor={course.instructor}
+                thumbnail={course.thumbnail}
+                price={course.price}
+                rating={course.rating}
+              />
+            );
+          })}
       </div>
 
     </div>
