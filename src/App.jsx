@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";   // ⭐ Added useLocation
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 /* AUTH CONTEXT */
@@ -21,8 +21,9 @@ import Footer from "./components/Footer";
 import LoginPage from "./components/LoginPage";
 import RegistrationPage from "./components/RegistrationPage";
 
+/* ================= COURSES ================= */
 import CoursesList from "./pages/courses/CoursesList";
-
+import CourseDetails from "./pages/courses/CourseDetails";   // ⭐ NEW IMPORT
 
 /* ================= CANDIDATE DASHBOARD ================= */
 import CandidateDashboardLayout from "./pages/candidate-dashboard/CandidateDashboardLayout";
@@ -74,7 +75,7 @@ import InternshipApplications from "./pages/recruiter-dashboard/applications/Int
 import EditJob from "./pages/recruiter-dashboard/jobs/EditJob";
 import EditInternship from "./pages/recruiter-dashboard/jobs/EditInternship";
 
-/* HOME PAGE */
+
 function HomePage({ onCategoryClick }) {
   return (
     <>
@@ -90,13 +91,19 @@ function HomePage({ onCategoryClick }) {
 /* ================= MAIN APP ================= */
 function App() {
   const [modalCategory, setModalCategory] = useState(null);
+  const location = useLocation();    // ⭐ NEW
+
+  // ⭐ HIDE HEADER FOR COURSE DETAILS PAGE
+  const hideHeader = location.pathname.startsWith("/course/");
 
   return (
     <AuthProvider>
       <SavedJobsProvider>
-        <SavedInternshipsProvider>   {/* ⭐ GLOBAL INTERNSHIP SAVE CONTEXT */}
+        <SavedInternshipsProvider>
           <div>
-            <Header />
+            
+            {/* ⭐ CONDITIONAL HEADER — hidden on /course/* */}
+            {!hideHeader && <Header />}
 
             <Routes>
 
@@ -108,7 +115,7 @@ function App() {
 
               {/* PUBLIC COURSES */}
               <Route path="/courses" element={<CoursesList />} />
-
+              <Route path="/course/:slug/:id" element={<CourseDetails />} />   {/* ⭐ NEW ROUTE */}
 
               {/* JOBS */}
               <Route path="/jobs" element={<JobsListPage />} />
@@ -124,7 +131,7 @@ function App() {
               {/* APPLY INTERNSHIP */}
               <Route path="/apply-internship" element={<ApplyInternshipPage />} />
 
-              {/* ==================== CANDIDATE DASHBOARD ==================== */}
+              {/* CANDIDATE DASHBOARD */}
               <Route path="/candidate-dashboard/*" element={<CandidateDashboardLayout />}>
                 <Route index element={<Overview />} />
                 <Route path="overview" element={<Overview />} />
@@ -147,7 +154,7 @@ function App() {
                 <Route path="freelancer/profile-preview" element={<FreelancerProfilePreview />} />
               </Route>
 
-              {/* ==================== RECRUITER DASHBOARD ==================== */}
+              {/* RECRUITER DASHBOARD */}
               <Route path="/recruiter-dashboard/*" element={<RecruiterDashboardLayout />}>
                 <Route index element={<RecruiterOverview />} />
                 <Route path="overview" element={<RecruiterOverview />} />

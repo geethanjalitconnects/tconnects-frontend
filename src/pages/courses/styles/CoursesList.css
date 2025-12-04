@@ -11,23 +11,24 @@
 .courses-hero {
   background: linear-gradient(180deg, #0097a7 0%, #0aa5b6 100%);
   text-align: center;
-  padding: 70px 20px 90px;
+  padding: 100px 20px 110px;  /* increased spacing */
   color: white;
   border-bottom-left-radius: 40px;
   border-bottom-right-radius: 40px;
+  margin-top: 80px;  /* space below navbar */
 }
 
 .courses-hero h1 {
-  font-size: 38px;
+  font-size: 40px;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .courses-hero p {
-  font-size: 17px;
-  opacity: 0.9;
-  margin-bottom: 8px;
+  font-size: 18px;
+  opacity: 0.95;
 }
+
 
 .course-count {
   font-size: 15px;

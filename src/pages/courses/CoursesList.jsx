@@ -35,7 +35,6 @@ const CoursesList = () => {
       <div className="courses-hero">
         <h1>Risk Management Courses</h1>
         <p>Explore risk management programs designed for your career growth.</p>
-        <span className="course-count">20 courses available</span>
       </div>
 
       {/* ================= SEARCH + FILTER SECTION ================= */}
