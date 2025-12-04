@@ -6,7 +6,8 @@ import LearnVideoPlayer from "./components/LearnVideoPlayer";
 import LearnCurriculum from "./components/LearnCurriculum";
 
 const LearnCourse = () => {
-  const { id } = useParams();
+  const { slug, id } = useParams();
+
 
   // ====================================================
   // SAMPLE COURSE DATA (Replace with backend later)

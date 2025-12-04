@@ -3,14 +3,11 @@ import { useNavigate } from "react-router-dom";
 import "../styles/CourseDetails.css";
 import { FaVideo, FaBook, FaClock, FaFileAlt, FaMobileAlt } from "react-icons/fa";
 
-const CourseSidebar = ({ price, includes, courseId }) => {
+const CourseSidebar = ({ price, includes, courseId, slug }) => {
   const navigate = useNavigate();
 
   const handleEnroll = () => {
-    // Later this will call backend API:
-    // api.post(`/api/courses/${courseId}/enroll/`)
-    
-    navigate(`/course/learn/${courseId}`);
+    navigate(`/course/learn/${slug}/${courseId}`);
   };
 
   return (

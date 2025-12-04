@@ -14,7 +14,6 @@ import CourseSidebar from "./components/CourseSidebar";
 const CourseDetails = () => {
   const { slug, id } = useParams();
 
-  // Temporary sample data until backend connects
   const sampleCourse = {
     title: "Python Bootcamp: From Zero to Hero",
     instructor: "Dr. Angela Yu",
@@ -71,8 +70,6 @@ const CourseDetails = () => {
 
   return (
     <div className="course-details-page">
-
-      {/* HERO BANNER */}
       <CourseBanner
         title={sampleCourse.title}
         instructor={sampleCourse.instructor}
@@ -80,32 +77,23 @@ const CourseDetails = () => {
         language={sampleCourse.language}
       />
 
-      {/* MAIN TWO-COLUMN LAYOUT */}
       <div className="course-main-layout">
-
-        {/* LEFT CONTENT */}
         <div className="course-left">
-
           <WhatYouWillLearn points={sampleCourse.learnPoints} />
-
           <Description text={sampleCourse.description} />
-
           <Requirements requirements={sampleCourse.requirements} />
-
           <CourseIncludes includes={sampleCourse.includes} />
-
           <Curriculum curriculum={sampleCourse.curriculum} />
-
         </div>
 
-        {/* RIGHT SIDEBAR (Sticky) */}
         <div className="course-right">
           <CourseSidebar
             price={sampleCourse.price}
             includes={sampleCourse.includes}
+            courseId={id}
+            slug={slug}
           />
         </div>
-
       </div>
     </div>
   );

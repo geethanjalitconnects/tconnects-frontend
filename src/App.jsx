@@ -121,7 +121,8 @@ function App() {
               <Route path="/course/:slug/:id" element={<CourseDetails />} />
 
               {/* ⭐ AFTER-ENROLL COURSE LEARN PAGE */}
-              <Route path="/course/learn/:id" element={<LearnCourse />} />
+              <Route path="/course/learn/:slug/:id" element={<LearnCourse />} />
+
 
               {/* JOBS */}
               <Route path="/jobs" element={<JobsListPage />} />
