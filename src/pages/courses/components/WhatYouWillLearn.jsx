@@ -3,6 +3,8 @@ import "../styles/CourseDetails.css";
 import { FaCheckCircle } from "react-icons/fa";
 
 const WhatYouWillLearn = ({ points = [] }) => {
+  if (!Array.isArray(points)) points = [];
+
   return (
     <div className="what-you-will-learn">
       <h2>What you'll learn</h2>

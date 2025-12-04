@@ -8,30 +8,25 @@ const ModuleAccordion = ({ moduleTitle, lectures = [] }) => {
 
   return (
     <div className="module-accordion">
-      {/* Module Header */}
+
       <div className="module-header" onClick={() => setOpen(!open)}>
         <h3 className="module-title">{moduleTitle}</h3>
-
-        {open ? (
-          <FaChevronUp className="module-icon" />
-        ) : (
-          <FaChevronDown className="module-icon" />
-        )}
+        {open ? <FaChevronUp className="module-icon" /> : <FaChevronDown className="module-icon" />}
       </div>
 
-      {/* Lessons */}
       {open && (
         <div className="module-lessons">
-          {lectures.map((lesson, index) => (
+          {lectures.map((lesson) => (
             <LessonRow
-              key={index}
+              key={lesson.id}
               title={lesson.title}
               duration={lesson.duration}
-              preview={lesson.preview}
+              preview={lesson.is_preview}   // ⭐ backend mapping
             />
           ))}
         </div>
       )}
+
     </div>
   );
 };

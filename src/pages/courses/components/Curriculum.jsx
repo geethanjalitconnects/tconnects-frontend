@@ -10,9 +10,9 @@ const Curriculum = ({ curriculum = [] }) => {
       <div className="curriculum-list">
         {curriculum.map((module, index) => (
           <ModuleAccordion
-            key={index}
-            moduleTitle={`Module ${index + 1} — ${module.moduleTitle}`}
-            lectures={module.lectures}
+            key={module.id}
+            moduleTitle={`Module ${module.order} — ${module.title}`}
+            lectures={module.lessons}   // ⭐ backend mapping
           />
         ))}
       </div>

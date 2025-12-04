@@ -3,6 +3,8 @@ import "../styles/CourseDetails.css";
 import { FaCheck } from "react-icons/fa";
 
 const Requirements = ({ requirements = [] }) => {
+  if (!Array.isArray(requirements)) requirements = [];
+
   return (
     <div className="requirements-box">
       <h2>Requirements</h2>

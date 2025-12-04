@@ -3,37 +3,44 @@ import LessonRowLearn from "./LessonRowLearn";
 import "../styles/LearnCourse.css";
 
 const LearnCurriculum = ({
-  curriculum = [],
-  currentLectureId,
-  onSelectLecture,
-  completed = {},
-  onToggleComplete
+  modules = [],
+  currentLessonId,
+  onSelectLesson,
+  onOpenAssignment,
 }) => {
   return (
     <div className="learn-curriculum">
-      <h3>Course content</h3>
+      <h3>Course Content</h3>
 
-      {curriculum.map((module, mIndex) => (
-        <div className="learn-module" key={mIndex}>
+      {modules.map((module) => (
+        <div key={module.id} className="learn-module">
+
+          {/* Module Header */}
           <div className="learn-module-header">
-            <div className="module-title">
-              Module {mIndex + 1} • {module.moduleTitle}
-            </div>
-            <div className="module-meta">{module.lectures.length} lectures</div>
+            <div className="module-title">Module {module.order} — {module.title}</div>
+            <div className="module-meta">{module.lessons.length} lessons</div>
           </div>
 
+          {/* Lessons */}
           <div className="learn-module-lessons">
-            {module.lectures.map((lec) => (
+            {module.lessons.map((lesson) => (
               <LessonRowLearn
-                key={lec.id}
-                lecture={lec}
-                isActive={lec.id === currentLectureId}
-                isCompleted={!!completed[lec.id]}
-                onSelect={() => onSelectLecture(lec)}
-                onToggleComplete={() => onToggleComplete(lec.id)}
+                key={lesson.id}
+                lesson={lesson}
+                isActive={lesson.id === currentLessonId}
+                onSelect={() => onSelectLesson(lesson)}
               />
             ))}
           </div>
+
+          {/* Assignment */}
+          {module.assignment && (
+            <div className="assignment-entry">
+              <span>📘 {module.assignment.title}</span>
+              <button onClick={() => onOpenAssignment(module)}>Open</button>
+            </div>
+          )}
+
         </div>
       ))}
     </div>

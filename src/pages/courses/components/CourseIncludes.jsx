@@ -8,35 +8,32 @@ const CourseIncludes = ({ includes = {} }) => {
       <h2>This course includes</h2>
 
       <div className="includes-grid">
-        {/* Videos */}
+
         <div className="include-item">
           <FaVideo className="include-icon" />
-          <span>{includes.videos} video lessons</span>
+          <span>{includes.videos || 0} video lessons</span>
         </div>
 
-        {/* Modules */}
         <div className="include-item">
           <FaBook className="include-icon" />
-          <span>{includes.modules} modules</span>
+          <span>{includes.modules || 0} modules</span>
         </div>
 
-        {/* Duration */}
         <div className="include-item">
           <FaClock className="include-icon" />
-          <span>{includes.duration}</span>
+          <span>{includes.duration || "N/A"}</span>
         </div>
 
-        {/* Resources */}
         <div className="include-item">
           <FaFileAlt className="include-icon" />
-          <span>{includes.resources} downloadable resources</span>
+          <span>{includes.resources || 0} downloadable resources</span>
         </div>
 
-        {/* Access */}
         <div className="include-item">
           <FaMobileAlt className="include-icon" />
-          <span>{includes.access}</span>
+          <span>{includes.access || "Lifetime access"}</span>
         </div>
+
       </div>
     </div>
   );
