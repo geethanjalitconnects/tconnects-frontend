@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../config/api";   // ⭐ ADD THIS
+import api from "../../../config/api";  // ⭐ ADD THIS
 import "../styles/CourseDetails.css";
 import { FaVideo, FaBook, FaClock, FaFileAlt, FaMobileAlt } from "react-icons/fa";
 
