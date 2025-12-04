@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "./styles/CoursesList.css";
+import CourseCard from "./components/CourseCard";
+
 
 const CoursesList = () => {
   const [search, setSearch] = useState("");
