@@ -21,6 +21,9 @@ import Footer from "./components/Footer";
 import LoginPage from "./components/LoginPage";
 import RegistrationPage from "./components/RegistrationPage";
 
+import CoursesList from "./pages/courses/CoursesList";
+
+
 /* ================= CANDIDATE DASHBOARD ================= */
 import CandidateDashboardLayout from "./pages/candidate-dashboard/CandidateDashboardLayout";
 import Overview from "./pages/candidate-dashboard/Overview";
@@ -102,6 +105,10 @@ function App() {
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegistrationPage />} />
+
+              {/* PUBLIC COURSES */}
+              <Route path="/courses" element={<CoursesList />} />
+
 
               {/* JOBS */}
               <Route path="/jobs" element={<JobsListPage />} />
