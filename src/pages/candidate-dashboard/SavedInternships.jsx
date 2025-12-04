@@ -1,24 +1,16 @@
-// SavedInternships.jsx — GLOBAL SYNC VERSION
-// ✔ Uses SavedInternshipsContext
-// ✔ Removal syncs across all pages
-// ✔ UI unchanged
-
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
 import "./CandidateDashboard.css";
-
-// ⭐ GLOBAL CONTEXT
 import { useSavedInternships } from "../../context/SavedInternshipsContext";
 
 export default function SavedInternships() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ⭐ GLOBAL CONTEXT (savedIds, toggleSave)
   const { savedIds, toggleSave } = useSavedInternships();
 
   // ============================================================
-  // 1. Load saved internships (full details)
+  // LOAD SAVED INTERNSHIPS (Runs whenever savedIds change)
   // ============================================================
   useEffect(() => {
     const loadSaved = async () => {
@@ -33,15 +25,20 @@ export default function SavedInternships() {
     };
 
     loadSaved();
-  }, [savedIds]); 
-  // ⭐ Anytime savedIds changes (global), reload our detailed list
+  }, [savedIds]);
 
   // ============================================================
-  // 2. Remove saved internship — Use GLOBAL toggleSave()
+  // REMOVE SAVED INTERNSHIP
   // ============================================================
   const removeItem = async (internshipId) => {
-    await toggleSave(internshipId); // ⭐ Updates global savedIds instantly
-    setItems((prev) => prev.filter((i) => i.internship.id !== internshipId)); // local UI update
+    try {
+      await toggleSave(internshipId);
+      setItems((prev) =>
+        prev.filter((entry) => entry.internship?.id !== internshipId)
+      );
+    } catch (err) {
+      console.error("Failed to remove saved internship:", err);
+    }
   };
 
   if (loading) return <div className="cd-loading">Loading internships…</div>;
@@ -51,32 +48,42 @@ export default function SavedInternships() {
       <h2 className="cd-section-title">Saved Internships</h2>
       <p className="cd-section-subtitle">Your saved internships are listed here.</p>
 
-      {/* Empty state */}
+      {/* EMPTY STATE */}
       {items.length === 0 && (
         <p className="cd-empty-msg">No saved internships yet.</p>
       )}
 
-      {/* List */}
-      {items.map((item) => (
-        <div key={item.id} className="cd-saved-card">
-          <div className="cd-saved-info">
-            <h3 className="cd-job-title">{item.internship.title}</h3>
-            <p className="cd-job-company">
-              {item.internship.company_name} • {item.internship.location}
-            </p>
-            <p className="cd-job-date">
-              Saved on: {new Date(item.saved_on).toLocaleDateString("en-IN")}
-            </p>
-          </div>
+      {/* LIST */}
+      {items.map((item) => {
+        const internship = item.internship;
 
-          <button
-            className="cd-remove-btn"
-            onClick={() => removeItem(item.internship.id)}
-          >
-            Remove
-          </button>
-        </div>
-      ))}
+        if (!internship) return null; // Defensive safety check
+
+        return (
+          <div key={item.id} className="cd-saved-card">
+
+            <div className="cd-saved-info">
+              <h3 className="cd-job-title">{internship.title}</h3>
+
+              <p className="cd-job-company">
+                {internship.company_name || "Company"} •{" "}
+                {internship.location || "Location"}
+              </p>
+
+              <p className="cd-job-date">
+                Saved on: {new Date(item.saved_on).toLocaleDateString("en-IN")}
+              </p>
+            </div>
+
+            <button
+              className="cd-remove-btn"
+              onClick={() => removeItem(internship.id)}
+            >
+              Remove
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 }
