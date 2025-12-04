@@ -1,20 +1,46 @@
 import React from "react";
+import "../styles/CourseDetails.css";
+import { FaVideo, FaBook, FaClock, FaFileAlt, FaMobileAlt } from "react-icons/fa";
 
 const CourseIncludes = ({ includes = {} }) => {
   return (
     <div className="course-includes-box">
-      <h2>This course includes:</h2>
+      <h2>This course includes</h2>
 
-      <ul className="course-includes-list">
-        {includes.hours && <li>⏱ {includes.hours}</li>}
-        {includes.resources && <li>📄 {includes.resources}</li>}
-        {includes.access && <li>📚 {includes.access}</li>}
+      <div className="includes-grid">
 
-        {/* SAFE FALLBACKS */}
-        {!includes.hours && !includes.resources && !includes.access && (
-          <li>No extra materials listed.</li>
+        {/* HOURS */}
+        {includes.hours && (
+          <div className="include-item">
+            <FaClock className="include-icon" />
+            <span>{includes.hours}</span>
+          </div>
         )}
-      </ul>
+
+        {/* DOWNLOADABLE RESOURCES */}
+        {includes.resources && (
+          <div className="include-item">
+            <FaFileAlt className="include-icon" />
+            <span>{includes.resources}</span>
+          </div>
+        )}
+
+        {/* ACCESS */}
+        {includes.access && (
+          <div className="include-item">
+            <FaMobileAlt className="include-icon" />
+            <span>{includes.access}</span>
+          </div>
+        )}
+
+        {/* SAFE FALLBACK IF EMPTY */}
+        {!includes.hours && !includes.resources && !includes.access && (
+          <div className="include-item">
+            <span>No extra materials listed</span>
+          </div>
+        )}
+
+      </div>
     </div>
   );
 };
