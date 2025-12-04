@@ -1,17 +1,17 @@
 /* =====================================================
-   COURSE BANNER (HERO SECTION)
+   COURSE BANNER (HERO SECTION) — Udemy Style
    ===================================================== */
 
 .course-banner {
   background: linear-gradient(180deg, #0097a7 0%, #0aa5b6 100%);
-  padding: 80px 20px;
+  padding: 50px 20px; /* reduced height */
   color: white;
   text-align: left;
   display: flex;
   justify-content: center;
-  border-bottom-left-radius: 40px;
-  border-bottom-right-radius: 40px;
-  margin-top: 0; /* We remove header anyway */
+  border-bottom-left-radius: 25px; /* smaller corner */
+  border-bottom-right-radius: 25px;
+  margin-top: 0;
 }
 
 .course-banner-content {
@@ -21,30 +21,30 @@
 
 /* Title */
 .course-title {
-  font-size: 42px;
+  font-size: 34px; /* reduced from 42px */
   font-weight: 700;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 /* Instructor */
 .course-instructor {
-  font-size: 17px;
-  margin-bottom: 10px;
+  font-size: 16px;
+  margin-bottom: 8px;
 }
 
 /* Rating + Language Row */
 .course-meta-row {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   align-items: center;
-  font-size: 16px;
-  margin-bottom: 25px;
+  font-size: 15px;
+  margin-bottom: 20px;
 }
 
 .course-rating {
   display: flex;
   align-items: center;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
 }
 
@@ -54,19 +54,19 @@
 }
 
 .course-language {
-  font-size: 16px;
+  font-size: 15px;
   opacity: 0.9;
 }
 
 /* Enroll Button */
 .course-enroll-btn {
-  padding: 14px 28px;
+  padding: 12px 24px; /* smaller button */
   background: white;
   color: #0097a7;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.25s ease;
 }
@@ -75,6 +75,83 @@
   background: #f1fefe;
   transform: translateY(-2px);
 }
+
+
+/* ======================================================
+   2-COLUMN LAYOUT
+   ====================================================== */
+
+.course-main-layout {
+  display: flex;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.course-left {
+  flex: 0.7;
+}
+
+.course-right {
+  flex: 0.3;
+  position: sticky;
+  top: 100px;
+}
+
+/* ======================================================
+   SIDEBAR
+   ====================================================== */
+
+.course-sidebar {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.sidebar-price {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.sidebar-enroll-btn {
+  width: 100%;
+  padding: 14px;
+  background: #0097a7;
+  border: none;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.25s ease;
+}
+
+.sidebar-enroll-btn:hover {
+  background: #007f8e;
+}
+
+.sidebar-includes h4 {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.sidebar-include-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #34495e;
+}
+
+.sidebar-include-item svg {
+  color: #0097a7;
+}
+
 /* ======================================================
    WHAT YOU WILL LEARN
    ====================================================== */
@@ -212,6 +289,10 @@
   line-height: 1.7;
   white-space: pre-line; /* allows multiline formatting */
 }
+/* ======================================================
+   CURRICULUM SECTION
+   ====================================================== */
+
 /* ======================================================
    CURRICULUM SECTION
    ====================================================== */

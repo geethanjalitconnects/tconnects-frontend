@@ -11,7 +11,7 @@ const Curriculum = ({ curriculum = [] }) => {
         {curriculum.map((module, index) => (
           <ModuleAccordion
             key={index}
-            moduleTitle={module.moduleTitle}
+            moduleTitle={`Module ${index + 1} — ${module.moduleTitle}`}
             lectures={module.lectures}
           />
         ))}
