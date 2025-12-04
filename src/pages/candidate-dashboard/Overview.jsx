@@ -1,76 +1,78 @@
-import React from "react";
-import "./CandidateDashboard.css"; // reuse dashboard styling
+import React, { useEffect, useState } from "react";
+import api from "../../config/api";
+import "./CandidateDashboard.css";
 
 export default function Overview() {
+  const [stats, setStats] = useState({
+    applied_jobs: 0,
+    applied_internships: 0,
+    saved_jobs: 0,
+    saved_internships: 0,
+    ongoing_courses: 2,
+  });
+
+  useEffect(() => {
+    api
+      .get("/api/applications/dashboard/stats/")
+      .then((res) => setStats(res.data))
+      .catch((err) => console.error("Dashboard stats fetch error:", err));
+  }, []);
+
   return (
     <div className="cd-overview">
 
       {/* Welcome Section */}
       <div className="cd-welcome-card">
-        <h2 className="cd-welcome-title">Welcome back, John Dewey 👋</h2>
+        <h2 className="cd-welcome-title">Welcome back 👋</h2>
         <p className="cd-welcome-text">
-          Here’s a quick summary of your activity. Explore your applications,
-          saved opportunities, and keep your profile updated to get better recommendations.
+          Here’s a quick summary of your activity.
         </p>
       </div>
 
       {/* Stats Grid */}
       <div className="cd-stats-grid">
+
         <div className="cd-stat-card">
           <div className="cd-stat-icon">📝</div>
           <div>
-            <h3 className="cd-stat-number">4</h3>
+            <h3 className="cd-stat-number">{stats.applied_jobs}</h3>
             <p className="cd-stat-label">Applied Jobs</p>
+          </div>
+        </div>
+
+        <div className="cd-stat-card">
+          <div className="cd-stat-icon">📝</div>
+          <div>
+            <h3 className="cd-stat-number">{stats.applied_internships}</h3>
+            <p className="cd-stat-label">Applied Internships</p>
           </div>
         </div>
 
         <div className="cd-stat-card">
           <div className="cd-stat-icon">💾</div>
           <div>
-            <h3 className="cd-stat-number">12</h3>
+            <h3 className="cd-stat-number">{stats.saved_jobs}</h3>
             <p className="cd-stat-label">Saved Jobs</p>
           </div>
         </div>
 
         <div className="cd-stat-card">
-          <div className="cd-stat-icon">📨</div>
+          <div className="cd-stat-icon">💾</div>
           <div>
-            <h3 className="cd-stat-number">3</h3>
-            <p className="cd-stat-label">New Messages</p>
+            <h3 className="cd-stat-number">{stats.saved_internships}</h3>
+            <p className="cd-stat-label">Saved Internships</p>
           </div>
         </div>
 
         <div className="cd-stat-card">
           <div className="cd-stat-icon">🎓</div>
           <div>
-            <h3 className="cd-stat-number">2</h3>
+            <h3 className="cd-stat-number">{stats.ongoing_courses}</h3>
             <p className="cd-stat-label">Ongoing Courses</p>
           </div>
         </div>
-      </div>
-
-      {/* Recent Applications */}
-      <div className="cd-section">
-        <h2 className="cd-section-title">Recent Applications</h2>
-
-        <div className="cd-application-card">
-          <div>
-            <h3 className="cd-job-title">Frontend Developer Intern</h3>
-            <p className="cd-job-company">Google</p>
-          </div>
-          <span className="cd-status cd-status-pending">Pending</span>
-        </div>
-
-        <div className="cd-application-card">
-          <div>
-            <h3 className="cd-job-title">Backend Developer</h3>
-            <p className="cd-job-company">Amazon</p>
-          </div>
-          <span className="cd-status cd-status-reviewed">Reviewed</span>
-        </div>
 
       </div>
-
     </div>
   );
 }
