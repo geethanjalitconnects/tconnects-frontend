@@ -117,11 +117,14 @@ function App() {
               <Route path="/register" element={<RegistrationPage />} />
 
               {/* ================= COURSES ================= */}
-              <Route path="/courses" element={<CoursesList />} />
-              <Route path="/course/:slug/:id" element={<CourseDetails />} />
+            
+              {/* ⭐ LEARN PAGE MUST COME FIRST */}
+<Route path="/course/learn/:slug/:id" element={<LearnCourse />} />
 
-              {/* ⭐ AFTER-ENROLL COURSE LEARN PAGE */}
-              <Route path="/course/learn/:slug/:id" element={<LearnCourse />} />
+{/* ⭐ COURSE DETAILS PAGE */}
+<Route path="/course/:slug/:id" element={<CourseDetails />} />
+  <Route path="/courses" element={<CoursesList />} />
+
 
 
               {/* JOBS */}
