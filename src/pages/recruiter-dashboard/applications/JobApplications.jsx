@@ -1,7 +1,7 @@
 // JobApplications.jsx
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import api from "../../../config/api"; 
+import api from "../../config/api"; 
 import "../../recruiter-dashboard/RecruiterDashboard.css";
 
 export default function JobApplications() {

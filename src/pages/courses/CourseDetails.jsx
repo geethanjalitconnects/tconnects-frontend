@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import api from "../../../config/api";   // ⭐ ADD THIS
+import api from "../../config/api";  // ⭐ ADD THIS
 import "./styles/CourseDetails.css";
 
 /* Components */
