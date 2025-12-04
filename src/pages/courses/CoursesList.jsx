@@ -2,76 +2,98 @@ import React, { useState } from "react";
 import "./styles/CoursesList.css";
 import CourseCard from "./components/CourseCard";
 
-
 const CoursesList = () => {
   const [search, setSearch] = useState("");
   const [courseType, setCourseType] = useState("all");
-  const [level, setLevel] = useState("all");
+
+  // Temporary Data — We'll replace with backend later
+  const sampleCourses = [
+    {
+      id: 1,
+      title: "Basics of Cybersecurity",
+      instructor: "Dr. Sarah Chen",
+      thumbnail: "https://img-c.udemycdn.com/course/240x135/625204_436a_4.jpg",
+      rating: 4.8,
+      price: "₹2,999",
+      type: "video",
+    },
+    {
+      id: 2,
+      title: "Advanced Cyber Crime Investigation",
+      instructor: "Michael Rodriguez",
+      thumbnail: "https://img-c.udemycdn.com/course/240x135/1430746_2f43_10.jpg",
+      rating: 4.9,
+      price: "₹8,999",
+      type: "video",
+    },
+  ];
 
   return (
-    <div className="courses-container">
+    <div className="courses-page">
 
-      {/* 🔎 TOP FILTER BAR */}
-      <div className="courses-top-bar">
+      {/* ================= HERO SECTION ================= */}
+      <div className="courses-hero">
+        <h1>Risk Management Courses</h1>
+        <p>Explore risk management programs designed for your career growth.</p>
+        <span className="course-count">20 courses available</span>
+      </div>
 
-        {/* Search */}
+      {/* ================= SEARCH + FILTER SECTION ================= */}
+      <div className="courses-search-area">
+
+        {/* Search Bar */}
         <input
           type="text"
-          placeholder="Search courses..."
-          className="courses-search-input"
+          placeholder="Search for courses..."
+          className="courses-search-box"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        {/* Course Type Dropdown */}
-        <select
-          className="courses-dropdown"
-          value={courseType}
-          onChange={(e) => setCourseType(e.target.value)}
-        >
-          <option value="all">All Courses</option>
-          <option value="video">Video Courses</option>
-          <option value="live">Live Courses</option>
-        </select>
+        {/* Filter Buttons (Pills) */}
+        <div className="courses-filter-pills">
+          <button
+            className={courseType === "all" ? "pill active" : "pill"}
+            onClick={() => setCourseType("all")}
+          >
+            All Courses
+          </button>
 
-        {/* Level Dropdown */}
-        <select
-          className="courses-dropdown"
-          value={level}
-          onChange={(e) => setLevel(e.target.value)}
-        >
-          <option value="all">All Levels</option>
-          <option value="beginner">Beginner</option>
-          <option value="intermediate">Intermediate</option>
-          <option value="advanced">Advanced</option>
-        </select>
-        {/* TEMPORARY SAMPLE DATA (delete later when backend ready) */}
-<div className="courses-grid">
-  <CourseCard
-    title="Python Bootcamp"
-    instructor="Dr. Angela Yu"
-    thumbnail="https://img-c.udemycdn.com/course/240x135/2776760_f176_10.jpg"
-    price="₹499"
-  />
-  <CourseCard
-    title="Full Stack Development"
-    instructor="John Doe"
-    thumbnail="https://img-c.udemycdn.com/course/240x135/625204_436a_4.jpg"
-    price="₹799"
-  />
-  <CourseCard
-    title="Risk Management Basics"
-    instructor="TConnects Team"
-    thumbnail="https://img-c.udemycdn.com/course/240x135/1430746_2f43_10.jpg"
-    price="Free"
-  />
-</div>
+          <button
+            className={courseType === "video" ? "pill active" : "pill"}
+            onClick={() => setCourseType("video")}
+          >
+            Video Courses
+          </button>
 
+          <button
+            className={courseType === "live" ? "pill active" : "pill"}
+            onClick={() => setCourseType("live")}
+          >
+            Live Courses
+          </button>
+        </div>
+      </div>
 
+      {/* ================= COURSES GRID ================= */}
+      <div className="courses-grid">
+        {sampleCourses
+          .filter(course =>
+            courseType === "all" || course.type === courseType
+          )
+          .map(course => (
+            <CourseCard
+              key={course.id}
+              title={course.title}
+              instructor={course.instructor}
+              thumbnail={course.thumbnail}
+              price={course.price}
+              rating={course.rating}
+            />
+          ))}
       </div>
 
     </div>
-    
   );
 };
 

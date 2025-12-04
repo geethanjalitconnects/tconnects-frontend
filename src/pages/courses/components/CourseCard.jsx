@@ -1,27 +1,28 @@
 import React from "react";
 import "../styles/CoursesList.css";
 
-const CourseCard = ({ title, instructor, thumbnail, price }) => {
+const CourseCard = ({ title, instructor, thumbnail, rating, price }) => {
   return (
     <div className="course-card">
 
-      {/* Thumbnail */}
-      <div className="course-card-img-wrapper">
-        <img
-          src={thumbnail}
-          alt={title}
-          className="course-card-img"
-        />
+      {/* Thumbnail + Video Badge */}
+      <div className="course-card-image-wrapper">
+        <img src={thumbnail} alt={title} className="course-card-image" />
+        <span className="video-badge">VIDEO</span>
       </div>
 
       {/* Content */}
-      <div className="course-card-content">
+      <div className="course-card-body">
         <h3 className="course-card-title">{title}</h3>
+
         <p className="course-card-instructor">{instructor}</p>
 
-        <div className="course-card-footer">
-          <span className="course-card-price">{price || "Free"}</span>
+        <div className="course-rating-price">
+          <span className="course-card-rating">⭐ {rating}</span>
+          <span className="course-card-price">{price}</span>
         </div>
+
+        <button className="course-view-btn">View Details</button>
       </div>
 
     </div>
