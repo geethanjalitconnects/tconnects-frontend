@@ -16,14 +16,13 @@ const ModuleAccordion = ({ moduleTitle, lectures = [] }) => {
 
       {open && (
         <div className="module-lessons">
-          {lectures.map((lesson) => (
-            <LessonRow
-              key={lesson.id}
-              title={lesson.title}
-              duration={lesson.duration}
-              preview={lesson.is_preview}   // ⭐ backend mapping
-            />
-          ))}
+          {lectures.map((lesson, i) => (
+  <div key={lesson.id} className="lesson-row">
+    <p>{lesson.title}</p>
+    <span>{lesson.duration}</span>
+  </div>
+))}
+
         </div>
       )}
 
