@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../config/api";
-import "../styles/LearnCourse.css";
+import "./styles/LearnCourse.css";
 
 import LearnVideoPlayer from "./components/LearnVideoPlayer";
 import LearnCurriculum from "./components/LearnCurriculum";
