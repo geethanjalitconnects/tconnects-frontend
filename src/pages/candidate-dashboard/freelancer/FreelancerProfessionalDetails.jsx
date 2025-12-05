@@ -12,10 +12,34 @@ export default function FreelancerProfessionalDetails() {
   });
 
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // =======================================
-  // 1️⃣ LOAD EXISTING PROFESSIONAL DETAILS
-  // =======================================
+  // ================================
+  // Dynamic Placeholders for Risk Management
+  // ================================
+  const placeholderExpertise =
+    data.job_category.toLowerCase().includes("risk")
+      ? "Risk assessment, compliance, mitigation"
+      : "UI, Frontend, React";
+
+  const placeholderYears =
+    data.job_category.toLowerCase().includes("risk")
+      ? "e.g., 3"
+      : "e.g., 5";
+
+  const placeholderJobCategory =
+    data.job_category.toLowerCase().includes("risk")
+      ? "Risk management, Compliance, Audit"
+      : "Design, Web development";
+
+  const placeholderBio =
+    data.job_category.toLowerCase().includes("risk")
+      ? "Experienced in identifying and mitigating organizational risks."
+      : "Short summary about you...";
+
+  // ================================
+  // 1️⃣ LOAD EXISTING DATA
+  // ================================
   useEffect(() => {
     const fetchDetails = async () => {
       try {
@@ -31,7 +55,6 @@ export default function FreelancerProfessionalDetails() {
           professional_bio: d.professional_bio || "",
         });
       } catch (error) {
-        console.error("Error loading professional details:", error);
         toast.error("Unable to load professional details.");
       } finally {
         setLoading(false);
@@ -41,28 +64,41 @@ export default function FreelancerProfessionalDetails() {
     fetchDetails();
   }, []);
 
-  // =======================================
-  // 2️⃣ HANDLE INPUTS
-  // =======================================
-  const handleChange = (e) =>
+  // ================================
+  // 2️⃣ HANDLE INPUT CHANGES
+  // ================================
+  const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
+  };
 
-  // =======================================
-  // 3️⃣ SAVE (PATCH)
-  // =======================================
+  // ================================
+  // 3️⃣ SAVE DETAILS (PATCH)
+  // ================================
   const handleSave = async (e) => {
     e.preventDefault();
+
+    if (error) {
+      toast.error("Please fix validation errors before saving.");
+      return;
+    }
+
+    const payload = {
+      ...data,
+      years_of_experience:
+        data.years_of_experience === ""
+          ? null
+          : Number(data.years_of_experience),
+    };
 
     try {
       await api.patch(
         "/api/profiles/freelancer/professional-details/",
-        data
+        payload
       );
 
       toast.success("Professional details updated successfully!");
     } catch (error) {
-      console.error("Error updating professional details:", error);
-      toast.error("Unable to update details. Try again.");
+      toast.error("Unable to update details.");
     }
   };
 
@@ -75,27 +111,37 @@ export default function FreelancerProfessionalDetails() {
 
         {/* Expertise */}
         <div className="fr-row">
-          <label className="fr-label">Area of expertise (comma separated)</label>
+          <label className="fr-label">Area of expertise</label>
           <input
             name="area_of_expertise"
             value={data.area_of_expertise}
             onChange={handleChange}
             className="fr-input"
-            placeholder="UI, Frontend, React"
+            placeholder={placeholderExpertise}
           />
         </div>
 
-        {/* Experience + Job Category */}
+        {/* Years + Category */}
         <div className="fr-row fr-two-col">
           <div>
             <label className="fr-label">Years of experience</label>
             <input
               name="years_of_experience"
               value={data.years_of_experience}
-              onChange={handleChange}
-              className="fr-input"
-              placeholder="e.g. 5"
+              onChange={(e) => {
+                const value = e.target.value;
+
+                if (value === "" || /^[0-9]+$/.test(value)) {
+                  setError("");
+                  setData({ ...data, years_of_experience: value });
+                } else {
+                  setError("Please enter a valid number (e.g., 3).");
+                }
+              }}
+              className={`fr-input ${error ? "fr-input-error" : ""}`}
+              placeholder={placeholderYears}
             />
+            {error && <p className="fr-error-text">{error}</p>}
           </div>
 
           <div>
@@ -105,7 +151,7 @@ export default function FreelancerProfessionalDetails() {
               value={data.job_category}
               onChange={handleChange}
               className="fr-input"
-              placeholder="Design, Web development"
+              placeholder={placeholderJobCategory}
             />
           </div>
         </div>
@@ -118,7 +164,7 @@ export default function FreelancerProfessionalDetails() {
             value={data.professional_bio}
             onChange={handleChange}
             className="fr-textarea"
-            placeholder="Short summary about you..."
+            placeholder={placeholderBio}
             rows={6}
           />
         </div>
