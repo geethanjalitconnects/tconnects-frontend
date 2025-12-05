@@ -15,17 +15,34 @@ export default function FreelancerSocialLinks() {
   const [reviewerEmail, setReviewerEmail] = useState("");
 
   // ======================================================
-  // 1️⃣ LOAD SOCIAL LINKS + RATINGS (GET)
+  // 1️⃣ LOAD SOCIAL LINKS (with safe defaults)
   // ======================================================
   useEffect(() => {
     const loadLinks = async () => {
       try {
         const res = await api.get("/api/profiles/freelancer/social-links/");
-        setData(res.data);
+
+        setData({
+          linkedin_url: res.data.linkedin_url || "",
+          github_url: res.data.github_url || "",
+          portfolio_url: res.data.portfolio_url || "",
+          ratings: Array.isArray(res.data.ratings) ? res.data.ratings : [],
+          badges: Array.isArray(res.data.badges) ? res.data.badges : []
+        });
+
       } catch (error) {
         toast.error("Unable to load social links.");
+
+        setData({
+          linkedin_url: "",
+          github_url: "",
+          portfolio_url: "",
+          ratings: [],
+          badges: []
+        });
       }
     };
+
     loadLinks();
   }, []);
 
@@ -42,8 +59,7 @@ export default function FreelancerSocialLinks() {
 
       toast.success("Social links updated!");
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to update links.");
+      toast.error("Failed to update social links.");
     }
   };
 
@@ -52,11 +68,10 @@ export default function FreelancerSocialLinks() {
   // ======================================================
   const sendRequest = () => {
     if (!reviewerEmail) {
-      toast.error("Enter recruiter's email.");
+      toast.error("Enter recruiter email.");
       return;
     }
 
-    // In real backend → you would send email
     toast.success(`Rating request sent to ${reviewerEmail}`);
     setReviewerEmail("");
   };
@@ -66,16 +81,16 @@ export default function FreelancerSocialLinks() {
       <div className="fr-card fr-form">
         <h2 className="fr-title">Social Links & Ratings</h2>
 
-        {/* SOCIAL LINKS */}
+        {/* SOCIAL LINKS SECTION */}
         <div className="fr-row">
           <label className="fr-label">LinkedIn URL</label>
           <input
             className="fr-input"
-            value={data.linkedin_url || ""}
+            value={data.linkedin_url}
             onChange={(e) =>
               setData({ ...data, linkedin_url: e.target.value })
             }
-            placeholder="https://linkedin.com/in/username"
+            placeholder="https://linkedin.com/in/yourname"
           />
         </div>
 
@@ -83,11 +98,11 @@ export default function FreelancerSocialLinks() {
           <label className="fr-label">GitHub URL</label>
           <input
             className="fr-input"
-            value={data.github_url || ""}
+            value={data.github_url}
             onChange={(e) =>
               setData({ ...data, github_url: e.target.value })
             }
-            placeholder="https://github.com/username"
+            placeholder="https://github.com/yourname"
           />
         </div>
 
@@ -95,24 +110,20 @@ export default function FreelancerSocialLinks() {
           <label className="fr-label">Portfolio URL</label>
           <input
             className="fr-input"
-            value={data.portfolio_url || ""}
+            value={data.portfolio_url}
             onChange={(e) =>
               setData({ ...data, portfolio_url: e.target.value })
             }
-            placeholder="https://myportfolio.com"
+            placeholder="https://yourportfolio.com"
           />
         </div>
 
-        <button
-          type="button"
-          className="fr-btn fr-btn-primary"
-          onClick={saveLinks}
-        >
+        <button className="fr-btn fr-btn-primary" onClick={saveLinks}>
           Save Links
         </button>
 
-        {/* FEEDBACK REQUEST */}
-        <div className="fr-section-divider">Request Rating from Recruiter</div>
+        {/* REQUEST REVIEW */}
+        <div className="fr-section-divider">Request Rating</div>
 
         <div className="fr-row fr-two-col">
           <div>
@@ -124,8 +135,8 @@ export default function FreelancerSocialLinks() {
               placeholder="recruiter@example.com"
             />
           </div>
+
           <button
-            type="button"
             className="fr-btn fr-btn-secondary"
             style={{ marginTop: "26px" }}
             onClick={sendRequest}
@@ -134,22 +145,15 @@ export default function FreelancerSocialLinks() {
           </button>
         </div>
 
-        {/* RATINGS SECTION */}
+        {/* RATINGS */}
         <div className="fr-section-divider">Ratings Received</div>
 
-        {data.ratings.length === 0 ? (
-          <p className="fr-empty">No ratings received yet.</p>
+        {(!data.ratings || data.ratings.length === 0) ? (
+          <p className="fr-empty">No ratings yet.</p>
         ) : (
-          data.ratings.map((r, index) => (
-            <div key={index} className="fr-rating-item">
-              <div className="fr-rating-stars">
-                {"★".repeat(r.stars)}{" "}
-                <span className="fr-rating-date">({r.date})</span>
-              </div>
-
-              {r.badge && (
-                <div className="fr-badge">{r.badge}</div>
-              )}
+          data.ratings.map((r, i) => (
+            <div key={i} className="fr-rating-item">
+              <strong>{r.stars} ★</strong> — {r.comment || "No comment"}
             </div>
           ))
         )}
@@ -157,14 +161,12 @@ export default function FreelancerSocialLinks() {
         {/* BADGES */}
         <div className="fr-section-divider">Badges Earned</div>
 
-        {data.badges.length === 0 ? (
-          <p className="fr-empty">No badges awarded yet.</p>
+        {(!data.badges || data.badges.length === 0) ? (
+          <p className="fr-empty">No badges awarded.</p>
         ) : (
           <div className="fr-badge-list">
             {data.badges.map((b, i) => (
-              <span key={i} className="fr-badge">
-                {b}
-              </span>
+              <span key={i} className="fr-badge">{b}</span>
             ))}
           </div>
         )}
