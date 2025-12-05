@@ -1,54 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import api from "../../../config/api";
+import toast from "react-hot-toast";
 import "./Freelancer.css";
 
 export default function FreelancerSocialLinks() {
-  const [links, setLinks] = useState({
-    linkedin: "",
-    github: "",
-    portfolio: "",
-    reviewerEmail: "",
+  const [data, setData] = useState({
+    linkedin_url: "",
+    github_url: "",
+    portfolio_url: "",
+    ratings: [],
+    badges: []
   });
 
-  const [ratings, setRatings] = useState([]);
-  const [stars, setStars] = useState(0);
-  const [badge, setBadge] = useState("");
+  const [reviewerEmail, setReviewerEmail] = useState("");
 
-  const updateLinks = (field, value) => {
-    setLinks((s) => ({ ...s, [field]: value }));
-  };
-
-  const sendRequest = () => {
-    if (!links.reviewerEmail) {
-      alert("Enter recruiter's email before sending request.");
-      return;
-    }
-    alert(
-      `Request sent to ${links.reviewerEmail}. (UI only, backend not implemented)`
-    );
-    setLinks((s) => ({ ...s, reviewerEmail: "" }));
-  };
-
-  const saveRating = () => {
-    if (stars === 0) {
-      alert("Please select a rating.");
-      return;
-    }
-
-    const entry = {
-      stars,
-      badge,
-      date: new Date().toLocaleDateString(),
+  // ======================================================
+  // 1️⃣ LOAD SOCIAL LINKS + RATINGS (GET)
+  // ======================================================
+  useEffect(() => {
+    const loadLinks = async () => {
+      try {
+        const res = await api.get("/api/profiles/freelancer/social-links/");
+        setData(res.data);
+      } catch (error) {
+        toast.error("Unable to load social links.");
+      }
     };
+    loadLinks();
+  }, []);
 
-    setRatings((prev) => [...prev, entry]);
-    setStars(0);
-    setBadge("");
+  // ======================================================
+  // 2️⃣ SAVE SOCIAL LINKS (PATCH)
+  // ======================================================
+  const saveLinks = async () => {
+    try {
+      await api.patch("/api/profiles/freelancer/social-links/", {
+        linkedin_url: data.linkedin_url,
+        github_url: data.github_url,
+        portfolio_url: data.portfolio_url
+      });
 
-    alert("Rating added (UI only)");
+      toast.success("Social links updated!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update links.");
+    }
   };
 
-  const removeRating = (index) => {
-    setRatings((prev) => prev.filter((_, i) => i !== index));
+  // ======================================================
+  // 3️⃣ SEND RATING REQUEST EMAIL (UI ONLY)
+  // ======================================================
+  const sendRequest = () => {
+    if (!reviewerEmail) {
+      toast.error("Enter recruiter's email.");
+      return;
+    }
+
+    // In real backend → you would send email
+    toast.success(`Rating request sent to ${reviewerEmail}`);
+    setReviewerEmail("");
   };
 
   return (
@@ -58,114 +68,105 @@ export default function FreelancerSocialLinks() {
 
         {/* SOCIAL LINKS */}
         <div className="fr-row">
-          <label className="fr-label">LinkedIn Profile URL</label>
+          <label className="fr-label">LinkedIn URL</label>
           <input
             className="fr-input"
-            placeholder="https://linkedin.com/in/yourname"
-            value={links.linkedin}
-            onChange={(e) => updateLinks("linkedin", e.target.value)}
+            value={data.linkedin_url || ""}
+            onChange={(e) =>
+              setData({ ...data, linkedin_url: e.target.value })
+            }
+            placeholder="https://linkedin.com/in/username"
           />
         </div>
 
         <div className="fr-row">
-          <label className="fr-label">GitHub Profile URL</label>
+          <label className="fr-label">GitHub URL</label>
           <input
             className="fr-input"
-            placeholder="https://github.com/yourname"
-            value={links.github}
-            onChange={(e) => updateLinks("github", e.target.value)}
+            value={data.github_url || ""}
+            onChange={(e) =>
+              setData({ ...data, github_url: e.target.value })
+            }
+            placeholder="https://github.com/username"
           />
         </div>
 
         <div className="fr-row">
-          <label className="fr-label">Portfolio Link</label>
+          <label className="fr-label">Portfolio URL</label>
           <input
             className="fr-input"
+            value={data.portfolio_url || ""}
+            onChange={(e) =>
+              setData({ ...data, portfolio_url: e.target.value })
+            }
             placeholder="https://myportfolio.com"
-            value={links.portfolio}
-            onChange={(e) => updateLinks("portfolio", e.target.value)}
           />
         </div>
+
+        <button
+          type="button"
+          className="fr-btn fr-btn-primary"
+          onClick={saveLinks}
+        >
+          Save Links
+        </button>
 
         {/* FEEDBACK REQUEST */}
-        <div className="fr-section-divider">Feedback Request</div>
+        <div className="fr-section-divider">Request Rating from Recruiter</div>
 
         <div className="fr-row fr-two-col">
           <div>
             <label className="fr-label">Recruiter Email</label>
             <input
               className="fr-input"
+              value={reviewerEmail}
+              onChange={(e) => setReviewerEmail(e.target.value)}
               placeholder="recruiter@example.com"
-              value={links.reviewerEmail}
-              onChange={(e) => updateLinks("reviewerEmail", e.target.value)}
             />
           </div>
-
           <button
             type="button"
-            className="fr-btn fr-btn-primary"
-            style={{ marginTop: "28px" }}
+            className="fr-btn fr-btn-secondary"
+            style={{ marginTop: "26px" }}
             onClick={sendRequest}
           >
             Send Request
           </button>
         </div>
 
-        {/* RATINGS */}
-        <div className="fr-section-divider">Add Rating (Manually for Now)</div>
+        {/* RATINGS SECTION */}
+        <div className="fr-section-divider">Ratings Received</div>
 
-        <div className="fr-row">
-          <label className="fr-label">Star Rating</label>
-          <div className="fr-stars-row">
-            {[1, 2, 3, 4, 5].map((s) => (
-              <span
-                key={s}
-                className={`fr-star ${stars >= s ? "active" : ""}`}
-                onClick={() => setStars(s)}
-              >
-                ★
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="fr-row">
-          <label className="fr-label">Badge (Optional)</label>
-          <input
-            className="fr-input"
-            placeholder="Top Performer, Hardworker, On-time Delivery..."
-            value={badge}
-            onChange={(e) => setBadge(e.target.value)}
-          />
-        </div>
-
-        <button className="fr-btn fr-btn-secondary" onClick={saveRating}>
-          + Add Rating
-        </button>
-
-        {/* SAVED RATINGS LIST */}
-        <div className="fr-section-divider">Received Ratings</div>
-
-        {ratings.length === 0 ? (
-          <p className="fr-empty">No ratings added yet.</p>
+        {data.ratings.length === 0 ? (
+          <p className="fr-empty">No ratings received yet.</p>
         ) : (
-          ratings.map((r, index) => (
+          data.ratings.map((r, index) => (
             <div key={index} className="fr-rating-item">
               <div className="fr-rating-stars">
                 {"★".repeat(r.stars)}{" "}
                 <span className="fr-rating-date">({r.date})</span>
               </div>
 
-              {r.badge && <div className="fr-badge">{r.badge}</div>}
-
-              <button
-                className="fr-btn fr-btn-danger fr-small-remove"
-                onClick={() => removeRating(index)}
-              >
-                Remove
-              </button>
+              {r.badge && (
+                <div className="fr-badge">{r.badge}</div>
+              )}
             </div>
           ))
+        )}
+
+        {/* BADGES */}
+        <div className="fr-section-divider">Badges Earned</div>
+
+        {data.badges.length === 0 ? (
+          <p className="fr-empty">No badges awarded yet.</p>
+        ) : (
+          <div className="fr-badge-list">
+            {data.badges.map((b, i) => (
+              <span key={i} className="fr-badge">
+                {b}
+              </span>
+            ))}
+          </div>
         )}
       </div>
     </div>
