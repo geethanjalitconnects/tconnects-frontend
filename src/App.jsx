@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
+import { Toaster } from "react-hot-toast";   // ⭐ ADDED
+
 /* AUTH CONTEXT */
 import { AuthProvider } from "./context/AuthContext";
 import { SavedJobsProvider } from "./context/SavedJobsContext";
@@ -24,7 +26,7 @@ import RegistrationPage from "./components/RegistrationPage";
 /* ================= COURSES ================= */
 import CoursesList from "./pages/courses/CoursesList";
 import CourseDetails from "./pages/courses/CourseDetails";
-import LearnCourse from "./pages/courses/LearnCourse";   // ⭐ NEW IMPORT
+import LearnCourse from "./pages/courses/LearnCourse";
 
 /* ================= CANDIDATE DASHBOARD ================= */
 import CandidateDashboardLayout from "./pages/candidate-dashboard/CandidateDashboardLayout";
@@ -93,52 +95,38 @@ function App() {
   const [modalCategory, setModalCategory] = useState(null);
   const location = useLocation();
 
-  /* ⭐ HIDE HEADER FOR COURSE DETAILS + LEARN PAGE */
-  const hideHeader =
-    location.pathname.startsWith("/course/");
+  const hideHeader = location.pathname.startsWith("/course/");
 
   return (
     <AuthProvider>
       <SavedJobsProvider>
         <SavedInternshipsProvider>
           <div>
-            {/* ⭐ CONDITIONAL HEADER */}
+
+            <Toaster position="top-right" />  {/* ⭐ ADDED HERE */}
+
             {!hideHeader && <Header />}
 
             <Routes>
-
               {/* PUBLIC ROUTES */}
-              <Route
-                path="/"
-                element={<HomePage onCategoryClick={setModalCategory} />}
-              />
+              <Route path="/" element={<HomePage onCategoryClick={setModalCategory} />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegistrationPage />} />
 
-              {/* ================= COURSES ================= */}
-            
-              {/* ⭐ LEARN PAGE MUST COME FIRST */}
-<Route path="/course/learn/:slug/:id" element={<LearnCourse />} />
-
-{/* ⭐ COURSE DETAILS PAGE */}
-<Route path="/course/:slug/:id" element={<CourseDetails />} />
-  <Route path="/courses" element={<CoursesList />} />
-
-
+              {/* COURSES */}
+              <Route path="/course/learn/:slug/:id" element={<LearnCourse />} />
+              <Route path="/course/:slug/:id" element={<CourseDetails />} />
+              <Route path="/courses" element={<CoursesList />} />
 
               {/* JOBS */}
               <Route path="/jobs" element={<JobsListPage />} />
               <Route path="/jobs/:slug" element={<JobDetailsPage />} />
-
-              {/* APPLY JOB */}
               <Route path="/apply" element={<ApplyJobPage />} />
 
               {/* INTERNSHIPS */}
               <Route path="/internships" element={<InternshipsListPage />} />
               <Route path="/internships/:id" element={<InternshipDetailsPage />} />
-
-              {/* APPLY INTERNSHIP */}
               <Route path="/apply-internship" element={<ApplyInternshipPage />} />
 
               {/* CANDIDATE DASHBOARD */}
@@ -146,14 +134,8 @@ function App() {
                 <Route index element={<Overview />} />
                 <Route path="overview" element={<Overview />} />
                 <Route path="profile" element={<Profile />} />
-                <Route path="applied-jobs" element={<AppliedJobs />} />
-                <Route path="applied-internships" element={<AppliedInternships />} />
-                <Route path="saved-jobs" element={<SavedJobs />} />
-                <Route path="saved-internships" element={<SavedInternships />} />
-                <Route path="messages" element={<Messages />} />
-                <Route path="courses" element={<Courses />} />
 
-                {/* Freelancer Routes */}
+                {/* Freelancer Pages */}
                 <Route path="freelancer/overview" element={<FreelancerOverview />} />
                 <Route path="freelancer/basic-information" element={<FreelancerBasicInfo />} />
                 <Route path="freelancer/professional-details" element={<FreelancerProfessionalDetails />} />
@@ -180,12 +162,10 @@ function App() {
                 <Route path="applications/internships" element={<InternshipApplications />} />
               </Route>
 
-              {/* FALLBACK */}
               <Route path="*" element={<HomePage />} />
-
             </Routes>
 
-            {/* RISK CATEGORY MODAL */}
+            {/* MODAL */}
             {modalCategory && (
               <RiskCategoryModal
                 category={modalCategory}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import api from "../../../config/api";  // <-- adjust path if needed
+import api from "../../../config/api";  
+import toast from "react-hot-toast";
 import "./Freelancer.css";
 
 export default function FreelancerBasicInfo() {
@@ -35,6 +36,7 @@ export default function FreelancerBasicInfo() {
         }
       } catch (error) {
         console.error("Error loading freelancer data:", error);
+        toast.error("Unable to load basic information.");
       } finally {
         setLoading(false);
       }
@@ -44,14 +46,14 @@ export default function FreelancerBasicInfo() {
   }, []);
 
   // ================================
-  // 2️⃣ HANDLE INPUT CHANGES
+  // 2️⃣ HANDLE INPUT CHANGE
   // ================================
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   // ================================
-  // 3️⃣ HANDLE PROFILE PICTURE PREVIEW + SAVE FILE
+  // 3️⃣ FILE PREVIEW
   // ================================
   const handleFile = (e) => {
     const file = e.target.files[0];
@@ -62,7 +64,7 @@ export default function FreelancerBasicInfo() {
   };
 
   // ================================
-  // 4️⃣ SAVE BASIC INFO (PATCH)
+  // 4️⃣ PATCH BASIC INFO
   // ================================
   const updateBasicInfo = async () => {
     try {
@@ -78,17 +80,15 @@ export default function FreelancerBasicInfo() {
   // 5️⃣ UPLOAD PROFILE PICTURE
   // ================================
   const uploadProfilePicture = async () => {
-    if (!profilePicFile) return true; // no new image
+    if (!profilePicFile) return true;
 
     try {
       const formData = new FormData();
       formData.append("profile_picture", profilePicFile);
 
       await api.post("/api/profiles/freelancer/upload-picture/", formData, {
-
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       return true;
     } catch (error) {
@@ -98,7 +98,7 @@ export default function FreelancerBasicInfo() {
   };
 
   // ================================
-  // 6️⃣ HANDLE SAVE (PATCH + UPLOAD FILE)
+  // 6️⃣ SAVE ALL (PATCH + UPLOAD)
   // ================================
   const handleSave = async (e) => {
     e.preventDefault();
@@ -107,13 +107,15 @@ export default function FreelancerBasicInfo() {
     const photoSuccess = await uploadProfilePicture();
 
     if (basicSuccess && photoSuccess) {
-      alert("Freelancer basic information updated successfully!");
+      toast.success("Your basic information has been updated successfully!");
     } else {
-      alert("Some error occurred. Please try again.");
+      toast.error("Unable to update. Please try again.");
     }
   };
 
-  // Loading state
+  // ================================
+  // Loading Indicator
+  // ================================
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -173,7 +175,7 @@ export default function FreelancerBasicInfo() {
           />
         </div>
 
-        {/* Upload Profile Picture */}
+        {/* Profile Picture */}
         <div className="fr-row">
           <label className="fr-label">Upload profile picture</label>
           <div className="fr-upload-row">
