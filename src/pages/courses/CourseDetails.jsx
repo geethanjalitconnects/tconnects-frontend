@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import api from "../../config/api";  // ⭐ ADD THIS
+import api from "../../config/api";
 import "./styles/CourseDetails.css";
 
 /* Components */
@@ -17,7 +17,7 @@ const CourseDetails = () => {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ⭐ FETCH COURSE DETAILS FROM BACKEND
+  // FETCH COURSE DETAILS
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -38,6 +38,8 @@ const CourseDetails = () => {
 
   return (
     <div className="course-details-page">
+
+      {/* TOP BANNER */}
       <CourseBanner
         title={course.title}
         instructor={course.instructor}
@@ -46,22 +48,37 @@ const CourseDetails = () => {
       />
 
       <div className="course-main-layout">
+
+        {/* LEFT SIDE CONTENT */}
         <div className="course-left">
-          <WhatYouWillLearn points={course.learnPoints || []} />
+
+          {/* WHAT YOU WILL LEARN */}
+          <WhatYouWillLearn points={course.what_you_will_learn || []} />
+
+          {/* DESCRIPTION */}
           <Description text={course.description} />
+
+          {/* REQUIREMENTS */}
           <Requirements requirements={course.requirements || []} />
-          <CourseIncludes includes={course.includes} />
-          <Curriculum curriculum={course.modules} />
+
+
+          {/* THIS COURSE INCLUDES */}
+          <CourseIncludes includes={course.includes || {}} />
+
+          {/* CURRICULUM */}
+          <Curriculum curriculum={course.modules || []} />
         </div>
 
+        {/* RIGHT SIDEBAR */}
         <div className="course-right">
           <CourseSidebar
             price={course.price}
-            includes={course.includes}
-            courseId={id}
+            includes={course.includes || {}}
+            courseId={course.id}
             slug={slug}
           />
         </div>
+
       </div>
     </div>
   );
