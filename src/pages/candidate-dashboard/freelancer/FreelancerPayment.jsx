@@ -7,16 +7,18 @@ export default function FreelancerPayment() {
   const [methods, setMethods] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Empty new entry template (only UI, no API yet)
   const emptyMethod = {
+    id: null,
     payment_type: "UPI",
     upi_id: "",
     account_holder_name: "",
     account_number: "",
-    ifsc_code: ""
+    ifsc_code: "",
   };
 
   // ======================================================
-  // 1️⃣ Load existing payment methods (GET)
+  // 1️⃣ LOAD EXISTING METHODS (GET)
   // ======================================================
   useEffect(() => {
     const loadMethods = async () => {
@@ -35,7 +37,7 @@ export default function FreelancerPayment() {
   }, []);
 
   // ======================================================
-  // 2️⃣ Convert empty string → null (to prevent backend 400)
+  // 2️⃣ SAFELY CONVERT "" → null (fixes backend 400)
   // ======================================================
   const normalize = (obj) => {
     const fixed = { ...obj };
@@ -46,7 +48,7 @@ export default function FreelancerPayment() {
   };
 
   // ======================================================
-  // 3️⃣ Validate before sending (prevents 400)
+  // 3️⃣ VALIDATE BEFORE API CALL
   // ======================================================
   const validate = (m) => {
     if (m.payment_type === "UPI") {
@@ -62,46 +64,47 @@ export default function FreelancerPayment() {
         return false;
       }
     }
+
     return true;
   };
 
   // ======================================================
-  // 4️⃣ Add payment method (POST)
+  // 4️⃣ ADD METHOD (LOCAL ONLY) — NO VALIDATION, NO API!!
   // ======================================================
-  const addMethod = async () => {
-    const payload = normalize(emptyMethod);
-
-    if (!validate(payload)) return;
-
-    try {
-      const res = await api.post(
-        "/api/profiles/freelancer/payment-methods/",
-        payload
-      );
-
-      setMethods((prev) => [...prev, res.data]);
-      toast.success("Payment method added!");
-    } catch (error) {
-      console.log(error.response?.data);
-      toast.error("Backend rejected the data (400).");
-    }
+  const addMethod = () => {
+    setMethods((prev) => [...prev, { ...emptyMethod }]);
   };
 
   // ======================================================
-  // 5️⃣ Remove payment method (DELETE)
+  // 5️⃣ UPDATE A FIELD
   // ======================================================
-  const removeMethod = async (id) => {
+  const updateField = (index, field, value) => {
+    setMethods((prev) =>
+      prev.map((m, i) => (i === index ? { ...m, [field]: value } : m))
+    );
+  };
+
+  // ======================================================
+  // 6️⃣ DELETE METHOD
+  // ======================================================
+  const removeMethod = async (id, index) => {
+    // If it's a new unsaved entry → remove directly
+    if (!id) {
+      setMethods((prev) => prev.filter((_, i) => i !== index));
+      return;
+    }
+
     try {
       await api.delete(`/api/profiles/freelancer/payment-methods/${id}/`);
-      setMethods((prev) => prev.filter((item) => item.id !== id));
-      toast.success("Payment method removed.");
+      setMethods((prev) => prev.filter((m) => m.id !== id));
+      toast.success("Payment method deleted.");
     } catch (error) {
       toast.error("Unable to delete payment method.");
     }
   };
 
   // ======================================================
-  // 6️⃣ Save all changes (PATCH each record)
+  // 7️⃣ SAVE ALL (POST new + PATCH existing)
   // ======================================================
   const saveAll = async (e) => {
     e.preventDefault();
@@ -118,19 +121,29 @@ export default function FreelancerPayment() {
           account_number:
             method.payment_type === "Bank" ? method.account_number : null,
           ifsc_code:
-            method.payment_type === "Bank" ? method.ifsc_code : null
+            method.payment_type === "Bank" ? method.ifsc_code : null,
         });
 
-        await api.patch(
-          `/api/profiles/freelancer/payment-methods/${method.id}/`,
-          payload
-        );
+        if (!method.id) {
+          // Create a new payment method
+          const res = await api.post(
+            "/api/profiles/freelancer/payment-methods/",
+            payload
+          );
+          method.id = res.data.id; // update local id
+        } else {
+          // Update existing method
+          await api.patch(
+            `/api/profiles/freelancer/payment-methods/${method.id}/`,
+            payload
+          );
+        }
       }
 
-      toast.success("Payment methods updated!");
+      toast.success("Payment methods saved successfully!");
     } catch (error) {
       console.log(error.response?.data);
-      toast.error("Failed to update payment methods.");
+      toast.error("Failed to save payment methods.");
     }
   };
 
@@ -146,7 +159,7 @@ export default function FreelancerPayment() {
         )}
 
         {methods.map((method, index) => (
-          <div key={method.id} className="fr-payment-block">
+          <div key={index} className="fr-payment-block">
             {/* PAYMENT TYPE */}
             <div className="fr-row fr-two-col">
               <div>
@@ -155,13 +168,7 @@ export default function FreelancerPayment() {
                   className="fr-input"
                   value={method.payment_type}
                   onChange={(e) =>
-                    setMethods((prev) =>
-                      prev.map((m, i) =>
-                        i === index
-                          ? { ...m, payment_type: e.target.value }
-                          : m
-                      )
-                    )
+                    updateField(index, "payment_type", e.target.value)
                   }
                 >
                   <option value="UPI">UPI</option>
@@ -172,7 +179,7 @@ export default function FreelancerPayment() {
               <button
                 type="button"
                 className="fr-btn fr-btn-danger remove-btn"
-                onClick={() => removeMethod(method.id)}
+                onClick={() => removeMethod(method.id, index)}
               >
                 Remove
               </button>
@@ -213,7 +220,7 @@ export default function FreelancerPayment() {
                     <label className="fr-label">Account Number</label>
                     <input
                       className="fr-input"
-                      placeholder="1234 5678 8901"
+                      placeholder="1234567890"
                       value={method.account_number || ""}
                       onChange={(e) =>
                         updateField(index, "account_number", e.target.value)
