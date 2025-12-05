@@ -7,13 +7,13 @@ export default function FreelancerPayment() {
   const [methods, setMethods] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Empty template
+  // Default new payment object
   const newMethod = {
     payment_type: "UPI",
     upi_id: "",
-    account_holder_name: "",
-    account_number: "",
-    ifsc_code: "",
+    account_holder_name: null,
+    account_number: null,
+    ifsc_code: null,
   };
 
   // ======================================================
@@ -22,12 +22,13 @@ export default function FreelancerPayment() {
   useEffect(() => {
     const loadPayments = async () => {
       try {
-        const res = await api.get(
-          "/api/profiles/freelancer/payment-methods/"
-        );
-        setMethods(res.data);
+        const res = await api.get("/api/profiles/freelancer/payment-methods/");
+
+        // safety: ensure array
+        setMethods(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
         toast.error("Unable to load payment methods.");
+        setMethods([]); // prevent undefined
       } finally {
         setLoading(false);
       }
@@ -37,7 +38,7 @@ export default function FreelancerPayment() {
   }, []);
 
   // ======================================================
-  // 2️⃣ UPDATE A FIELD
+  // 2️⃣ UPDATE A FIELD (local state)
   // ======================================================
   const updateField = (index, field, value) => {
     setMethods((prev) =>
@@ -46,54 +47,98 @@ export default function FreelancerPayment() {
   };
 
   // ======================================================
-  // 3️⃣ ADD NEW METHOD (POST)
+  // 3️⃣ VALIDATION LOGIC (prevents 400 errors)
+  // ======================================================
+  const validatePayment = (method) => {
+    if (method.payment_type === "UPI") {
+      if (!method.upi_id || method.upi_id.trim() === "") {
+        toast.error("Please enter a valid UPI ID.");
+        return false;
+      }
+    }
+
+    if (method.payment_type === "Bank") {
+      if (
+        !method.account_holder_name ||
+        !method.account_number ||
+        !method.ifsc_code
+      ) {
+        toast.error("Please fill all bank details.");
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  // ======================================================
+  // 4️⃣ ADD NEW PAYMENT METHOD (POST)
   // ======================================================
   const addMethod = async () => {
+    const payload = { ...newMethod };
+
+    if (!validatePayment(payload)) return;
+
     try {
       const res = await api.post(
         "/api/profiles/freelancer/payment-methods/",
-        newMethod
+        payload
       );
+
       setMethods((prev) => [...prev, res.data]);
 
       toast.success("Payment method added!");
     } catch (error) {
-      toast.error("Failed to add payment method.");
+      console.log(error);
+      toast.error("Unable to add payment method.");
     }
   };
 
   // ======================================================
-  // 4️⃣ DELETE METHOD
+  // 5️⃣ DELETE PAYMENT METHOD
   // ======================================================
   const removeMethod = async (id) => {
     try {
-      await api.delete(
-        `/api/profiles/freelancer/payment-methods/${id}/`
-      );
+      await api.delete(`/api/profiles/freelancer/payment-methods/${id}/`);
       setMethods((prev) => prev.filter((m) => m.id !== id));
       toast.success("Payment method deleted.");
     } catch (error) {
-      toast.error("Unable to delete payment method.");
+      toast.error("Unable to delete method.");
     }
   };
 
   // ======================================================
-  // 5️⃣ SAVE CHANGES (PATCH for each modified method)
+  // 6️⃣ SAVE ALL (PATCH PER ITEM)
   // ======================================================
   const save = async (e) => {
     e.preventDefault();
 
     try {
       for (const method of methods) {
+        if (!validatePayment(method)) return;
+
+        const payload = {
+          payment_type: method.payment_type,
+          upi_id: method.payment_type === "UPI" ? method.upi_id : null,
+          account_holder_name:
+            method.payment_type === "Bank"
+              ? method.account_holder_name
+              : null,
+          account_number:
+            method.payment_type === "Bank" ? method.account_number : null,
+          ifsc_code:
+            method.payment_type === "Bank" ? method.ifsc_code : null,
+        };
+
         await api.patch(
           `/api/profiles/freelancer/payment-methods/${method.id}/`,
-          method
+          payload
         );
       }
 
       toast.success("Payment methods updated!");
     } catch (error) {
-      toast.error("Update failed.");
+      toast.error("Failed to update payment methods.");
     }
   };
 
@@ -104,89 +149,105 @@ export default function FreelancerPayment() {
       <form className="fr-card fr-form" onSubmit={save}>
         <h2 className="fr-title">Payment Methods</h2>
 
-        {methods.map((method, index) => (
-          <div key={method.id} className="fr-payment-block">
-            <div className="fr-row fr-two-col">
-              <div>
-                <label className="fr-label">Payment Type</label>
-                <select
-                  className="fr-input"
-                  value={method.payment_type}
-                  onChange={(e) =>
-                    updateField(index, "payment_type", e.target.value)
-                  }
+        {methods && methods.length > 0 ? (
+          methods.map((method, index) => (
+            <div key={method.id} className="fr-payment-block">
+              <div className="fr-row fr-two-col">
+                <div>
+                  <label className="fr-label">Payment Type</label>
+                  <select
+                    className="fr-input"
+                    value={method.payment_type}
+                    onChange={(e) =>
+                      updateField(index, "payment_type", e.target.value)
+                    }
+                  >
+                    <option value="UPI">UPI</option>
+                    <option value="Bank">Bank Transfer</option>
+                  </select>
+                </div>
+
+                <button
+                  type="button"
+                  className="fr-btn fr-btn-danger remove-btn"
+                  onClick={() => removeMethod(method.id)}
                 >
-                  <option value="UPI">UPI</option>
-                  <option value="Bank">Bank Transfer</option>
-                </select>
+                  Remove
+                </button>
               </div>
 
-              <button
-                type="button"
-                className="fr-btn fr-btn-danger remove-btn"
-                onClick={() => removeMethod(method.id)}
-              >
-                Remove
-              </button>
-            </div>
-
-            {method.payment_type === "UPI" && (
-              <div className="fr-row">
-                <label className="fr-label">UPI ID</label>
-                <input
-                  className="fr-input"
-                  placeholder="yourname@upi"
-                  value={method.upi_id || ""}
-                  onChange={(e) =>
-                    updateField(index, "upi_id", e.target.value)
-                  }
-                />
-              </div>
-            )}
-
-            {method.payment_type === "Bank" && (
-              <>
+              {method.payment_type === "UPI" && (
                 <div className="fr-row">
-                  <label className="fr-label">Account Holder Name</label>
+                  <label className="fr-label">UPI ID</label>
                   <input
                     className="fr-input"
-                    placeholder="Full Name"
-                    value={method.account_holder_name || ""}
+                    placeholder="yourname@upi"
+                    value={method.upi_id || ""}
                     onChange={(e) =>
-                      updateField(index, "account_holder_name", e.target.value)
+                      updateField(index, "upi_id", e.target.value)
                     }
                   />
                 </div>
+              )}
 
-                <div className="fr-row fr-two-col">
-                  <div>
-                    <label className="fr-label">Account Number</label>
+              {method.payment_type === "Bank" && (
+                <>
+                  <div className="fr-row">
+                    <label className="fr-label">Account Holder Name</label>
                     <input
                       className="fr-input"
-                      placeholder="1234 5678 8901"
-                      value={method.account_number || ""}
+                      placeholder="Full Name"
+                      value={method.account_holder_name || ""}
                       onChange={(e) =>
-                        updateField(index, "account_number", e.target.value)
+                        updateField(
+                          index,
+                          "account_holder_name",
+                          e.target.value
+                        )
                       }
                     />
                   </div>
 
-                  <div>
-                    <label className="fr-label">IFSC Code</label>
-                    <input
-                      className="fr-input"
-                      placeholder="SBIN0001234"
-                      value={method.ifsc_code || ""}
-                      onChange={(e) =>
-                        updateField(index, "ifsc_code", e.target.value)
-                      }
-                    />
+                  <div className="fr-row fr-two-col">
+                    <div>
+                      <label className="fr-label">Account Number</label>
+                      <input
+                        className="fr-input"
+                        placeholder="1234 5678 8901"
+                        value={method.account_number || ""}
+                        onChange={(e) =>
+                          updateField(
+                            index,
+                            "account_number",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+
+                    <div>
+                      <label className="fr-label">IFSC Code</label>
+                      <input
+                        className="fr-input"
+                        placeholder="SBIN0001234"
+                        value={method.ifsc_code || ""}
+                        onChange={(e) =>
+                          updateField(
+                            index,
+                            "ifsc_code",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
                   </div>
-                </div>
-              </>
-            )}
-          </div>
-        ))}
+                </>
+              )}
+            </div>
+          ))
+        ) : (
+          <p className="fr-empty">No payment methods added yet.</p>
+        )}
 
         <button
           type="button"
