@@ -10,13 +10,12 @@ export default function FreelancerEducation() {
     institution: "",
     start_year: "",
     end_year: "",
-    description: "",
   });
 
   const [loading, setLoading] = useState(true);
 
   // =====================================
-  // 1️⃣ Load existing education from backend
+  // 1️⃣ Load saved education
   // =====================================
   useEffect(() => {
     const fetchEducation = async () => {
@@ -24,8 +23,8 @@ export default function FreelancerEducation() {
         const res = await api.get("/api/profiles/freelancer/education/");
         setList(res.data);
       } catch (error) {
-        toast.error("Unable to load education records.");
         console.error(error);
+        toast.error("Unable to load education records.");
       } finally {
         setLoading(false);
       }
@@ -35,7 +34,7 @@ export default function FreelancerEducation() {
   }, []);
 
   // =====================================
-  // 2️⃣ Handle Add Education (POST)
+  // 2️⃣ Add new education
   // =====================================
   const handleAdd = async (e) => {
     e.preventDefault();
@@ -46,50 +45,40 @@ export default function FreelancerEducation() {
     }
 
     try {
-      const res = await api.post(
-        "/api/profiles/freelancer/education/",
-        entry
-      );
+      const res = await api.post("/api/profiles/freelancer/education/", entry);
 
-      // Append newly added backend record
       setList((prev) => [...prev, res.data]);
 
       toast.success("Education added successfully!");
 
-      // Reset form fields
       setEntry({
         degree: "",
         institution: "",
         start_year: "",
         end_year: "",
-        description: "",
       });
     } catch (error) {
-      toast.error("Failed to add education. Try again.");
       console.error(error);
+      toast.error("Failed to add education.");
     }
   };
 
   // =====================================
-  // 3️⃣ Handle Delete Education (DELETE)
+  // 3️⃣ Delete education
   // =====================================
   const handleDelete = async (id) => {
     try {
       await api.delete(`/api/profiles/freelancer/education/${id}/`);
 
-      // Update local list
       setList((prev) => prev.filter((item) => item.id !== id));
 
-      toast.success("Education removed successfully.");
+      toast.success("Education removed.");
     } catch (error) {
-      toast.error("Failed to delete education.");
       console.error(error);
+      toast.error("Unable to delete.");
     }
   };
 
-  // =====================================
-  // Loading state
-  // =====================================
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -97,21 +86,20 @@ export default function FreelancerEducation() {
       <div className="fr-card">
         <h2 className="fr-title">Education</h2>
 
-        {/* ADD EDUCATION FORM */}
+        {/* Add Education Form */}
         <form className="fr-form" onSubmit={handleAdd}>
           <div className="fr-row fr-two-col">
             <input
               className="fr-input"
-              placeholder="Degree"
+              placeholder="Degree (e.g., BSc Computer Science)"
               value={entry.degree}
-              onChange={(e) =>
-                setEntry({ ...entry, degree: e.target.value })
-              }
+              onChange={(e) => setEntry({ ...entry, degree: e.target.value })}
               required
             />
+
             <input
               className="fr-input"
-              placeholder="Institution"
+              placeholder="Institution (e.g., VIT, IIT)"
               value={entry.institution}
               onChange={(e) =>
                 setEntry({ ...entry, institution: e.target.value })
@@ -129,25 +117,12 @@ export default function FreelancerEducation() {
                 setEntry({ ...entry, start_year: e.target.value })
               }
             />
+
             <input
               className="fr-input"
               placeholder="End year (e.g., 2023)"
               value={entry.end_year}
-              onChange={(e) =>
-                setEntry({ ...entry, end_year: e.target.value })
-              }
-            />
-          </div>
-
-          <div className="fr-row">
-            <textarea
-              className="fr-textarea"
-              placeholder="Description (optional)"
-              value={entry.description}
-              onChange={(e) =>
-                setEntry({ ...entry, description: e.target.value })
-              }
-              rows={3}
+              onChange={(e) => setEntry({ ...entry, end_year: e.target.value })}
             />
           </div>
 
@@ -156,7 +131,7 @@ export default function FreelancerEducation() {
           </div>
         </form>
 
-        {/* SAVED EDUCATION LIST */}
+        {/* Saved Education */}
         <div className="fr-section">
           <h3 className="fr-subtitle">Saved Education</h3>
 
@@ -170,7 +145,6 @@ export default function FreelancerEducation() {
                 <div>
                   <strong>{it.degree}</strong> — {it.institution} (
                   {it.start_year || "N/A"} — {it.end_year || "N/A"})
-                  <p className="fr-muted">{it.description}</p>
                 </div>
 
                 <button
