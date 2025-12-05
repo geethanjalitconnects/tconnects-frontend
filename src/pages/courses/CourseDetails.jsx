@@ -53,27 +53,36 @@ const CourseDetails = () => {
         <div className="course-left">
 
           {/* WHAT YOU WILL LEARN */}
-          <WhatYouWillLearn points={course.what_you_will_learn || []} />
+          <WhatYouWillLearn 
+            points={course.what_you_will_learn || []} 
+          />
 
           {/* DESCRIPTION */}
-          <Description text={course.description} />
+          <Description 
+            text={course.description || ""} 
+          />
 
           {/* REQUIREMENTS */}
-          <Requirements requirements={course.requirements || []} />
-
+          <Requirements 
+            items={course.requirements || []} 
+          />
 
           {/* THIS COURSE INCLUDES */}
-          <CourseIncludes includes={course.includes || {}} />
+          <CourseIncludes 
+            includes={course.course_includes || {}} 
+          />
 
           {/* CURRICULUM */}
-          <Curriculum curriculum={course.modules || []} />
+          <Curriculum 
+            curriculum={course.modules || []} 
+          />
         </div>
 
         {/* RIGHT SIDEBAR */}
         <div className="course-right">
           <CourseSidebar
             price={course.price}
-            includes={course.includes || {}}
+            includes={course.course_includes || {}}
             courseId={course.id}
             slug={slug}
           />

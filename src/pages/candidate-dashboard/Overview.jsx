@@ -8,7 +8,7 @@ export default function Overview() {
     applied_internships: 0,
     saved_jobs: 0,
     saved_internships: 0,
-    ongoing_courses: 2,
+    ongoing_courses: 0,
   });
 
   useEffect(() => {

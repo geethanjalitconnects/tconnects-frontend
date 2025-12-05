@@ -2,21 +2,25 @@ import React from "react";
 import "../styles/CourseDetails.css";
 import { FaCheck } from "react-icons/fa";
 
-const Requirements = ({ requirements = [] }) => {
-  if (!Array.isArray(requirements)) requirements = [];
+const Requirements = ({ items = [] }) => {
+  if (!Array.isArray(items)) items = [];
 
   return (
-    <div className="requirements-box">
-      <h2>Requirements</h2>
+    <div className="requirements-section learn-section-box">
+      <h2 className="section-title">Requirements</h2>
 
-      <ul className="requirements-list">
-        {requirements.map((req, index) => (
-          <li key={index} className="requirement-item">
-            <FaCheck className="req-check-icon" />
-            {req}
-          </li>
-        ))}
-      </ul>
+      {items.length === 0 ? (
+        <p className="empty-text">No prerequisites required for this course.</p>
+      ) : (
+        <ul className="requirements-list">
+          {items.map((req, i) => (
+            <li key={i} className="req-item">
+              <FaCheck className="req-icon" />
+              {req}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

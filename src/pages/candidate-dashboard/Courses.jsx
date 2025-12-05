@@ -1,62 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import api from "../../config/api";
 import "./CandidateDashboard.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Courses() {
+  const [courses, setCourses] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    api
+      .get("/api/courses/my-courses/")
+      .then((res) => setCourses(res.data))
+      .catch((err) => console.error("Course fetch error:", err));
+  }, []);
+
   return (
     <div className="cd-courses">
 
-      {/* Page Header */}
       <h2 className="cd-section-title">My Courses</h2>
       <p className="cd-section-subtitle">
         Continue your learning and track your course progress.
       </p>
 
-      {/* Course 1 */}
-      <div className="cd-course-card">
-        <div className="cd-course-info">
-          <h3 className="cd-course-title">Frontend Development Bootcamp</h3>
-          <p className="cd-course-provider">Offered by: TConnects Academy</p>
-          <p className="cd-course-progress-text">Progress: 65%</p>
+      {courses.length === 0 && (
+        <p className="cd-empty">No enrolled courses yet.</p>
+      )}
 
-          {/* Progress Bar */}
-          <div className="cd-progress">
-            <div className="cd-progress-bar" style={{ width: "65%" }}></div>
+      {courses.map((course) => (
+        <div key={course.id} className="cd-course-card" onClick={() => 
+          navigate(`/course/${course.slug}/${course.id}/learn`)
+        }>
+          <div className="cd-course-info">
+            <h3 className="cd-course-title">{course.title}</h3>
+            <p className="cd-course-provider">Offered by: TConnects Academy</p>
+            <p className="cd-course-progress-text">
+              Progress: {course.progress}%
+            </p>
+
+            <div className="cd-progress">
+              <div className="cd-progress-bar" style={{ width: `${course.progress}%` }}></div>
+            </div>
           </div>
+
+          <span className={`cd-course-status ${
+            course.status === "Completed" ? "cd-status-completed" : "cd-status-ongoing"
+          }`}>
+            {course.status}
+          </span>
         </div>
-
-        <span className="cd-course-status cd-status-ongoing">Ongoing</span>
-      </div>
-
-      {/* Course 2 */}
-      <div className="cd-course-card">
-        <div className="cd-course-info">
-          <h3 className="cd-course-title">Python for Beginners</h3>
-          <p className="cd-course-provider">Offered by: SkillUp Learning</p>
-          <p className="cd-course-progress-text">Progress: 100%</p>
-
-          <div className="cd-progress">
-            <div className="cd-progress-bar" style={{ width: "100%" }}></div>
-          </div>
-        </div>
-
-        <span className="cd-course-status cd-status-completed">Completed</span>
-      </div>
-
-      {/* Course 3 */}
-      <div className="cd-course-card">
-        <div className="cd-course-info">
-          <h3 className="cd-course-title">UI/UX Essentials</h3>
-          <p className="cd-course-provider">Offered by: DesignMaster</p>
-          <p className="cd-course-progress-text">Progress: 20%</p>
-
-          <div className="cd-progress">
-            <div className="cd-progress-bar" style={{ width: "20%" }}></div>
-          </div>
-        </div>
-
-        <span className="cd-course-status cd-status-ongoing">Ongoing</span>
-      </div>
-
+      ))}
     </div>
   );
 }
