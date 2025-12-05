@@ -1,31 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import api from "../../../config/api";
+import toast from "react-hot-toast";
 import "./Freelancer.css";
 
 export default function FreelancerAvailability() {
+  const [loading, setLoading] = useState(true);
+
   const [state, setState] = useState({
-    status: "available",
-    from: "",
-    to: "",
-    timezone: "Asia/Kolkata",
-    days: [],
+    is_available: true,
+    is_occupied: false,
+    available_from: "",
+    available_to: "",
+    time_zone: "Asia/Kolkata",
+    available_days: [],
   });
 
+  const daysList = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+  // ======================================================
+  // 1️⃣ LOAD SAVED AVAILABILITY FROM BACKEND
+  // ======================================================
+  useEffect(() => {
+    const loadAvailability = async () => {
+      try {
+        const res = await api.get("/api/profiles/freelancer/availability/");
+        setState(res.data);
+      } catch (error) {
+        console.error(error);
+        toast.error("Unable to load availability.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadAvailability();
+  }, []);
+
+  // ======================================================
+  // 2️⃣ TOGGLE DAY LOGIC
+  // ======================================================
   const toggleDay = (day) => {
     setState((s) => ({
       ...s,
-      days: s.days.includes(day)
-        ? s.days.filter((d) => d !== day)
-        : [...s.days, day],
+      available_days: s.available_days.includes(day)
+        ? s.available_days.filter((d) => d !== day)
+        : [...s.available_days, day],
     }));
   };
 
-  const save = (e) => {
+  // ======================================================
+  // 3️⃣ SAVE AVAILABILITY (PATCH)
+  // ======================================================
+  const save = async (e) => {
     e.preventDefault();
-    console.log("Availability:", state);
-    alert("Availability saved (UI only, no backend)");
+
+    try {
+      await api.patch("/api/profiles/freelancer/availability/", state);
+      toast.success("Availability updated!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update availability.");
+    }
   };
 
-  const daysList = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="fr-page">
@@ -37,18 +74,27 @@ export default function FreelancerAvailability() {
           <label className="fr-label">Status</label>
           <div className="fr-toggle-row">
             <label
-              className={`fr-pill ${
-                state.status === "available" ? "active" : ""
-              }`}
-              onClick={() => setState((s) => ({ ...s, status: "available" }))}
+              className={`fr-pill ${state.is_available ? "active" : ""}`}
+              onClick={() =>
+                setState({
+                  ...state,
+                  is_available: true,
+                  is_occupied: false,
+                })
+              }
             >
               Available for work
             </label>
+
             <label
-              className={`fr-pill ${
-                state.status === "occupied" ? "active" : ""
-              }`}
-              onClick={() => setState((s) => ({ ...s, status: "occupied" }))}
+              className={`fr-pill ${state.is_occupied ? "active" : ""}`}
+              onClick={() =>
+                setState({
+                  ...state,
+                  is_available: false,
+                  is_occupied: true,
+                })
+              }
             >
               Currently occupied
             </label>
@@ -60,11 +106,11 @@ export default function FreelancerAvailability() {
           <div>
             <label className="fr-label">Available from</label>
             <input
-              type="date"
+              type="time"
               className="fr-input"
-              value={state.from}
+              value={state.available_from || ""}
               onChange={(e) =>
-                setState((s) => ({ ...s, from: e.target.value }))
+                setState({ ...state, available_from: e.target.value })
               }
             />
           </div>
@@ -72,11 +118,11 @@ export default function FreelancerAvailability() {
           <div>
             <label className="fr-label">Available to</label>
             <input
-              type="date"
+              type="time"
               className="fr-input"
-              value={state.to}
+              value={state.available_to || ""}
               onChange={(e) =>
-                setState((s) => ({ ...s, to: e.target.value }))
+                setState({ ...state, available_to: e.target.value })
               }
             />
           </div>
@@ -87,9 +133,9 @@ export default function FreelancerAvailability() {
           <label className="fr-label">Time zone</label>
           <select
             className="fr-input"
-            value={state.timezone}
+            value={state.time_zone}
             onChange={(e) =>
-              setState((s) => ({ ...s, timezone: e.target.value }))
+              setState({ ...state, time_zone: e.target.value })
             }
           >
             <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
@@ -107,7 +153,9 @@ export default function FreelancerAvailability() {
             {daysList.map((day) => (
               <div
                 key={day}
-                className={`fr-day ${state.days.includes(day) ? "active" : ""}`}
+                className={`fr-day ${
+                  state.available_days.includes(day) ? "active" : ""
+                }`}
                 onClick={() => toggleDay(day)}
               >
                 {day}
@@ -116,7 +164,7 @@ export default function FreelancerAvailability() {
           </div>
         </div>
 
-        {/* ACTION BUTTONS */}
+        {/* BUTTONS */}
         <div className="fr-actions">
           <button type="submit" className="fr-btn fr-btn-primary">
             Save Availability
@@ -127,11 +175,12 @@ export default function FreelancerAvailability() {
             className="fr-btn"
             onClick={() =>
               setState({
-                status: "available",
-                from: "",
-                to: "",
-                timezone: "Asia/Kolkata",
-                days: [],
+                is_available: true,
+                is_occupied: false,
+                available_from: "",
+                available_to: "",
+                time_zone: "Asia/Kolkata",
+                available_days: [],
               })
             }
           >
