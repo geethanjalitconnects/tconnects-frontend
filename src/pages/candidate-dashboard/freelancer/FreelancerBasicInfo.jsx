@@ -84,10 +84,8 @@ export default function FreelancerBasicInfo() {
       const formData = new FormData();
       formData.append("profile_picture", profilePicFile);
 
-      await api.post(
-        "/api/profiles/freelancer/upload-profile-picture/",
-        formData,
-        {
+      await api.post("/api/profiles/freelancer/upload-picture/", formData, {
+
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
