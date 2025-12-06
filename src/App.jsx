@@ -89,9 +89,9 @@ function HomePage({ onCategoryClick }) {
       <HeroSection onCategoryClick={onCategoryClick} 
       navigateToJobsList={() => navigate("/jobs")}
         navigateToResumeMaking={() => window.open("https://tconnects.vercel.app/", "_blank")}
-        navigateToAboutUs={() => navigate("/about-us")}
+        
         />
-      
+        <AboutSection navigateToAboutUs={() => navigate("/about-us")} />
       <WhyChoose />
       <HowItWorks />
       <Footer />
