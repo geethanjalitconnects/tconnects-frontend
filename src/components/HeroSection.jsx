@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, Form, Card } from 'react-bootstrap';
 import './HeroSection.css';
 import RiskCategoryModal from './RiskCategoryModal';
+import { Link } from "react-router-dom";
+
 
 const HeroSection = ({ navigateToJobsList, navigateToResumeMaking, onNavigate }) => {
   const [currentText, setCurrentText] = useState(0);
@@ -192,7 +194,7 @@ const HeroSection = ({ navigateToJobsList, navigateToResumeMaking, onNavigate })
   variant="primary-custom" 
   size="lg" 
   className="px-4 explore-jobs-btn"
-  onClick={handleExploreJobsClick}
+  onClick={() => navigate("/jobs")}
 >
   Explore Jobs <i className="bi bi-arrow-right"></i>
 </Button>
