@@ -1,44 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../config/api";
-import toast from "react-hot-toast";
-import "./FreelancerList.css"; // Reuse theme styling
+import "./FreelancerList.css";
 
 export default function FreelancerProfile() {
   const { id } = useParams();
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  // =============================
-  // Load freelancer full profile
-  // =============================
   useEffect(() => {
-    const load = async () => {
+    const loadProfile = async () => {
       try {
         const res = await api.get(`/api/profiles/freelancers/${id}/`);
         setData(res.data);
       } catch (error) {
-        console.error(error);
-        toast.error("Unable to load freelancer profile.");
-      } finally {
-        setLoading(false);
+        console.error("Error loading freelancer profile:", error);
       }
     };
-    load();
+    loadProfile();
   }, [id]);
 
-  if (loading) return <p className="loading">Loading profile...</p>;
-  if (!data) return <p>Freelancer not found.</p>;
+  if (!data) return <p className="loading">Loading profile...</p>;
 
   const basic = data.basic;
   const professional = data.professional;
   const availability = data.availability;
+  const education = data.education;
+  const payments = data.payments;
   const social = data.social;
 
   return (
     <div className="fl-profile-page">
-
-      {/* TOP HEADER */}
+      {/* HEADER */}
       <div className="fl-profile-header">
         <div className="fl-profile-img">
           {basic.profile_picture ? (
@@ -52,39 +44,30 @@ export default function FreelancerProfile() {
 
         <div className="fl-profile-main">
           <h2 className="fl-profile-name">{basic.full_name}</h2>
-          <p className="fl-profile-expertise">{professional?.expertise}</p>
+          <p className="fl-profile-expertise">
+            {professional?.expertise || "Freelancer"}
+          </p>
           <p className="fl-profile-location">{basic.location}</p>
 
-          {/* Hire button */}
-          <button className="fl-hire-btn">
-            Hire This Freelancer
-          </button>
+          <button className="fl-hire-btn">Hire This Freelancer</button>
         </div>
       </div>
 
-      {/* ABOUT SECTION */}
+      {/* ABOUT */}
       <div className="fl-section">
         <h3 className="fl-section-title">About</h3>
-        <p className="fl-paragraph">{professional?.bio || "No bio provided."}</p>
-      </div>
-
-      {/* SKILLS */}
-      <div className="fl-section">
-        <h3 className="fl-section-title">Skills</h3>
-        <div className="fl-skills">
-          {professional?.skills?.map((s, i) => (
-            <span key={i} className="fl-skill">{s}</span>
-          )) || <p>No skills added</p>}
-        </div>
+        <p className="fl-paragraph">
+          {professional?.bio || "This freelancer has not added a bio yet."}
+        </p>
       </div>
 
       {/* EDUCATION */}
       <div className="fl-section">
         <h3 className="fl-section-title">Education</h3>
-        {data.education?.length === 0 ? (
-          <p>No education added</p>
+        {education.length === 0 ? (
+          <p>No education details available.</p>
         ) : (
-          data.education.map((edu, i) => (
+          education.map((edu, i) => (
             <div key={i} className="fl-edu-item">
               <strong>{edu.degree}</strong> — {edu.institution}
               <div className="fl-edu-year">
@@ -100,14 +83,15 @@ export default function FreelancerProfile() {
         <h3 className="fl-section-title">Availability</h3>
         {availability ? (
           <>
-            <p><strong>Status:</strong> {availability.is_available ? "Available" : "Busy"}</p>
-            <p><strong>From:</strong> {availability.available_from}</p>
-            <p><strong>To:</strong> {availability.available_to}</p>
+            <p><strong>Status:</strong> {availability.is_available ? "Available" : "Not Available"}</p>
             <p><strong>Timezone:</strong> {availability.time_zone}</p>
-            <p><strong>Days:</strong> {availability.available_days?.join(", ")}</p>
+            <p>
+              <strong>Days:</strong>{" "}
+              {availability.available_days?.join(", ") || "Not specified"}
+            </p>
           </>
         ) : (
-          <p>No availability added</p>
+          <p>Availability not provided.</p>
         )}
       </div>
 
@@ -115,33 +99,17 @@ export default function FreelancerProfile() {
       <div className="fl-section">
         <h3 className="fl-section-title">Social Profiles</h3>
         <div className="fl-social-links">
-          {social?.linkedin_url && (
-            <a href={social.linkedin_url} target="_blank" rel="noreferrer">LinkedIn</a>
-          )}
-          {social?.github_url && (
-            <a href={social.github_url} target="_blank" rel="noreferrer">GitHub</a>
-          )}
-          {social?.portfolio_url && (
-            <a href={social.portfolio_url} target="_blank" rel="noreferrer">Portfolio</a>
-          )}
+          {social?.linkedin_url && <a href={social.linkedin_url}>LinkedIn</a>}
+          {social?.github_url && <a href={social.github_url}>GitHub</a>}
+          {social?.portfolio_url && <a href={social.portfolio_url}>Portfolio</a>}
         </div>
       </div>
 
       {/* RATINGS */}
       <div className="fl-section">
-        <h3 className="fl-section-title">Ratings & Feedback</h3>
-        {data.ratings?.length === 0 ? (
-          <p>No ratings yet</p>
-        ) : (
-          data.ratings.map((r, i) => (
-            <div key={i} className="fl-rating-box">
-              <div className="fl-rating-stars">{"★".repeat(r.stars)}</div>
-              <p className="fl-rating-comment">{r.comment}</p>
-            </div>
-          ))
-        )}
+        <h3 className="fl-section-title">Ratings & Badges</h3>
+        <p>No ratings or badges yet.</p>
       </div>
-
     </div>
   );
 }
