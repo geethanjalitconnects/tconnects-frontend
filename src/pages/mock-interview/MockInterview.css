@@ -1,0 +1,185 @@
+/* ======================== */
+/*      COLOR PALETTE       */
+/* ======================== */
+
+:root {
+  --teal-1: #0097a7;
+  --teal-2: #00796b;
+  --highlight: #008577;
+  --card-bg: #ffffff;
+  --muted-text: #6c7a7a;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --text-dark: #1f2d2d;
+}
+
+/* ======================== */
+/*       HERO SECTION       */
+/* ======================== */
+
+.mock-hero-section {
+  background: linear-gradient(135deg, var(--teal-1), var(--teal-2));
+  padding: 80px 20px 70px;
+  text-align: center;
+  color: white;
+}
+
+.mock-hero-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.mock-hero-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 18px;
+}
+
+.mock-hero-title {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.mock-highlight {
+  color: #b2f5ea;
+  text-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.mock-hero-sub {
+  margin: 12px auto 25px;
+  max-width: 700px;
+  font-size: 1.1rem;
+  opacity: 0.95;
+}
+
+.mock-hero-btn {
+  background: white;
+  color: var(--teal-2);
+  padding: 12px 26px;
+  font-weight: 700;
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* ======================== */
+/*     CONTENT SECTION      */
+/* ======================== */
+
+.mock-content {
+  max-width: 1100px;
+  margin: 40px auto 80px;
+  padding: 0 15px;
+}
+
+.mock-section-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: var(--text-dark);
+}
+
+.mock-empty-box {
+  padding: 25px;
+  background: #f0f9f9;
+  border-radius: 12px;
+  text-align: center;
+}
+
+/* ======================== */
+/*     UPCOMING CARDS      */
+/* ======================== */
+
+.mock-interview-list {
+  display: grid;
+  gap: 18px;
+}
+
+.mock-interview-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 14px var(--shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.mock-left h4 {
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.mock-meta {
+  margin-top: 6px;
+  color: var(--muted-text);
+}
+
+.mock-email {
+  margin-top: 6px;
+  color: #267b7a;
+  font-weight: 600;
+}
+
+.mock-right {
+  text-align: right;
+}
+
+.mock-join-btn {
+  background: linear-gradient(135deg, var(--teal-1), var(--teal-2));
+  color: white !important;
+  padding: 8px 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.mock-created {
+  font-size: 0.85rem;
+  color: var(--muted-text);
+}
+
+/* ======================== */
+/*     MODAL BUTTONS       */
+/* ======================== */
+
+.mock-submit-btn {
+  background: linear-gradient(135deg, var(--teal-1), var(--teal-2));
+  border: none;
+  padding: 8px 18px;
+}
+
+/* ======================== */
+/* MOBILE RESPONSIVE BELOW */
+/* ======================== */
+
+@media (max-width: 768px) {
+  .mock-hero-title {
+    font-size: 28px;
+  }
+  .mock-interview-card {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .mock-right {
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  .mock-hero-sub {
+    font-size: 0.95rem;
+  }
+  .mock-hero-btn {
+    padding: 10px 20px;
+  }
+  .mock-interview-card {
+    padding: 16px;
+  }
+}

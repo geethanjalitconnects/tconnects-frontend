@@ -28,6 +28,9 @@ import CoursesList from "./pages/courses/CoursesList";
 import CourseDetails from "./pages/courses/CourseDetails";
 import LearnCourse from "./pages/courses/LearnCourse";
 
+import MockInterview from "./pages/mock-interview/MockInterview";
+
+
 /* ================= CANDIDATE DASHBOARD ================= */
 import CandidateDashboardLayout from "./pages/candidate-dashboard/CandidateDashboardLayout";
 import Overview from "./pages/candidate-dashboard/Overview";
@@ -39,7 +42,6 @@ import SavedInternships from "./pages/candidate-dashboard/SavedInternships";
 import Courses from "./pages/candidate-dashboard/Courses";
 
 /* Freelancer */
-import FreelancerOverview from "./pages/candidate-dashboard/freelancer/FreelancerOverview";
 import FreelancerBasicInfo from "./pages/candidate-dashboard/freelancer/FreelancerBasicInfo";
 import FreelancerProfessionalDetails from "./pages/candidate-dashboard/freelancer/FreelancerProfessionalDetails";
 import FreelancerEducation from "./pages/candidate-dashboard/freelancer/FreelancerEducation";
@@ -127,6 +129,11 @@ function App() {
               <Route path="/course/learn/:slug/:id" element={<LearnCourse />} />
               <Route path="/course/:slug/:id" element={<CourseDetails />} />
               <Route path="/courses" element={<CoursesList />} />
+              {/* MOCK INTERVIEW */}
+<Route path="/mock-interview" element={<MockInterview />} />
+
+
+              
 
               {/* JOBS */}
               <Route path="/jobs" element={<JobsListPage />} />
