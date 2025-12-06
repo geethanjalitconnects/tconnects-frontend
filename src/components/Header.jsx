@@ -1,170 +1,216 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
-import { FaChevronDown } from "react-icons/fa";
+import React, { useState } from "react";
+import { Navbar, Nav, NavDropdown, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import newLogo from "../assets/TconnectsNewLogo.png";
-import api from "../config/api";
+import logo from "../assets/logo.png";
+import {
+  FaChevronDown,
+  FaUser,
+} from "react-icons/fa";
 import "./Header.css";
-import { AuthContext } from "../context/AuthContext";
 
-const Header = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const { user, setUser } = useContext(AuthContext);
+const Header = ({ isAuthenticated, userName, userType, handleLogout }) => {
+  const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
 
-  // NEW: Dropdown state + reference
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const menuRef = useRef(null);
-
-  // Scroll Effect
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // NEW: Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setDropdownOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  // Close mobile menu
-  const closeMobileMenu = () => {
-    const nav = document.querySelector(".navbar-collapse");
-    if (nav?.classList.contains("show")) {
-      nav.classList.remove("show");
-    }
-  };
-
-  // Logout
-  const logoutUser = () => {
-    setDropdownOpen(false); // close dropdown before logout
-
-    api.post("/api/auth/logout/").finally(() => {
-      setUser(null);
-      navigate("/");
-    });
-  };
+  const closeMobileMenu = () => setExpanded(false);
 
   return (
-    <Navbar expand="lg" className={`custom-navbar fixed-top ${scrolled ? "scrolled" : ""}`}>
-      <Container fluid className="px-3 px-md-4">
+    <Navbar
+      expand="lg"
+      expanded={expanded}
+      className="custom-navbar"
+      fixed="top"
+    >
+      <div className="container-fluid">
 
         {/* LOGO */}
         <Navbar.Brand as={Link} to="/" onClick={closeMobileMenu}>
-          <img src={newLogo} className="main-logo" alt="TConnects Logo" />
+          <img src={logo} alt="Logo" className="main-logo" />
         </Navbar.Brand>
 
-        {/* HAMBURGER */}
-        <Navbar.Toggle aria-controls="basic-navbar-nav" className="custom-toggler">
+        {/* MOBILE HAMBURGER */}
+        <Navbar.Toggle
+          aria-controls="navbar-nav"
+          className="custom-toggler"
+          onClick={() => setExpanded(expanded ? false : true)}
+        >
           <span className="toggler-icon"></span>
           <span className="toggler-icon"></span>
           <span className="toggler-icon"></span>
         </Navbar.Toggle>
 
-        <Navbar.Collapse id="basic-navbar-nav">
-          {/* CENTER NAV */}
-          <Nav className="mx-auto navbar-nav-custom">
+        <Navbar.Collapse id="navbar-nav">
+          <Nav className="ms-auto navbar-nav-custom">
 
-            <Nav.Link as={Link} to="/" className="nav-link-custom" onClick={closeMobileMenu}>
-              <span className="nav-text">Home</span>
+            {/* HOME */}
+            <Nav.Link
+              as={Link}
+              to="/"
+              className="nav-link-custom"
+              onClick={closeMobileMenu}
+            >
+              Home
             </Nav.Link>
 
+            {/* BLOGS */}
+            <Nav.Link
+              as={Link}
+              to="/blogs"
+              className="nav-link-custom"
+              onClick={closeMobileMenu}
+            >
+              Blogs
+            </Nav.Link>
+
+            {/* FIND WORK DROPDOWN */}
             <NavDropdown
-              title={<span className="nav-text dropdown-title">Find Work <FaChevronDown className="dropdown-icon" /></span>}
-              id="find-work-dropdown"
+              title={
+                <span className="nav-text dropdown-title">
+                  Find Work <FaChevronDown className="dropdown-icon" />
+                </span>
+              }
               className="nav-dropdown-custom"
               align="start"
             >
-              <NavDropdown.Item as={Link} to="/jobs" className="dropdown-item-custom">Jobs</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/internships" className="dropdown-item-custom">Internships</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/freelancers" className="dropdown-item-custom">Freelance</NavDropdown.Item>
-            </NavDropdown>
-
-            <NavDropdown
-              title={<span className="nav-text dropdown-title">Learning <FaChevronDown className="dropdown-icon" /></span>}
-              id="learning-dropdown"
-              className="nav-dropdown-custom"
-              align="start"
-            >
-              <NavDropdown.Item as={Link} to="/courses" className="dropdown-item-custom">Skill Development</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/mock-interview" className="dropdown-item-custom">Schedule a Mock Interview</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/resume-building" className="dropdown-item-custom">Resume Building</NavDropdown.Item>
-            </NavDropdown>
-
-            <Nav.Link as={Link} to="/blogs" className="nav-link-custom" onClick={closeMobileMenu}>
-              <span className="nav-text">Blogs</span>
-            </Nav.Link>
-          </Nav>
-
-          {/* RIGHT SECTION */}
-          <div className="right-section">
-
-            {user ? (
-              // USER LOGGED IN
-              <div
-                className="header-user-menu"
-                ref={menuRef}
-                onClick={() => setDropdownOpen(!dropdownOpen)}
+              <NavDropdown.Item
+                as={Link}
+                to="/jobs"
+                className="dropdown-item-custom"
+                onClick={closeMobileMenu}
               >
-                {/* Avatar */}
-                <div className="user-avatar">
-                  {user.full_name?.charAt(0)?.toUpperCase()}
-                </div>
+                Jobs
+              </NavDropdown.Item>
 
-                <div className="user-name">
-                  Hi, {user.full_name?.split(" ")[0]}
-                </div>
+              <NavDropdown.Item
+                as={Link}
+                to="/internships"
+                className="dropdown-item-custom"
+                onClick={closeMobileMenu}
+              >
+                Internships
+              </NavDropdown.Item>
 
-                {/* Dropdown */}
-                <div
-                  className="user-dropdown-menu"
-                  style={{ display: dropdownOpen ? "block" : "none" }}
+              <NavDropdown.Item
+                as={Link}
+                to="/freelancers"
+                className="dropdown-item-custom"
+                onClick={closeMobileMenu}
+              >
+                Freelance
+              </NavDropdown.Item>
+            </NavDropdown>
+
+            {/* LEARNING DROPDOWN */}
+            <NavDropdown
+              title={
+                <span className="nav-text dropdown-title">
+                  Learning <FaChevronDown className="dropdown-icon" />
+                </span>
+              }
+              className="nav-dropdown-custom"
+              align="start"
+            >
+              <NavDropdown.Item
+                as={Link}
+                to="/courses"
+                className="dropdown-item-custom"
+                onClick={closeMobileMenu}
+              >
+                Skill Development
+              </NavDropdown.Item>
+
+              <NavDropdown.Item
+                as={Link}
+                to="/mock-interview"
+                className="dropdown-item-custom"
+                onClick={closeMobileMenu}
+              >
+                Schedule a Mock Interview
+              </NavDropdown.Item>
+
+              <NavDropdown.Item
+                as={Link}
+                to="/resume-building"
+                className="dropdown-item-custom"
+                onClick={closeMobileMenu}
+              >
+                Resume Building
+              </NavDropdown.Item>
+            </NavDropdown>
+
+            {/* AUTH SECTION */}
+            {!isAuthenticated ? (
+              <div className="auth-buttons">
+
+                <Button
+                  as={Link}
+                  to="/login"
+                  className="login-btn"
+                  onClick={closeMobileMenu}
                 >
-                  <button
-                    className="user-dropdown-item"
-                    onClick={() => {
-                      setDropdownOpen(false);
-                      navigate(
-                        user.role === "candidate"
-                          ? "/candidate-dashboard"
-                          : "/recruiter-dashboard"
-                      );
-                    }}
-                  >
-                    🧑‍💼 My Account
-                  </button>
+                  Login
+                </Button>
 
-                  <button
-                    className="user-dropdown-item logout-item"
-                    onClick={logoutUser}
-                  >
-                    ↪ Logout
-                  </button>
-                </div>
+                <Button
+                  as={Link}
+                  to="/register"
+                  className="register-btn"
+                  onClick={closeMobileMenu}
+                >
+                  Register
+                </Button>
+
               </div>
             ) : (
-              // NOT LOGGED IN
-              <div className="auth-buttons">
-                <Link to="/register">
-                  <button className="auth-btn register-btn">Register</button>
-                </Link>
-                <Link to="/login">
-                  <button className="auth-btn login-btn">Login</button>
-                </Link>
+              <div className="header-user-menu">
+
+                {/* USER DROPDOWN */}
+                <NavDropdown
+                  title={
+                    <span className="user-name">
+                      <FaUser className="user-icon" /> Hi, {userName}
+                    </span>
+                  }
+                  className="user-dropdown"
+                  align="end"
+                >
+                  {/* Dashboard (Candidate or Recruiter) */}
+                  {userType === "candidate" && (
+                    <NavDropdown.Item
+                      as={Link}
+                      to="/candidate-dashboard/overview"
+                      onClick={closeMobileMenu}
+                    >
+                      Dashboard
+                    </NavDropdown.Item>
+                  )}
+
+                  {userType === "recruiter" && (
+                    <NavDropdown.Item
+                      as={Link}
+                      to="/recruiter-dashboard/overview"
+                      onClick={closeMobileMenu}
+                    >
+                      Dashboard
+                    </NavDropdown.Item>
+                  )}
+
+                  {/* LOGOUT */}
+                  <NavDropdown.Item
+                    onClick={() => {
+                      handleLogout();
+                      closeMobileMenu();
+                    }}
+                  >
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
               </div>
             )}
 
-          </div>
+          </Nav>
         </Navbar.Collapse>
-
-      </Container>
+      </div>
     </Navbar>
   );
 };

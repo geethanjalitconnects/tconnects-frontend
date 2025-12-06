@@ -325,3 +325,52 @@
     gap: 10px;
   }
 }
+/* ============================================================
+   📱 FIX TEXT WRAPPING – INTERNSHIP DETAILS PAGE
+   ============================================================ */
+
+.jd-description,
+.jd-list li,
+.jd-company-about,
+.jd-company-item,
+.jd-section p {
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  white-space: normal !important;
+  line-height: 1.6 !important;
+}
+
+/* Prevent content from overflowing boxes */
+.jd-section {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Force the About Internship paragraph to stay inside */
+.jd-description {
+  font-size: 15px;
+  color: #37474f;
+  margin-top: 8px;
+}
+
+/* Mobile fix: shrink long text and maintain spacing */
+@media (max-width: 600px) {
+  .jd-description,
+  .jd-list li,
+  .jd-company-about {
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+  }
+
+  .jd-section {
+    padding: 14px !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .jd-description,
+  .jd-list li,
+  .jd-company-about {
+    font-size: 13px !important;
+  }
+}

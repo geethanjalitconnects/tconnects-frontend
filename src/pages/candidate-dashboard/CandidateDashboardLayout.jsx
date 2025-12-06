@@ -24,17 +24,24 @@ const FREELANCER_LINKS = [
 ];
 
 export default function CandidateDashboardLayout() {
+
   const [freelancerOpen, setFreelancerOpen] = useState(false);
+
+  // ⭐ Added this
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigate = useNavigate();
 
   return (
-    <div className="cd-layout">
+    <div className={`cd-layout ${sidebarOpen ? "sidebar-open" : ""}`}>
+      
+      {/* ⭐ Mobile Hamburger Button */}
+      <button className="cd-hamburger" onClick={() => setSidebarOpen(!sidebarOpen)}>
+        ☰
+      </button>
 
       {/* SIDEBAR */}
       <aside className="cd-sidebar">
-
-        {/* TOP — TITLE ONLY */}
         <div className="cd-sidebar-top">
           <div className="cd-logo" onClick={() => navigate("/candidate-dashboard/overview")}>
             TConnects
@@ -42,8 +49,6 @@ export default function CandidateDashboardLayout() {
         </div>
 
         <nav className="cd-nav">
-
-          {/* MAIN LINKS */}
           {MAIN_LINKS.map((item) => (
             <NavLink
               key={item.to}
@@ -51,14 +56,13 @@ export default function CandidateDashboardLayout() {
               className={({ isActive }) =>
                 isActive ? "cd-nav-link active" : "cd-nav-link"
               }
+              onClick={() => setSidebarOpen(false)}  // ⭐ CLOSE SIDEBAR
             >
               {item.label}
             </NavLink>
           ))}
 
-          {/* FREELANCER DROPDOWN */}
           <div className={`cd-dropdown ${freelancerOpen ? "open" : ""}`}>
-
             <button
               className="cd-nav-link cd-dropdown-toggle"
               onClick={() => setFreelancerOpen(!freelancerOpen)}
@@ -75,20 +79,18 @@ export default function CandidateDashboardLayout() {
                   className={({ isActive }) =>
                     isActive ? "cd-dropdown-item active" : "cd-dropdown-item"
                   }
+                  onClick={() => setSidebarOpen(false)}  // ⭐ CLOSE SIDEBAR
                 >
                   {item.label}
                 </NavLink>
               ))}
             </div>
           </div>
-
-          {/* MESSAGES (LAST ITEM) */}
-      
         </nav>
       </aside>
 
       {/* MAIN CONTENT */}
-      <main className="cd-main">
+      <main className="cd-main" onClick={() => setSidebarOpen(false)}>
         <section className="cd-content">
           <Outlet />
         </section>

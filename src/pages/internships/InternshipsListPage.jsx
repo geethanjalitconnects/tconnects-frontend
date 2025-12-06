@@ -70,7 +70,7 @@ export default function InternshipsListPage() {
           <div className="job-info">
             <span>{intern.location}</span> •
             <span>{intern.duration}</span> •
-            <span>{intern.stipend}</span> •
+            <span>{intern.stipend}</span> 
             <span>{intern.work_mode}</span>
           </div>
 
