@@ -194,7 +194,7 @@ const HeroSection = ({ navigateToJobsList, navigateToResumeMaking, onNavigate })
               <div className="d-grid gap-3 d-sm-flex justify-content-sm-center hero-buttons">
    <Link 
   to="/jobs" 
-  className="explore-jobs-btn"
+  className="hero-btn explore-jobs-btn"
 >
   Explore Jobs <i className="bi bi-arrow-right"></i>
 </Link>
@@ -203,7 +203,7 @@ const HeroSection = ({ navigateToJobsList, navigateToResumeMaking, onNavigate })
 
                 <Button 
                   size="lg" 
-                  className="px-4 btn-orange-resume"
+                  className="hero-btn btn-orange-resume"
                   onClick={handleResumeMakingClick}
                 >
                   Resume Making <i className="bi bi-file-earmark-text ms-2"></i>

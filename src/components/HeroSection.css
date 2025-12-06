@@ -574,9 +574,78 @@ input::placeholder {
   text-decoration: none !important;
 }
 
-.explore-jobs-btn i {
-  margin-left: 8px;
+/* --- BASE BUTTON STYLE FOR BOTH BUTTONS --- */
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 2rem !important;
+  border-radius: 14px !important;
+  font-size: 1rem !important;
+  font-weight: 600;
+  white-space: nowrap;
+  gap: 8px;
+  min-width: 220px;      /* Makes both buttons equal width */
+  height: 55px;          /* SAME height */
 }
+
+/* Explore Jobs Button */
+.explore-jobs-btn {
+  background: #006d71; /* your teal color */
+  color: white !important;
+  border: none;
+}
+
+/* Remove underline from Link */
+.explore-jobs-btn:hover,
+.explore-jobs-btn:focus {
+  text-decoration: none !important;
+}
+
+/* Resume Button */
+.btn-orange-resume {
+  background: linear-gradient(90deg, #ff8a00, #ff5f00);
+  color: white !important;
+  border: none;
+  box-shadow: 0 8px 25px rgba(255, 136, 0, 0.35);
+}
+/* --- BASE BUTTON STYLE FOR BOTH BUTTONS --- */
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.9rem 2rem !important;
+  border-radius: 14px !important;
+  font-size: 1rem !important;
+  font-weight: 600;
+  white-space: nowrap;
+  gap: 8px;
+  min-width: 220px;      /* Makes both buttons equal width */
+  height: 55px;          /* SAME height */
+}
+
+/* Explore Jobs Button */
+.explore-jobs-btn {
+  background: #006d71; /* your teal color */
+  color: white !important;
+  border: none;
+}
+
+/* Remove underline from Link */
+.explore-jobs-btn:hover,
+.explore-jobs-btn:focus {
+  text-decoration: none !important;
+}
+
+/* Resume Button */
+.btn-orange-resume {
+  background: linear-gradient(90deg, #ff8a00, #ff5f00);
+  color: white !important;
+  border: none;
+  box-shadow: 0 8px 25px rgba(255, 136, 0, 0.35);
+}
+
+
 
 
 
