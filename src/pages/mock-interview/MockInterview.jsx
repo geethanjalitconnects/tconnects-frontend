@@ -116,7 +116,6 @@ export default function MockInterview() {
         ) : upcoming.length === 0 ? (
           <div className="mock-empty-box">
             <p>No interviews scheduled.</p>
-            <Button onClick={() => setShow(true)}>Schedule One Now</Button>
           </div>
         ) : (
           <div className="mock-interview-list">

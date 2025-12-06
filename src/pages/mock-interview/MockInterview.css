@@ -84,11 +84,14 @@
 }
 
 .mock-empty-box {
-  padding: 25px;
-  background: #f0f9f9;
-  border-radius: 12px;
   text-align: center;
+  padding: 30px;
+  background: #eef9f8;
+  border-radius: 12px;
+  font-size: 16px;
+  color: #333;
 }
+
 
 /* ======================== */
 /*     UPCOMING CARDS      */
