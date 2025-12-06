@@ -77,7 +77,8 @@ export default function FreelancerList() {
               {/* VIEW PROFILE BUTTON */}
               <button
                 className="fl-view-btn"
-                onClick={() => navigate(`/freelancers/${f.id}`)}
+               onClick={() => navigate(`/freelancers/${f.basic?.id}`)}
+
               >
                 View Profile
               </button>
