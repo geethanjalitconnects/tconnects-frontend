@@ -1,94 +1,124 @@
-/* Import fonts to match header */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
-
-/* Wrapper */
+/* GLOBAL */
 .aboutus-wrapper {
   width: 100%;
-  padding-bottom: 50px;
   background: #f4fcff;
+  font-family: 'Inter', sans-serif;
   color: #023047;
+  padding-bottom: 60px;
 }
 
-/* Top Banner */
-.aboutus-banner {
-  background: linear-gradient(135deg, #006d77, #0096a5);
-  padding: 70px 20px;
+/* HERO BANNER */
+.aboutus-hero {
+  width: 100%;
+  padding: 110px 20px 100px;
+  background: linear-gradient(135deg, #006D77, #0096A5);
   text-align: center;
-  color: #ffffff;
-}
-
-.aboutus-banner h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-}
-
-.aboutus-banner p {
-  font-size: 1.1rem;
-  margin-top: 10px;
-  opacity: 0.9;
-}
-
-/* Section Styling */
-.aboutus-section {
-  max-width: 850px;
-  margin: 50px auto;
-  padding: 20px;
-}
-
-.aboutus-section h2 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #006d77;
-  margin-bottom: 15px;
-}
-
-.aboutus-section p {
-  font-size: 1.05rem;
-  line-height: 1.7;
-  margin-bottom: 15px;
-  color: #023047;
-}
-
-/* Values List */
-.values-list {
-  padding-left: 20px;
-  list-style: none;
-}
-
-.values-list li {
-  margin-bottom: 10px;
-  font-size: 1.05rem;
-  padding-left: 20px;
+  color: white;
   position: relative;
 }
 
-/* Custom Bullet */
-.values-list li::before {
-  content: "•";
-  position: absolute;
-  left: 0;
-  top: 3px;
-  font-size: 1.5rem;
-  color: #0096a5;
+.aboutus-hero-content {
+  max-width: 800px;
+  margin: auto;
 }
 
-/* Mobile Responsive */
-@media (max-width: 600px) {
-  .aboutus-banner h1 {
-    font-size: 1.8rem;
+.aboutus-title {
+  font-size: 3rem;
+  font-weight: 800;
+}
+
+.aboutus-subtitle {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  opacity: 0.95;
+}
+
+/* MAIN CONTENT CONTAINER */
+.aboutus-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 50px auto;
+  padding: 0 20px;
+}
+
+/* PREMIUM CARD STYLE */
+.aboutus-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(10px);
+  padding: 35px 30px;
+  border-radius: 16px;
+  margin-bottom: 35px;
+  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 150, 165, 0.15);
+}
+
+.section-heading {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #006D77;
+  margin-bottom: 15px;
+}
+
+.aboutus-card p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #023047;
+}
+
+/* VALUES LIST */
+.premium-values-list {
+  margin-top: 15px;
+  list-style: none;
+  padding-left: 0;
+}
+
+.premium-values-list li {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  padding-left: 28px;
+  position: relative;
+}
+
+.premium-values-list li::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background: #0096A5;
+  border-radius: 3px;
+  position: absolute;
+  top: 6px;
+  left: 0;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+  .aboutus-title {
+    font-size: 2.4rem;
   }
 
-  .aboutus-section {
-    margin: 30px 15px;
+  .aboutus-subtitle {
+    font-size: 1rem;
   }
 
-  .aboutus-section h2 {
-    font-size: 1.5rem;
+  .section-heading {
+    font-size: 1.6rem;
   }
 
-  .aboutus-section p,
-  .values-list li {
-    font-size: 0.95rem;
+  .aboutus-card p {
+    font-size: 1rem;
+  }
+
+  .premium-values-list li {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .aboutus-title {
+    font-size: 2rem;
+  }
+
+  .aboutus-hero {
+    padding: 90px 20px;
   }
 }
