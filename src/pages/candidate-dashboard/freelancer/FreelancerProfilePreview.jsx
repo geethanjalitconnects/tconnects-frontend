@@ -1,70 +1,91 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import api from "../../../config/api";
+import toast from "react-hot-toast";
 import "./Freelancer.css";
 
 export default function FreelancerProfilePreview() {
-  // 📌 Temporary mock data (UI only)
-  // Later, these values will be loaded from backend API.
-  const data = {
-    fullName: "John Doe",
-    email: "john@example.com",
-    phone: "+91 98765 43210",
-    location: "Chennai, India",
-    languages: "English, Tamil",
+  const [data, setData] = useState({
+    basic: null,
+    professional: null,
+    education: [],
+    availability: null,
+    payments: [],
+    social: null,
+    ratings: [],
+    badges: []
+  });
 
-    profileImage: null,
+  const [loading, setLoading] = useState(true);
 
-    expertise: "Frontend Developer",
-    experience: "3 Years",
-    categories: "Web Development, UI/UX",
-    bio: "Creative frontend developer passionate about building user-friendly interfaces.",
+  // ======================================================
+  // 1️⃣ LOAD FULL PROFILE PREVIEW FROM BACKEND
+  // ======================================================
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const res = await api.get("/api/profiles/freelancer/profile-preview/");
+        setData({
+          basic: res.data.basic || null,
+          professional: res.data.professional || null,
+          education: Array.isArray(res.data.education) ? res.data.education : [],
+          availability: res.data.availability || null,
+          payments: Array.isArray(res.data.payments) ? res.data.payments : [],
+          social: res.data.social || null,
+          ratings: Array.isArray(res.data.ratings) ? res.data.ratings : [],
+          badges: Array.isArray(res.data.badges) ? res.data.badges : []
+        });
+      } catch (error) {
+        console.error(error);
+        toast.error("Unable to load profile preview.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    education: [
-      {
-        degree: "B.Tech in Computer Science",
-        school: "ABC Institute of Technology",
-        year: "2022",
-      },
-    ],
+    loadProfile();
+  }, []);
 
-    availability: {
-      status: "Available",
-      from: "2025-01-10",
-      to: "2025-12-20",
-      timezone: "Asia/Kolkata",
-      days: ["Mon", "Tue", "Wed", "Thu", "Fri"],
-    },
+  // ======================================================
+  // 2️⃣ PUBLISH PROFILE
+  // ======================================================
+  const publishProfile = async () => {
+    try {
+      await api.post("/api/profiles/freelancer/publish/");
+      toast.success("Your profile is now published!");
 
-    payments: [
-      { id: 1, method: "UPI", value: "john@upi" },
-      { id: 2, method: "Bank Account", value: "HDFC **** 4321" },
-    ],
-
-    links: {
-      linkedin: "https://linkedin.com/in/johndoe",
-      github: "https://github.com/johndoe",
-      portfolio: "https://johndoe.dev",
-    },
-
-    ratings: [
-      { stars: 5, badge: "Top Performer", date: "02/03/2025" },
-      { stars: 4, badge: "Fast Delivery", date: "15/02/2025" },
-    ],
+      // Update UI
+      setData((prev) => ({
+        ...prev,
+        basic: { ...prev.basic, is_published: true }
+      }));
+    } catch (error) {
+      toast.error("Failed to publish profile.");
+    }
   };
+
+  if (loading) return <p>Loading...</p>;
+  if (!data.basic) return <p>No profile data found.</p>;
+
+  const basic = data.basic;
+  const professional = data.professional;
+  const availability = data.availability;
+  const social = data.social;
 
   return (
     <div className="fr-page">
       <div className="fr-card">
-        <h2 className="fr-title">Freelancer Profile Preview</h2>
 
-        {/* TOP SECTION */}
+        {/* HEADER */}
+        <h2 className="fr-title">Profile Preview</h2>
+
         <div className="fr-preview-header">
           <div className="fr-preview-img">
-            {data.profileImage ? (
-              <img src={data.profileImage} alt="profile" />
+            {basic.profile_picture ? (
+              <img src={basic.profile_picture} alt="Profile" />
             ) : (
               <div className="fr-avatar-placeholder-large">
-                {data.fullName
-                  .split(" ")
+                {basic.full_name
+                  ?.split(" ")
                   .map((w) => w[0])
                   .join("")
                   .toUpperCase()}
@@ -73,42 +94,39 @@ export default function FreelancerProfilePreview() {
           </div>
 
           <div className="fr-preview-basic">
-            <h3>{data.fullName}</h3>
-            <p>{data.expertise}</p>
-            <p className="fr-small">{data.location}</p>
+            <h3>{basic.full_name}</h3>
+            <p>{professional?.categories || "No category added"}</p>
+            <p className="fr-small">{basic.location}</p>
           </div>
         </div>
 
-        {/* BASIC INFO */}
+        {/* BASIC INFORMATION */}
         <div className="fr-section">
-          <h4 className="fr-section-title">Basic Information</h4>
-          <div className="fr-info-row"><span>Email:</span> {data.email}</div>
-          <div className="fr-info-row"><span>Phone:</span> {data.phone}</div>
-          <div className="fr-info-row"><span>Location:</span> {data.location}</div>
-          <div className="fr-info-row"><span>Languages:</span> {data.languages}</div>
+          <h4 className="fr-section-title">Basic Info</h4>
+          <div className="fr-info-row"><span>Phone:</span> {basic.phone_number}</div>
+          <div className="fr-info-row"><span>Location:</span> {basic.location}</div>
+          <div className="fr-info-row"><span>Languages:</span> {basic.languages_known?.join(", ")}</div>
         </div>
 
         {/* PROFESSIONAL DETAILS */}
         <div className="fr-section">
           <h4 className="fr-section-title">Professional Details</h4>
-          <div className="fr-info-row"><span>Expertise:</span> {data.expertise}</div>
-          <div className="fr-info-row"><span>Experience:</span> {data.experience}</div>
-          <div className="fr-info-row"><span>Categories:</span> {data.categories}</div>
-          <p className="fr-bio">{data.bio}</p>
+          <div className="fr-info-row"><span>Expertise:</span> {professional?.expertise}</div>
+          <div className="fr-info-row"><span>Experience:</span> {professional?.experience}</div>
+          <div className="fr-info-row"><span>Bio:</span> {professional?.bio}</div>
         </div>
 
         {/* EDUCATION */}
         <div className="fr-section">
           <h4 className="fr-section-title">Education</h4>
-
           {data.education.length === 0 ? (
             <p className="fr-empty">No education added</p>
           ) : (
             data.education.map((edu, i) => (
               <div key={i} className="fr-edu-item">
                 <strong>{edu.degree}</strong>
-                <p>{edu.school}</p>
-                <span className="fr-small">{edu.year}</span>
+                <p>{edu.institution}</p>
+                <span>{edu.start_year} - {edu.end_year}</span>
               </div>
             ))
           )}
@@ -117,38 +135,29 @@ export default function FreelancerProfilePreview() {
         {/* AVAILABILITY */}
         <div className="fr-section">
           <h4 className="fr-section-title">Availability</h4>
-
-          <div className="fr-info-row">
-            <span>Status:</span> {data.availability.status}
-          </div>
-
-          <div className="fr-info-row">
-            <span>Available From:</span> {data.availability.from}
-          </div>
-
-          <div className="fr-info-row">
-            <span>Available To:</span> {data.availability.to}
-          </div>
-
-          <div className="fr-info-row">
-            <span>Timezone:</span> {data.availability.timezone}
-          </div>
-
-          <div className="fr-info-row">
-            <span>Working Days:</span> {data.availability.days.join(", ")}
-          </div>
+          {availability ? (
+            <>
+              <div className="fr-info-row"><span>Status:</span> {availability.is_available ? "Available" : "Occupied"}</div>
+              <div className="fr-info-row"><span>From:</span> {availability.available_from}</div>
+              <div className="fr-info-row"><span>To:</span> {availability.available_to}</div>
+              <div className="fr-info-row"><span>Timezone:</span> {availability.time_zone}</div>
+              <div className="fr-info-row"><span>Days:</span> {availability.available_days?.join(", ")}</div>
+            </>
+          ) : (
+            <p className="fr-empty">No availability added</p>
+          )}
         </div>
 
-        {/* PAYMENT METHODS */}
+        {/* PAYMENT */}
         <div className="fr-section">
           <h4 className="fr-section-title">Payment Methods</h4>
-
           {data.payments.length === 0 ? (
             <p className="fr-empty">No payment methods added</p>
           ) : (
             data.payments.map((p) => (
               <div key={p.id} className="fr-info-row">
-                <span>{p.method}:</span> {p.value}
+                <span>{p.payment_type}:</span>
+                {p.payment_type === "UPI" ? p.upi_id : p.account_number}
               </div>
             ))
           )}
@@ -156,27 +165,36 @@ export default function FreelancerProfilePreview() {
 
         {/* SOCIAL LINKS */}
         <div className="fr-section">
-          <h4 className="fr-section-title">Social Profiles</h4>
-          <div className="fr-info-row"><span>LinkedIn:</span> {data.links.linkedin}</div>
-          <div className="fr-info-row"><span>GitHub:</span> {data.links.github}</div>
-          <div className="fr-info-row"><span>Portfolio:</span> {data.links.portfolio}</div>
+          <h4 className="fr-section-title">Social Links</h4>
+          <div className="fr-info-row"><span>LinkedIn:</span> {social?.linkedin_url}</div>
+          <div className="fr-info-row"><span>GitHub:</span> {social?.github_url}</div>
+          <div className="fr-info-row"><span>Portfolio:</span> {social?.portfolio_url}</div>
         </div>
 
         {/* RATINGS */}
         <div className="fr-section">
-          <h4 className="fr-section-title">Ratings & Feedback</h4>
-
+          <h4 className="fr-section-title">Ratings</h4>
           {data.ratings.length === 0 ? (
             <p className="fr-empty">No ratings yet</p>
           ) : (
             data.ratings.map((r, i) => (
               <div key={i} className="fr-rating-item">
-                <div className="fr-rating-stars">{"★".repeat(r.stars)}</div>
-                <span className="fr-rating-date">({r.date})</span>
-                {r.badge && <div className="fr-badge">{r.badge}</div>}
+                <div>{"★".repeat(r.stars)}</div>
+                {r.comment && <p>{r.comment}</p>}
               </div>
             ))
           )}
+        </div>
+
+        {/* PUBLISH BUTTON */}
+        <div className="fr-actions">
+          <button
+            className="fr-btn fr-btn-primary"
+            disabled={basic.is_published}
+            onClick={publishProfile}
+          >
+            {basic.is_published ? "Profile Already Published" : "Publish Profile"}
+          </button>
         </div>
       </div>
     </div>

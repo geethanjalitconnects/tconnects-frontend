@@ -84,7 +84,7 @@ const Header = () => {
             >
               <NavDropdown.Item as={Link} to="/jobs" className="dropdown-item-custom">Jobs</NavDropdown.Item>
               <NavDropdown.Item as={Link} to="/internships" className="dropdown-item-custom">Internships</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/freelance" className="dropdown-item-custom">Freelance</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/freelancers" className="dropdown-item-custom">Freelance</NavDropdown.Item>
             </NavDropdown>
 
             <NavDropdown

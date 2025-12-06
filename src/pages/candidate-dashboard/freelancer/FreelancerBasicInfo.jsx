@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import api from "../../../config/api";  
+import api from "../../../config/api";
 import toast from "react-hot-toast";
 import "./Freelancer.css";
 
@@ -9,6 +9,7 @@ export default function FreelancerBasicInfo() {
     phone_number: "",
     location: "",
     languages_known: "",
+    is_published: false,   // ← NEW FIELD
   });
 
   const [preview, setPreview] = useState(null);
@@ -29,6 +30,7 @@ export default function FreelancerBasicInfo() {
           phone_number: data.phone_number || "",
           location: data.location || "",
           languages_known: data.languages_known || "",
+          is_published: data.is_published || false, // ← ADD HERE
         });
 
         if (data.profile_picture) {
@@ -52,6 +54,11 @@ export default function FreelancerBasicInfo() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Handle publish toggle
+  const togglePublish = () => {
+    setForm({ ...form, is_published: !form.is_published });
+  };
+
   // ================================
   // 3️⃣ FILE PREVIEW
   // ================================
@@ -64,7 +71,7 @@ export default function FreelancerBasicInfo() {
   };
 
   // ================================
-  // 4️⃣ PATCH BASIC INFO
+  // 4️⃣ PATCH BASIC INFO + PUBLISH FLAG
   // ================================
   const updateBasicInfo = async () => {
     try {
@@ -107,15 +114,12 @@ export default function FreelancerBasicInfo() {
     const photoSuccess = await uploadProfilePicture();
 
     if (basicSuccess && photoSuccess) {
-      toast.success("Your basic information has been updated successfully!");
+      toast.success("Your basic information has been updated!");
     } else {
       toast.error("Unable to update. Please try again.");
     }
   };
 
-  // ================================
-  // Loading Indicator
-  // ================================
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -131,7 +135,6 @@ export default function FreelancerBasicInfo() {
             value={form.full_name}
             onChange={handleChange}
             className="fr-input"
-            placeholder="Your full name"
             required
           />
         </div>
@@ -145,7 +148,6 @@ export default function FreelancerBasicInfo() {
               value={form.phone_number}
               onChange={handleChange}
               className="fr-input"
-              placeholder="+91 98765 43210"
               required
             />
           </div>
@@ -157,7 +159,6 @@ export default function FreelancerBasicInfo() {
               value={form.location}
               onChange={handleChange}
               className="fr-input"
-              placeholder="City, Country"
               required
             />
           </div>
@@ -171,29 +172,32 @@ export default function FreelancerBasicInfo() {
             value={form.languages_known}
             onChange={handleChange}
             className="fr-input"
-            placeholder="English, Hindi, Spanish"
           />
         </div>
 
         {/* Profile Picture */}
         <div className="fr-row">
           <label className="fr-label">Upload profile picture</label>
+
           <div className="fr-upload-row">
             <div className="fr-avatar-preview">
-              {preview ? (
-                <img src={preview} alt="preview" />
-              ) : (
-                <div className="fr-avatar-placeholder">IMG</div>
-              )}
+              {preview ? <img src={preview} alt="preview" /> : <div className="fr-avatar-placeholder">IMG</div>}
             </div>
 
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFile}
-              className="fr-file-input"
-            />
+            <input type="file" accept="image/*" onChange={handleFile} />
           </div>
+        </div>
+
+        {/* Publish Profile Toggle */}
+        <div className="fr-row">
+          <label className="fr-label">Profile Visibility</label>
+          <button
+            type="button"
+            onClick={togglePublish}
+            className={`fr-btn ${form.is_published ? "fr-btn-danger" : "fr-btn-secondary"}`}
+          >
+            {form.is_published ? "Unpublish Profile" : "Publish Profile"}
+          </button>
         </div>
 
         {/* Buttons */}
@@ -211,6 +215,7 @@ export default function FreelancerBasicInfo() {
                 phone_number: "",
                 location: "",
                 languages_known: "",
+                is_published: false,
               });
               setPreview(null);
               setProfilePicFile(null);

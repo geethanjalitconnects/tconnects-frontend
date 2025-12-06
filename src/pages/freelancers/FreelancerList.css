@@ -1,0 +1,143 @@
+/* PAGE WRAPPER */
+.fl-page {
+  padding: 40px 20px;
+  background: linear-gradient(180deg, #f1f9fc 0%, #ffffff 100%);
+  min-height: 100vh;
+}
+
+/* PAGE TITLE */
+.fl-title {
+  font-size: 32px;
+  color: #2a3a4a;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+/* GRID LAYOUT */
+.fl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  padding: 0 20px;
+}
+
+/* CARD */
+.fl-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #cde8ef;
+  padding: 25px 20px;
+  text-align: center;
+  box-shadow: 0px 4px 18px rgba(0, 0, 0, 0.08);
+  transition: 0.25s ease;
+  cursor: pointer;
+}
+
+.fl-card:hover {
+  transform: translateY(-5px);
+  border-color: #00a6b6;
+  box-shadow: 0px 6px 24px rgba(0, 166, 182, 0.18);
+}
+
+/* PROFILE IMAGE */
+.fl-img-container img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #cde8ef;
+}
+
+.fl-placeholder {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #e0f7fb;
+  color: #0096a6;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* NAME */
+.fl-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2a3a4a;
+  margin-top: 12px;
+}
+
+/* EXPERTISE */
+.fl-expertise {
+  font-size: 15px;
+  color: #0096a6;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* LOCATION */
+.fl-location {
+  font-size: 14px;
+  color: #6d7a84;
+  margin-top: 4px;
+}
+
+/* SKILLS */
+.fl-skills {
+  margin: 12px 0;
+}
+
+.fl-skill {
+  background: #e8f9fb;
+  color: #007b86;
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 8px;
+  margin: 4px;
+  display: inline-block;
+  border: 1px solid #cde8ef;
+}
+
+.fl-more {
+  background: #d9eef1;
+  color: #2a3a4a;
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 8px;
+  margin: 4px;
+  display: inline-block;
+}
+
+/* RATINGS */
+.fl-rating {
+  font-size: 16px;
+  color: #ffb400;
+  margin-top: 8px;
+}
+
+.fl-rating-number {
+  color: #2a3a4a;
+  margin-left: 6px;
+  font-weight: 600;
+}
+
+/* VIEW PROFILE BUTTON */
+.fl-view-btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: #00a6b6;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.fl-view-btn:hover {
+  background: #0096a6;
+}

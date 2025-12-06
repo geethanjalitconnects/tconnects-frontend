@@ -57,6 +57,10 @@ import JobDetailsPage from "./pages/jobs/JobDetailsPage";
 import InternshipsListPage from "./pages/internships/InternshipsListPage";
 import InternshipDetailsPage from "./pages/internships/InternshipDetailsPage";
 
+import FreelancerList from "./pages/freelancers/FreelancerList";
+import FreelancerProfile from "./pages/freelancers/FreelancerProfile";
+
+
 /* ================= APPLY PAGES ================= */
 import ApplyJobPage from "./pages/apply/ApplyJobPage";
 import ApplyInternshipPage from "./pages/apply/ApplyInternshipPage";
@@ -113,6 +117,10 @@ function App() {
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegistrationPage />} />
+
+              <Route path="/freelancers" element={<FreelancerList />} />
+              <Route path="/freelancers/:id" element={<FreelancerProfile />} />
+
 
               {/* COURSES */}
               <Route path="/course/learn/:slug/:id" element={<LearnCourse />} />
