@@ -24,8 +24,8 @@ export default function FreelancerList() {
 
       {/* ================= HERO SECTION ================= */}
       <section className="fl-hero">
-        <h1 className="fl-hero-title">Find Top Freelancers</h1>
-        <p className="fl-hero-subtitle">
+        <h1>Find Top Freelancers</h1>
+        <p>
           Browse skilled professionals ready to work on your next project.
         </p>
       </section>
@@ -37,6 +37,7 @@ export default function FreelancerList() {
         ) : (
           freelancers.map((f) => (
             <div key={f.id} className="fl-card">
+
               {/* PROFILE IMAGE */}
               <div className="fl-img-container">
                 {f.profile_picture ? (
@@ -48,12 +49,15 @@ export default function FreelancerList() {
                 )}
               </div>
 
+              {/* NAME */}
               <h3 className="fl-name">{f.full_name || "Unnamed Freelancer"}</h3>
 
+              {/* EXPERTISE */}
               <p className="fl-expertise">
                 {f.professional?.expertise || "Freelancer"}
               </p>
 
+              {/* LOCATION */}
               <p className="fl-location">
                 {f.location || "Location Not Provided"}
               </p>
@@ -63,16 +67,14 @@ export default function FreelancerList() {
                 {Array.isArray(f.languages_known) &&
                 f.languages_known.length > 0 ? (
                   f.languages_known.slice(0, 3).map((lang, i) => (
-                    <span key={i} className="fl-skill">
-                      {lang}
-                    </span>
+                    <span key={i} className="fl-skill">{lang}</span>
                   ))
                 ) : (
                   <span className="fl-skill">Languages Not Provided</span>
                 )}
               </div>
 
-              {/* VIEW PROFILE NAVIGATION */}
+              {/* VIEW PROFILE BUTTON */}
               <button
                 className="fl-view-btn"
                 onClick={() => navigate(`/freelancers/${f.id}`)}

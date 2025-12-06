@@ -32,10 +32,8 @@ export default function FreelancerProfile() {
 
       {/* ================= HERO SECTION ================= */}
       <section className="fl-hero">
-        <h1 className="fl-hero-title">Freelancer Profile</h1>
-        <p className="fl-hero-subtitle">
-          A verified professional available for work.
-        </p>
+        <h1>Freelancer Profile</h1>
+        <p>A verified professional available for work.</p>
       </section>
 
       {/* ================= PROFILE HEADER ================= */}
@@ -61,7 +59,7 @@ export default function FreelancerProfile() {
         </div>
       </div>
 
-      {/* ================= ABOUT SECTION ================= */}
+      {/* ================= ABOUT ================= */}
       <div className="fl-section">
         <h3 className="fl-section-title">About</h3>
         <p className="fl-paragraph">

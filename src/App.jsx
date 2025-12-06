@@ -117,8 +117,10 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegistrationPage />} />
 
-              <Route path="/freelancers" element={<FreelancerList />} />
-              <Route path="/freelancers/:id" element={<FreelancerProfile />} />
+              {/* FREELANCERS PUBLIC PAGES */}
+<Route path="/freelancers" element={<FreelancerList />} />
+<Route path="/freelancers/:id" element={<FreelancerProfile />} />
+
 
 
               {/* COURSES */}
