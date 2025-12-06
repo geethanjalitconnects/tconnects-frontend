@@ -545,24 +545,47 @@ input::placeholder {
   outline: none !important;
   box-shadow: none !important;
 }
+/* MAIN EXPLORE JOBS BUTTON STYLE */
 .explore-jobs-btn {
   font-size: clamp(0.8rem, 1.6vw, 1rem) !important;
   white-space: nowrap;
   padding: 0.8rem 1.5rem !important;
+
   display: flex;
   align-items: center;
   gap: 6px;
+
+  background: linear-gradient(90deg, #006b70, #0096a0); /* keep your color */
+  color: white !important;
+
+  border-radius: 8px !important;  /* RECTANGLE SHAPE */
+  border: none !important;
+
+  text-decoration: none !important;  /* REMOVE UNDERLINE */
+  font-weight: 600;
+
+  transition: 0.25s ease;
 }
 
+/* HOVER EFFECT */
+.explore-jobs-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  text-decoration: none !important;
+}
+
+/* EXISTING Z-INDEX AND POINTER EVENTS (kept) */
 .explore-jobs-btn {
   position: relative;
   z-index: 9999 !important;
   pointer-events: auto !important;
 }
+
 .hero-buttons {
   position: relative;
   z-index: 9999 !important;
 }
+
 .hero-content-overlay {
   pointer-events: none !important;
 }
@@ -571,6 +594,7 @@ input::placeholder {
 .hero-buttons * {
   pointer-events: auto !important;
 }
+
 
 
 /* Comprehensive responsive breakpoints */
