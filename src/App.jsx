@@ -90,7 +90,7 @@ function HomePage({ onCategoryClick }) {
       navigateToJobsList={() => navigate("/jobs")}
         navigateToResumeMaking={() => window.open("https://tconnects.vercel.app/", "_blank")}
         />
-      <AboutSection />
+      <AboutSection navigateToAboutUs={navigateToAboutUs} />
       <WhyChoose />
       <HowItWorks />
       <Footer />
