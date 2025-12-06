@@ -1,94 +1,124 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Modal, Button, Form, Alert } from "react-bootstrap";
 import api from "../../config/api";
 import "./MockInterview.css";
 
-const MockInterview = () => {
+export default function MockInterview() {
   const [show, setShow] = useState(false);
-  const [interviews, setInterviews] = useState([]);
+  const [upcoming, setUpcoming] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [form, setForm] = useState({
     job_role: "",
     experience: "",
-    email: "",
     scheduled_date: "",
     scheduled_time: "",
+    email: "",
     interviewer_preference: "",
     special_requests: "",
   });
 
-  const [successMsg, setSuccessMsg] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   // Fetch upcoming interviews
-  const loadInterviews = async () => {
-    try {
-      const res = await api.get("/api/mock-interview/my-interviews/");
-      setInterviews(res.data || []);
-    } catch (error) {
-      console.error("Error loading interviews:", error);
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
-    loadInterviews();
+    loadUpcoming();
   }, []);
 
+  const loadUpcoming = async () => {
+    try {
+      const res = await api.get("/api/mock-interview/my-interviews/");
+      setUpcoming(res.data);
+    } catch (err) {
+      console.log("Error fetching interviews:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle input update
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
 
     try {
       const res = await api.post("/api/mock-interview/schedule/", form);
+      setSuccess("Interview scheduled successfully!");
 
-      if (res.status === 201) {
-        setSuccessMsg("Your mock interview has been successfully scheduled!");
-        setShow(false);
-        loadInterviews();
-        setForm({
-          job_role: "",
-          experience: "",
-          email: "",
-          scheduled_date: "",
-          scheduled_time: "",
-          interviewer_preference: "",
-          special_requests: "",
-        });
-      }
+      // Refresh upcoming list
+      loadUpcoming();
+
+      // Close modal
+      setShow(false);
+
+      // Reset form
+      setForm({
+        job_role: "",
+        experience: "",
+        scheduled_date: "",
+        scheduled_time: "",
+        email: "",
+        interviewer_preference: "",
+        special_requests: "",
+      });
     } catch (err) {
-      console.error("Error scheduling:", err);
-      alert(err.response?.data?.error || "Failed to schedule interview.");
+      console.log(err);
+      const msg =
+        err.response?.data?.detail ||
+        Object.values(err.response?.data || {})[0] ||
+        "Failed to schedule interview";
+      setError(msg);
     }
   };
 
-  const upcoming = interviews.filter((i) => i.meeting_link);
-
   return (
-    <div className="mock-page">
+    <div className="mock-container">
 
       {/* HERO SECTION */}
-      <div className="mock-hero">
-        <h1>Schedule Your Mock Interview</h1>
-        <p>
-          Boost your confidence with expert-led mock interviews designed to
-          prepare you for real job placements.
-        </p>
+      <section className="mock-hero-section">
+        <div className="mock-hero-content">
+          <span className="mock-hero-badge">INTERVIEW PREPARATION</span>
 
-        <button className="mock-primary-btn" onClick={() => setShow(true)}>
-          Schedule Interview
-        </button>
-      </div>
+          <h1 className="mock-hero-title">
+            Master Your Career With Professional{" "}
+            <span className="mock-highlight">Mock Interviews</span>
+          </h1>
 
-      {/* SUCCESS MESSAGE */}
-      {successMsg && (
-        <div className="mock-success">
-          <p>{successMsg}</p>
+          <p className="mock-hero-sub">
+            Practice real interview scenarios, gain expert feedback, and build
+            the confidence needed to ace your next opportunity.
+          </p>
+
+          <Button className="mock-hero-btn" onClick={() => setShow(true)}>
+            Schedule Mock Interview
+          </Button>
         </div>
-      )}
+      </section>
 
-      {/* UPCOMING INTERVIEWS */}
-      {upcoming.length > 0 && (
-        <>
-          <h3 className="mock-section-title">Your Upcoming Interviews</h3>
+      {/* CONTENT AREA */}
+      <div className="mock-content">
 
+        {success && <Alert variant="success">{success}</Alert>}
+        {error && <Alert variant="danger">{error}</Alert>}
+
+        {/* UPCOMING INTERVIEWS */}
+        <h3 className="mock-section-title">Your Upcoming Interviews</h3>
+
+        {loading ? (
+          <p>Loading interviews...</p>
+        ) : upcoming.length === 0 ? (
+          <div className="mock-empty-box">
+            <p>No interviews scheduled.</p>
+            <Button onClick={() => setShow(true)}>Schedule One Now</Button>
+          </div>
+        ) : (
           <div className="mock-interview-list">
             {upcoming.map((i) => (
               <div key={i.id} className="mock-interview-card">
@@ -110,124 +140,127 @@ const MockInterview = () => {
                     Join Meeting
                   </a>
                   <p className="mock-created">
-                    Scheduled on:{" "}
+                    Scheduled:{" "}
                     {new Date(i.created_at).toLocaleString()}
                   </p>
                 </div>
               </div>
             ))}
           </div>
-        </>
-      )}
+        )}
+      </div>
 
-      {/* SCHEDULE MODAL */}
-      {show && (
-        <div className="mock-modal-overlay">
-          <div className="mock-modal">
-            <h2>Schedule a Mock Interview</h2>
+      {/* BOOKING MODAL */}
+      <Modal show={show} onHide={() => setShow(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Schedule Mock Interview</Modal.Title>
+        </Modal.Header>
 
-            <form onSubmit={handleSubmit}>
-              <label>Job Role *</label>
-              <input
-                type="text"
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Job Role *</Form.Label>
+              <Form.Control
+                name="job_role"
                 value={form.job_role}
-                onChange={(e) =>
-                  setForm({ ...form, job_role: e.target.value })
-                }
+                onChange={handleChange}
                 required
               />
+            </Form.Group>
 
-              <label>Experience *</label>
-              <select
+            <Form.Group className="mb-3">
+              <Form.Label>Experience *</Form.Label>
+              <Form.Select
+                name="experience"
                 value={form.experience}
-                onChange={(e) =>
-                  setForm({ ...form, experience: e.target.value })
-                }
+                onChange={handleChange}
                 required
               >
-                <option value="">Select</option>
+                <option value="">Select level</option>
                 <option value="entry">Entry (0–2 years)</option>
                 <option value="mid">Mid (2–5 years)</option>
                 <option value="senior">Senior (5+ years)</option>
-              </select>
+              </Form.Select>
+            </Form.Group>
 
-              <label>Email *</label>
-              <input
+            <Form.Group className="mb-3">
+              <Form.Label>Email *</Form.Label>
+              <Form.Control
                 type="email"
+                name="email"
                 value={form.email}
-                onChange={(e) =>
-                  setForm({ ...form, email: e.target.value })
-                }
+                onChange={handleChange}
                 required
               />
+            </Form.Group>
 
-              <div className="mock-row">
-                <div>
-                  <label>Date *</label>
-                  <input
+            <div className="row">
+              <div className="col">
+                <Form.Group className="mb-3">
+                  <Form.Label>Date *</Form.Label>
+                  <Form.Control
                     type="date"
+                    name="scheduled_date"
                     value={form.scheduled_date}
-                    onChange={(e) =>
-                      setForm({ ...form, scheduled_date: e.target.value })
-                    }
+                    onChange={handleChange}
+                    min={new Date().toISOString().split("T")[0]}
                     required
                   />
-                </div>
-
-                <div>
-                  <label>Time *</label>
-                  <input
-                    type="time"
-                    value={form.scheduled_time}
-                    onChange={(e) =>
-                      setForm({ ...form, scheduled_time: e.target.value })
-                    }
-                    required
-                  />
-                </div>
+                </Form.Group>
               </div>
 
-              <label>Interviewer Preference</label>
-              <select
+              <div className="col">
+                <Form.Group className="mb-3">
+                  <Form.Label>Time *</Form.Label>
+                  <Form.Control
+                    type="time"
+                    name="scheduled_time"
+                    value={form.scheduled_time}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+              </div>
+            </div>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Interviewer Preference</Form.Label>
+              <Form.Select
+                name="interviewer_preference"
                 value={form.interviewer_preference}
-                onChange={(e) =>
-                  setForm({ ...form, interviewer_preference: e.target.value })
-                }
+                onChange={handleChange}
               >
                 <option value="">No preference</option>
                 <option value="industry-expert">Industry Expert</option>
                 <option value="hr-professional">HR Professional</option>
                 <option value="technical-lead">Technical Lead</option>
-              </select>
+              </Form.Select>
+            </Form.Group>
 
-              <label>Special Requests</label>
-              <textarea
+            <Form.Group className="mb-3">
+              <Form.Label>Special Requests</Form.Label>
+              <Form.Control
+                as="textarea"
                 rows={3}
+                name="special_requests"
                 value={form.special_requests}
-                onChange={(e) =>
-                  setForm({ ...form, special_requests: e.target.value })
-                }
+                onChange={handleChange}
               />
+            </Form.Group>
 
-              <div className="mock-modal-actions">
-                <button
-                  type="button"
-                  className="mock-cancel-btn"
-                  onClick={() => setShow(false)}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="mock-submit-btn">
-                  Schedule
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+            <div className="text-end">
+              <Button variant="secondary" onClick={() => setShow(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" className="mock-submit-btn">
+                Schedule
+              </Button>
+            </div>
 
+          </Form>
+        </Modal.Body>
+      </Modal>
     </div>
   );
-};
-
-export default MockInterview;
+}
