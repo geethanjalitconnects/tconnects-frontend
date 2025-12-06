@@ -98,9 +98,17 @@ const Header = () => {
               <NavDropdown.Item as={Link} to="/mock-interview" className="dropdown-item-custom" onClick={closeMobileMenu}>
                 Schedule a Mock Interview
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/resume-building" className="dropdown-item-custom" onClick={closeMobileMenu}>
-                Resume Building
-              </NavDropdown.Item>
+              <NavDropdown.Item
+  as="a"
+  href="https://tconnects.vercel.app/"
+  target="_self"
+  rel="noopener noreferrer"
+  className="dropdown-item-custom"
+  onClick={closeMobileMenu}
+>
+  Resume Building
+</NavDropdown.Item>
+
             </NavDropdown>
 
             <Nav.Link as={Link} to="/blogs" className="nav-link-custom" onClick={closeMobileMenu}>

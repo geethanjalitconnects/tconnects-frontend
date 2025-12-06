@@ -86,7 +86,10 @@ import EditInternship from "./pages/recruiter-dashboard/jobs/EditInternship";
 function HomePage({ onCategoryClick }) {
   return (
     <>
-      <HeroSection onCategoryClick={onCategoryClick} />
+      <HeroSection onCategoryClick={onCategoryClick} 
+      navigateToJobsList={() => navigate("/jobs")}
+        navigateToResumeMaking={() => window.open("https://tconnects.vercel.app/", "_blank")}
+        />
       <AboutSection />
       <WhyChoose />
       <HowItWorks />
