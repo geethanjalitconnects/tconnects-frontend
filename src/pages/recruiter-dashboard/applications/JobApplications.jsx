@@ -1,6 +1,7 @@
 // JobApplications.jsx
 import React, { useEffect, useState } from "react";
-import api from "../../config/api"; // your global axios instance
+import api from "../../../config/api";
+ // your global axios instance
 import "./RecruiterDashboard.css"; // uses classes defined in your recruiter css
 
 // Set these to match your backend URLs (change if needed)

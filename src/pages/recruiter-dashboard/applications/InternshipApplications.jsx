@@ -1,6 +1,6 @@
 // InternshipApplications.jsx
 import React, { useEffect, useState } from "react";
-import api from "../../config/api";
+import api from "../../../config/api";
 import "./RecruiterDashboard.css";
 
 const INTERNS_URL = "/api/recruiter/applications/internships/";
