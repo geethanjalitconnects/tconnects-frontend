@@ -545,69 +545,37 @@ input::placeholder {
   outline: none !important;
   box-shadow: none !important;
 }
-/* ---------- Explore Jobs button - rectangular, no underline ---------- */
-/* Replace any existing .explore-jobs-btn rules with this block */
-
+/* EXPLORE JOBS – final clean rectangular button */
 .explore-jobs-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  /* remove underline and ensure anchor behaves like a button */
-  text-decoration: none !important;
-  color: inherit;               /* keep the same font color as in markup */
-  cursor: pointer;
+  text-decoration: none !important; /* remove underline */
+  color: #ffffff !important;        /* keep white text like resume button */
 
-  /* rectangular shape (sharper edges) */
-  border-radius: 8px;           /* reduce to 4px for even sharper corners */
-  padding: 0.85rem 2.25rem;     /* vertical / horizontal — adjust if needed */
-  min-height: 56px;             /* consistent button height */
-  line-height: 1;
-  box-sizing: border-box;
+  background: linear-gradient(135deg, #006064 0%, #00838f 50%, #0097a7 100%);
+  border-radius: 12px;             /* rectangular, smooth edges */
+  padding: 1rem 2.2rem;            /* SAME SIZE as resume button */
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  font-size: clamp(0.8rem, 2.5vw, 0.9rem);
 
-  /* background + border (keeps existing look but rectangular) */
-  background: linear-gradient(90deg, rgba(1,90,86,1) 0%, rgba(2,121,116,1) 100%);
-  border: 0;
-  color: #072f2f;               /* leave this if you want a specific color; otherwise keep color: inherit */
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  min-width: 250px;                /* EXACT WIDTH of Resume button */
+  min-height: 56px;                /* SAME HEIGHT */
+  box-shadow: 0 8px 25px rgba(0, 96, 100, 0.25);
 
-  /* remove default anchor underline on hover/focus */
-  outline: none;
+  transition: all 0.3s ease;
 }
 
-/* Ensure icon spacing inside the button */
+.explore-jobs-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 18px 35px rgba(0, 96, 100, 0.35);
+  text-decoration: none !important;
+}
+
 .explore-jobs-btn i {
-  margin-left: 0.6rem;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-/* Remove underline (again) for all states */
-.explore-jobs-btn,
-.explore-jobs-btn:link,
-.explore-jobs-btn:visited,
-.explore-jobs-btn:hover,
-.explore-jobs-btn:active,
-.explore-jobs-btn:focus {
-  text-decoration: none !important;
-}
-
-/* Hover/focus styles (subtle) */
-.explore-jobs-btn:hover,
-.explore-jobs-btn:focus {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 20px rgba(2,121,116,0.12);
-  text-decoration: none !important;
-}
-
-/* Responsive scale-down on small screens */
-@media (max-width: 576px) {
-  .explore-jobs-btn {
-    padding: 0.75rem 1.25rem;
-    min-height: 48px;
-    font-size: 0.95rem;
-  }
+  margin-left: 8px;
 }
 
 

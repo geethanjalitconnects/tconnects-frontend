@@ -194,10 +194,11 @@ const HeroSection = ({ navigateToJobsList, navigateToResumeMaking, onNavigate })
               <div className="d-grid gap-3 d-sm-flex justify-content-sm-center hero-buttons">
    <Link 
   to="/jobs" 
-  className="btn-primary-custom px-4 explore-jobs-btn"
+  className="explore-jobs-btn"
 >
   Explore Jobs <i className="bi bi-arrow-right"></i>
 </Link>
+
 
 
                 <Button 
