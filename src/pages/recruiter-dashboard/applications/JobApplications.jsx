@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../config/api";
  // your global axios instance
-import "./RecruiterDashboard.css"; // uses classes defined in your recruiter css
-
+import "../RecruiterDashboard.css";
+// uses classes defined in your recruiter css
 // Set these to match your backend URLs (change if needed)
 const JOBS_URL = "/api/recruiter/applications/jobs/"; // GET list
 // For update/delete we assume endpoint is /api/recruiter/applications/jobs/<id>/
