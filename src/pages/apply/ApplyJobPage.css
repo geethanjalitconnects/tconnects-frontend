@@ -150,3 +150,135 @@
   from { transform: scale(0.85); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+/* ============================================================
+   📱 MOBILE & TABLET RESPONSIVE DESIGN
+   ============================================================ */
+
+/* Tablet (max-width: 900px) */
+@media (max-width: 900px) {
+  .apply-wrapper {
+    width: 100% !important;
+    padding: 20px !important;
+    margin-top: 1rem !important;
+  }
+
+  .apply-container {
+    padding: 22px !important;
+    border-radius: 14px !important;
+  }
+
+  .apply-title {
+    font-size: 24px !important;
+    text-align: center !important;
+  }
+}
+
+/* Mobile (max-width: 600px) */
+@media (max-width: 600px) {
+
+  /* Remove forced desktop width */
+  body {
+    min-width: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  .apply-wrapper {
+    width: 100% !important;
+    padding: 15px !important;
+  }
+
+  .apply-container {
+    padding: 18px !important;
+  }
+
+  .apply-title {
+    font-size: 20px !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* PROFILE CARD SPACING */
+  .apply-card {
+    padding: 16px !important;
+  }
+
+  .apply-row {
+    margin-bottom: 14px !important;
+  }
+
+  .apply-label {
+    font-size: 13px !important;
+  }
+
+  .apply-value {
+    font-size: 14px !important;
+  }
+
+  /* TAGS RESPONSIVE */
+  .apply-tags {
+    gap: 8px !important;
+  }
+
+  .apply-tag {
+    font-size: 12px !important;
+    padding: 5px 10px !important;
+  }
+
+  /* RESUME BUTTON */
+  .resume-btn {
+    width: 100% !important;
+    padding: 12px !important;
+    font-size: 14px !important;
+    border-radius: 10px !important;
+  }
+
+  /* SUBMIT BUTTON */
+  .submit-btn {
+    width: 100% !important;
+    padding: 12px !important;
+    font-size: 15px !important;
+    border-radius: 40px !important;
+  }
+
+  /* POPUP RESPONSIVE */
+  .apply-popup-card {
+    width: 85% !important;
+    padding: 20px 25px !important;
+  }
+
+  .popup-icon {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 22px !important;
+  }
+}
+
+/* Very Small Devices (max-width: 400px) */
+@media (max-width: 400px) {
+
+  .apply-title {
+    font-size: 18px !important;
+  }
+
+  .apply-container {
+    padding: 14px !important;
+  }
+
+  .apply-card {
+    padding: 12px !important;
+  }
+
+  .apply-row {
+    margin-bottom: 10px !important;
+  }
+
+  .apply-value,
+  .apply-label {
+    font-size: 13px !important;
+  }
+
+  .submit-btn {
+    font-size: 14px !important;
+    padding: 10px !important;
+  }
+}
+

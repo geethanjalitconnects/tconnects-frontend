@@ -250,74 +250,140 @@
   background: linear-gradient(135deg, #004d4d 0%, #006064 100%);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* ============================================================
+   📱 EXTRA MOBILE RESPONSIVENESS (360px, 400px, 320px)
+   ============================================================ */
+
+@media (max-width: 400px) {
+
   .risk-modal-content {
-    padding: 2rem 1.5rem;
-    max-height: 85vh;
-    border-radius: 15px;
+    padding: 1.2rem 0.9rem !important;
+    border-radius: 12px !important;
+    max-height: 80vh !important;
   }
-  
-  .risk-modal-close {
-    width: 35px;
-    height: 35px;
-    font-size: 24px;
-    top: 1rem;
-    right: 1rem;
+
+  .risk-modal-title {
+    font-size: 1.35rem !important;
   }
-  
-  .risk-modal-icon {
-    font-size: 3rem;
-    margin-bottom: 0.75rem;
-  }
-  
+
   .risk-modal-description {
-    margin-bottom: 1.5rem;
+    font-size: 0.9rem !important;
+    line-height: 1.55 !important;
+    text-align: left !important;
   }
-  
-  .risk-modal-section {
-    margin-bottom: 1.5rem;
-  }
-  
-  .career-badge {
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
-  }
-  
-  .risk-modal-footer {
-    margin-top: 1.5rem;
-    padding-top: 1rem;
-  }
-}
 
-@media (max-width: 480px) {
-  .risk-modal-content {
-    padding: 1.5rem 1rem;
-    border-radius: 12px;
-  }
-  
-  .risk-modal-icon {
-    font-size: 2.5rem;
-  }
-  
   .risk-modal-list-item {
-    padding: 0.6rem 0;
-    padding-left: 1.25rem;
+    font-size: 0.9rem !important;
+    padding: 0.55rem 0 !important;
+    padding-left: 1.1rem !important;
   }
-  
+
+  .list-bullet {
+    font-size: 1.2rem !important;
+    top: 2px;
+  }
+
+  .career-badge {
+    padding: 0.45rem 0.8rem !important;
+    font-size: 0.78rem !important;
+  }
+
   .risk-modal-btn {
-    padding: 0.9rem 1.5rem;
+    padding: 0.8rem !important;
+    font-size: 0.9rem !important;
+  }
+
+  .risk-modal-close {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 20px !important;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .risk-modal-overlay,
-  .risk-modal-content,
-  .risk-modal-icon,
-  .risk-modal-close:hover,
-  .career-badge:hover,
-  .risk-modal-btn:hover {
-    animation: none !important;
-    transition: none !important;
+@media (max-width: 360px) {
+
+  .risk-modal-content {
+    padding: 1rem 0.75rem !important;
+    max-height: 78vh !important;
+  }
+
+  .risk-modal-title {
+    font-size: 1.25rem !important;
+  }
+
+  .risk-modal-description {
+    font-size: 0.85rem !important;
+  }
+
+  .risk-modal-list-item {
+    font-size: 0.85rem !important;
+  }
+
+  .career-badge {
+    padding: 0.4rem 0.7rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  .risk-modal-btn {
+    padding: 0.75rem !important;
+    font-size: 0.85rem !important;
+  }
+}
+
+@media (max-width: 320px) {
+
+  .risk-modal-content {
+    padding: 0.85rem 0.65rem !important;
+    border-radius: 10px !important;
+  }
+
+  .risk-modal-title {
+    font-size: 1.15rem !important;
+  }
+
+  .risk-modal-description,
+  .risk-modal-list-item {
+    font-size: 0.78rem !important;
+  }
+
+  .risk-modal-btn {
+    font-size: 0.8rem !important;
+    padding: 0.65rem !important;
+  }
+
+  .risk-modal-close {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 18px !important;
+  }
+}
+
+/* ============================================================
+   📱 LANDSCAPE MODE SUPPORT
+   ============================================================ */
+
+@media (max-height: 480px) and (orientation: landscape) {
+
+  .risk-modal-content {
+    max-height: 70vh !important;
+    padding: 1rem !important;
+  }
+
+  .risk-modal-description {
+    font-size: 0.9rem !important;
+  }
+
+  .risk-modal-btn {
+    padding: 0.65rem 1rem !important;
+  }
+}
+
+/* ============================================================
+   ✨ OPTIONAL: Prevent modal overflow on very small screens
+   ============================================================ */
+
+@media (max-height: 600px) {
+  .risk-modal-content {
+    max-height: 75vh !important;
   }
 }

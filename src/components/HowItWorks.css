@@ -1552,3 +1552,125 @@
 .section-visible .how-it-works-item:nth-child(n+4) {
   --animation-delay: calc(0.2s * (var(--item-index, 1)));
 }
+/* ============================================================
+   📱 RESPONSIVE FOR HOW IT WORKS SECTION
+   ============================================================ */
+
+/* Tablet (max-width: 768px) */
+@media (max-width: 768px) {
+
+  .how-it-works-section {
+    padding: 3rem 1rem !important;
+  }
+
+  .how-it-works-item {
+    padding: 1.8rem !important;
+    border-radius: 14px !important;
+  }
+
+  .icon-circle {
+    width: 70px !important;
+    height: 70px !important;
+  }
+
+  .icon-circle i {
+    font-size: 1.6rem !important;
+  }
+
+  .section-title {
+    font-size: 2rem !important;
+  }
+
+  .how-it-works-item h4 {
+    font-size: 1.2rem !important;
+  }
+
+  .how-it-works-item p {
+    font-size: 0.95rem !important;
+  }
+}
+
+/* Mobile (max-width: 575px) */
+@media (max-width: 575px) {
+
+  .how-it-works-section {
+    padding: 2.5rem 1rem !important;
+  }
+
+  .section-title {
+    font-size: 1.7rem !important;
+    margin-bottom: 2rem !important;
+  }
+
+  /* Force columns to 1 per row */
+  .how-it-works-section .col-md-4 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  .how-it-works-item {
+    padding: 1.6rem 1.2rem !important;
+  }
+
+  .icon-circle {
+    width: 60px !important;
+    height: 60px !important;
+  }
+
+  .icon-circle i {
+    font-size: 1.4rem !important;
+  }
+
+  .how-it-works-item h4 {
+    font-size: 1.1rem !important;
+  }
+
+  .how-it-works-item p {
+    font-size: 0.9rem !important;
+  }
+}
+
+/* Extra Small Phones (max-width: 400px) */
+@media (max-width: 400px) {
+
+  .section-title {
+    font-size: 1.5rem !important;
+  }
+
+  .how-it-works-item {
+    padding: 1.4rem !important;
+  }
+
+  .icon-circle {
+    width: 55px !important;
+    height: 55px !important;
+  }
+
+  .icon-circle i {
+    font-size: 1.2rem !important;
+  }
+
+  .how-it-works-item h4 {
+    font-size: 1rem !important;
+  }
+
+  .how-it-works-item p {
+    font-size: 0.85rem !important;
+  }
+}
+
+/* Landscape phones */
+@media (max-height: 480px) and (orientation: landscape) {
+  .how-it-works-section {
+    padding: 1.5rem 1rem !important;
+  }
+
+  .icon-circle {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .how-it-works-item {
+    padding: 1rem !important;
+  }
+}

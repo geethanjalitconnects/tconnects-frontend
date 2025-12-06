@@ -378,3 +378,113 @@
     height: 300px;
   }
 }
+/* ============================================================
+   📱 RESPONSIVE — LEARN COURSE PAGE (Video + Curriculum)
+   ============================================================ */
+
+/* Tablet */
+@media (max-width: 980px) {
+
+  .learn-main {
+    grid-template-columns: 1fr !important;
+    margin-top: 20px;
+  }
+
+  .learn-right {
+    position: static !important;
+    order: 2;
+    max-height: none;
+  }
+
+  .player-wrapper {
+    height: 300px !important;
+  }
+
+  .learn-tabs {
+    padding: 12px !important;
+  }
+
+  .lesson-row-learn {
+    padding: 6px !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+
+  .learn-hero {
+    padding: 20px 14px !important;
+  }
+
+  .learn-hero h1 {
+    font-size: 22px !important;
+  }
+
+  .learn-hero-meta {
+    font-size: 12px !important;
+  }
+
+  .player-wrapper {
+    height: 220px !important;
+  }
+
+  .lesson-title {
+    font-size: 13px !important;
+  }
+
+  .lesson-duration {
+    font-size: 12px !important;
+  }
+
+  .learn-tabs {
+    padding: 12px !important;
+  }
+
+  .tabs-nav {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tab {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .qa-input,
+  .notes-input {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .qa-btn,
+  .save-notes-btn {
+    font-size: 13px;
+    padding: 7px 12px;
+  }
+
+  .learn-curriculum {
+    padding: 12px !important;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 400px) {
+
+  .lesson-title {
+    font-size: 12px !important;
+  }
+
+  .lesson-duration {
+    width: 45px !important;
+    font-size: 11px !important;
+  }
+
+  .lesson-row-learn {
+    padding: 5px !important;
+  }
+
+  .assignment-content {
+    width: 92% !important;
+    padding: 18px !important;
+  }
+}

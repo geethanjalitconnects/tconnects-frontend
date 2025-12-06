@@ -372,3 +372,134 @@
   to { transform: scale(1); opacity: 1; }
 }
 
+/* ============================================================
+   📱 FINAL RESPONSIVE LAYER — REGISTRATION PAGE
+   ============================================================ */
+
+/* Tablet (max-width: 768px) */
+@media (max-width: 768px) {
+
+  .register-page {
+    padding: 30px 20px !important;
+  }
+
+  .register-container {
+    max-width: 420px !important;
+    padding: 32px !important;
+  }
+
+  .title {
+    font-size: 28px !important;
+  }
+
+  .user-type-btn {
+    padding: 14px 16px !important;
+    font-size: 15px !important;
+  }
+
+  .google-btn,
+  .submit-btn {
+    padding: 14px !important;
+    font-size: 15px !important;
+  }
+}
+
+/* Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+
+  .register-page {
+    padding: 24px 14px !important;
+  }
+
+  .register-container {
+    padding: 28px 18px !important;
+    border-radius: 16px !important;
+  }
+
+  .title {
+    font-size: 24px !important;
+    margin-bottom: 20px !important;
+    text-align: center !important;
+  }
+
+  /* User toggle becomes vertical */
+  .user-type-selector {
+    flex-direction: column !important;
+  }
+
+  .user-type-btn {
+    padding: 14px !important;
+    font-size: 14px !important;
+  }
+
+  .input-label {
+    font-size: 14px !important;
+  }
+
+  .input-field {
+    padding: 14px !important;
+    font-size: 14px !important;
+  }
+
+  .submit-btn,
+  .google-btn {
+    width: 100% !important;
+    font-size: 14px !important;
+    padding: 14px !important;
+  }
+
+  .login-link-container {
+    flex-direction: column !important;
+    gap: 6px !important;
+    text-align: center !important;
+  }
+
+  .login-link,
+  .login-text {
+    font-size: 13px !important;
+  }
+
+  /* Popup adjustments */
+  .popup-card {
+    width: 92% !important;
+    padding: 22px !important;
+  }
+
+  .popup-title {
+    font-size: 20px !important;
+  }
+
+  .popup-message {
+    font-size: 14px !important;
+  }
+}
+
+/* Small Mobile (max-width: 360px) */
+@media (max-width: 360px) {
+
+  .register-container {
+    padding: 22px 15px !important;
+  }
+
+  .title {
+    font-size: 22px !important;
+  }
+
+  .input-field {
+    padding: 12px !important;
+    font-size: 13px !important;
+  }
+
+  .submit-btn {
+    padding: 12px !important;
+    font-size: 14px !important;
+  }
+
+  .popup-card {
+    padding: 18px !important;
+  }
+
+  .popup-title {
+    font-size: 18px !important;
+  }
+}

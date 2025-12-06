@@ -451,3 +451,126 @@
   background: rgba(72, 201, 176, 0.3);
   color: #2d3748;
 }
+/* ============================================================
+   📱 FINAL MOBILE RESPONSIVENESS FOR ABOUT US PAGE
+   ============================================================ */
+
+/* Tablet (max-width: 768px) */
+@media (max-width: 768px) {
+
+  /* GENERAL SPACING */
+  .about-us-page section {
+    padding: 2.5rem 1.2rem !important;
+  }
+
+  /* TWO COLUMN SECTIONS → ONE COLUMN */
+  .about-us-page .row {
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+
+  /* CARD RESPONSIVENESS */
+  .about-us-page .card {
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* HERO IMAGE RESPONSIVE */
+  .about-us-page .hero-image img {
+    max-width: 85% !important;
+    margin: 0 auto !important;
+  }
+
+  /* FOUNDER SECTION */
+  .about-us-page .founder-card {
+    text-align: center !important;
+  }
+
+  .about-us-page .founder-card img {
+    margin: 0 auto !important;
+  }
+
+  /* STATISTICS GRID */
+  .about-us-page .stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.2rem !important;
+  }
+}
+
+/* Mobile (max-width: 575px) */
+@media (max-width: 575px) {
+
+  .about-us-page section {
+    padding: 2rem 1rem !important;
+  }
+
+  /* HERO AREA */
+  .about-us-page .hero-content h1 {
+    font-size: 1.6rem !important;
+  }
+  .about-us-page .hero-content .lead {
+    font-size: 0.95rem !important;
+  }
+
+  /* MAKE CARDS FULL WIDTH */
+  .about-us-page .card {
+    padding: 1.2rem !important;
+  }
+
+  /* STATS → 1 COLUMN */
+  .about-us-page .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* CENTER ALL TEXT */
+  .about-us-page h2,
+  .about-us-page h3,
+  .about-us-page p {
+    text-align: center !important;
+  }
+
+  /* ICONS */
+  .about-us-page .fa-check-circle {
+    font-size: 0.95rem !important;
+  }
+}
+
+/* Extra Small Mobile (max-width: 400px) */
+@media (max-width: 400px) {
+
+  /* HERO */
+  .about-us-page .hero-content h1 {
+    font-size: 1.4rem !important;
+  }
+
+  /* CARDS */
+  .about-us-page .card-body {
+    padding: 1rem !important;
+  }
+
+  .about-us-page .card-title {
+    font-size: 1.1rem !important;
+  }
+
+  .about-us-page .card-text {
+    font-size: 0.9rem !important;
+  }
+
+  /* FOUNDER SECTION */
+  .about-us-page .founder-card img {
+    width: 120px !important;
+    height: 120px !important;
+  }
+}
+
+/* Landscape phones (max-height: 500px) */
+@media (max-height: 500px) and (orientation: landscape) {
+
+  .about-us-page .hero-section {
+    padding: 1.5rem 1rem !important;
+  }
+
+  .about-us-page .hero-content h1 {
+    font-size: 1.3rem !important;
+  }
+}

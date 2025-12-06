@@ -839,3 +839,164 @@ body, html {
   outline: none;
   box-shadow: 0 0 0 3px rgba(15, 113, 115, 0.2);
 }
+/* ============================================
+   📱 MOBILE & TABLET RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet (max-width: 900px) */
+@media (max-width: 900px) {
+
+  /* Sidebar slides out */
+  .cd-sidebar {
+    left: -260px !important;
+    top: 90px !important;
+    width: 240px !important;
+    height: calc(100vh - 90px) !important;
+    transition: left 0.3s ease !important;
+    z-index: 999 !important;
+  }
+
+  /* Sidebar open state */
+  .cd-layout.sidebar-open .cd-sidebar {
+    left: 0 !important;
+  }
+
+  /* Main content becomes full-width */
+  .cd-main {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 22px 20px !important;
+  }
+
+  /* Reduce padding for cards & grids */
+  .cd-welcome-card,
+  .cd-stat-card,
+  .cd-profile-card,
+  .cd-job-card,
+  .cd-message-item,
+  .cd-course-card,
+  .cd-saved-card,
+  .cd-application-card {
+    padding: 18px !important;
+  }
+
+  .cd-form-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .cd-full-width {
+    grid-column: span 2 !important;
+  }
+}
+
+/* Mobile Large (max-width: 600px) */
+@media (max-width: 600px) {
+
+  /* HERO top margin adjust */
+  .cd-layout {
+    margin-top: 70px !important;
+  }
+
+  /* SIDEBAR */
+  .cd-sidebar {
+    width: 220px !important;
+  }
+
+  /* MAIN CONTENT AREA */
+  .cd-main {
+    padding: 18px 16px !important;
+  }
+
+  /* WELCOME CARD */
+  .cd-welcome-card {
+    padding: 18px !important;
+  }
+
+  .cd-welcome-title {
+    font-size: 18px !important;
+  }
+
+  .cd-welcome-text {
+    font-size: 13px !important;
+  }
+
+  /* DASHBOARD CARDS STACK */
+  .cd-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cd-stat-number {
+    font-size: 20px !important;
+  }
+
+  /* PROFILE FORM */
+  .cd-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cd-full-width {
+    grid-column: span 1 !important;
+  }
+
+  /* COURSE CARDS */
+  .cd-course-card {
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+
+  /* APPLICATION CARDS */
+  .cd-application-card {
+    flex-direction: column !important;
+    gap: 12px !important;
+    text-align: center;
+  }
+
+  .cd-status {
+    width: 100%;
+    display: inline-block;
+  }
+
+  /* MESSAGE ITEMS */
+  .cd-message-item {
+    flex-direction: column !important;
+    text-align: left !important;
+  }
+}
+
+/* Mobile Small (max-width: 400px) */
+@media (max-width: 400px) {
+
+  .cd-sidebar {
+    width: 200px !important;
+  }
+
+  .cd-main {
+    padding: 14px !important;
+  }
+
+  .cd-welcome-title {
+    font-size: 16px !important;
+  }
+
+  .cd-stat-card {
+    padding: 14px !important;
+  }
+
+  .cd-stat-number {
+    font-size: 18px !important;
+  }
+
+  .cd-save-btn {
+    width: 100% !important;
+  }
+
+  /* Text scaling */
+  .cd-profile-title,
+  .cd-section-title {
+    font-size: 16px !important;
+  }
+
+  .cd-profile-subtitle {
+    font-size: 13px !important;
+  }
+}

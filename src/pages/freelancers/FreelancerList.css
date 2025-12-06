@@ -150,29 +150,74 @@
 
 /* ========== FREELANCER PROFILE PAGE STYLING ========== */
 
+/* ============================================
+   HERO SECTION (Matches your teal gradient style)
+   ============================================ */
+.fl-hero {
+  width: 100%;
+  background: linear-gradient(180deg, #00a6b6 0%, #007a87 100%);
+  padding: 70px 20px;
+  text-align: center;
+  color: white;
+  border-bottom-left-radius: 70px;
+  border-bottom-right-radius: 70px;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+}
+
+.fl-hero h1 {
+  font-size: 40px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.fl-hero p {
+  margin-top: 10px;
+  font-size: 17px;
+  opacity: 0.9;
+}
+
+
+
+/* ============================================
+   PAGE BACKGROUND
+   ============================================ */
+.fl-page {
+  min-height: 100vh;
+  background: #f4fafb;
+  padding-bottom: 50px;
+}
+
+
+
+/* ============================================
+   MAIN PROFILE HEADER CARD
+   ============================================ */
 .fl-profile-header {
   display: flex;
-  align-items: center;
-  gap: 30px;
-  padding: 30px;
-  margin: 20px auto;
-  max-width: 850px;
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0px 6px 20px rgba(0,0,0,0.08);
+  align-items: flex-start;
+  gap: 25px;
+  padding: 35px;
+  margin: 20px auto 40px;
+  max-width: 900px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e4f3f5;
 }
 
 .fl-profile-img img,
 .fl-placeholder-lg {
-  width: 120px;
-  height: 120px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
-  background: #e0f7fb;
+  background: #dff3f7;
+  border: 3px solid #b9e4ea;
+  font-size: 46px;
+  color: #0091a3;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 42px;
-  color: #00a6b6;
 }
 
 .fl-profile-main {
@@ -180,41 +225,275 @@
 }
 
 .fl-profile-name {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 700;
+  color: #1f2d3d;
+  margin-bottom: 6px;
 }
 
 .fl-profile-expertise {
-  font-size: 16px;
-  color: #0096a6;
+  font-size: 17px;
+  font-weight: 500;
+  color: #00a6b6;
+  margin-bottom: 6px;
 }
 
 .fl-profile-location {
-  color: #6d7a84;
+  font-size: 15px;
+  color: #6c7e87;
 }
 
+
+/* Hire Button */
 .fl-hire-btn {
-  margin-top: 12px;
-  padding: 10px 22px;
-  border-radius: 10px;
-  background: #00a6b6;
+  margin-top: 15px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #00a6b6, #007a87);
   color: white;
+  font-size: 16px;
   font-weight: 600;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 150, 167, 0.3);
+  transition: 0.3s ease;
 }
 
+.fl-hire-btn:hover {
+  background: #006f7b;
+  transform: translateY(-2px);
+}
+
+
+
+/* ============================================
+   EACH CONTENT SECTION (About, Education, etc.)
+   ============================================ */
 .fl-section {
-  max-width: 850px;
-  margin: 30px auto;
+  max-width: 900px;
+  margin: 0 auto 35px;
+  padding: 25px 30px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e4f3f5;
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
 }
 
-.fl-section-title {
+.fl-section-title,
+.fl-section h3 {
   font-size: 22px;
-  font-weight: 600;
+  font-weight: 700;
+  color: #1f2d3d;
+  margin-bottom: 14px;
 }
 
+
+
+/* ============================================
+   ABOUT TEXT
+   ============================================ */
 .fl-paragraph {
-  color: #4a5b67;
-  line-height: 1.6;
+  color: #4b6067;
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+
+
+/* ============================================
+   EDUCATION
+   ============================================ */
+.fl-edu-item {
+  margin-bottom: 12px;
+}
+
+.fl-edu-item strong {
+  color: #007a87;
+}
+
+.fl-edu-year {
+  color: #6c7e87;
+  font-size: 14px;
+}
+
+
+
+/* ============================================
+   AVAILABILITY INFO
+   ============================================ */
+.fl-availability p {
+  margin: 4px 0;
+  color: #4a5c63;
+}
+
+
+
+/* ============================================
+   SOCIAL LINKS
+   ============================================ */
+.fl-social-links a {
+  display: inline-block;
+  margin-right: 15px;
+  margin-top: 5px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0097a7;
+  text-decoration: none;
+}
+
+.fl-social-links a:hover {
+  text-decoration: underline;
+}
+
+
+
+/* ============================================
+   RATINGS & BADGES (placeholder style)
+   ============================================ */
+.fl-ratings-placeholder {
+  color: #6c7e87;
+  font-size: 15px;
+}
+/* ============================================
+   RESPONSIVE DESIGN — MOBILE & TABLET
+   ============================================ */
+
+/* Tablets (max-width: 900px) */
+@media (max-width: 900px) {
+
+  .fl-profile-header {
+    max-width: 95%;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    padding: 25px;
+  }
+
+  .fl-profile-main {
+    text-align: center;
+  }
+
+  .fl-hire-btn {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .fl-section {
+    max-width: 95%;
+    padding: 20px;
+  }
+}
+
+/* Mobile (max-width: 600px) */
+@media (max-width: 600px) {
+
+  /* HERO */
+  .fl-hero {
+    padding: 50px 15px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+  }
+
+  .fl-hero h1 {
+    font-size: 28px;
+  }
+
+  .fl-hero p {
+    font-size: 14px;
+  }
+
+  /* PROFILE HEADER */
+  .fl-profile-header {
+    padding: 20px;
+    margin-top: 10px;
+  }
+
+  .fl-profile-img img,
+  .fl-placeholder-lg {
+    width: 100px;
+    height: 100px;
+    font-size: 36px;
+  }
+
+  .fl-profile-name {
+    font-size: 22px;
+  }
+
+  .fl-profile-expertise {
+    font-size: 15px;
+  }
+
+  .fl-profile-location {
+    font-size: 14px;
+  }
+
+  .fl-hire-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    width: 100%;
+  }
+
+  /* SECTION */
+  .fl-section {
+    padding: 18px;
+    margin-bottom: 20px;
+    max-width: 95%;
+  }
+
+  .fl-section-title {
+    font-size: 18px;
+  }
+
+  .fl-paragraph {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* EDUCATION */
+  .fl-edu-item strong {
+    font-size: 14px;
+  }
+
+  .fl-edu-year {
+    font-size: 13px;
+  }
+
+  /* SOCIAL LINKS */
+  .fl-social-links a {
+    font-size: 14px;
+    margin-right: 10px;
+  }
+}
+
+/* Ultra-small devices (max-width: 400px) */
+@media (max-width: 400px) {
+  .fl-profile-img img,
+  .fl-placeholder-lg {
+    width: 85px;
+    height: 85px;
+    font-size: 30px;
+  }
+
+  .fl-profile-name {
+    font-size: 20px;
+  }
+
+  .fl-hire-btn {
+    font-size: 13px;
+    padding: 9px 16px;
+  }
+
+  .fl-section {
+    padding: 14px;
+  }
+
+  .fl-section-title {
+    font-size: 16px;
+  }
+
+  .fl-paragraph,
+  .fl-edu-item,
+  .fl-edu-year {
+    font-size: 13px;
+  }
 }

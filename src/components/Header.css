@@ -974,3 +974,193 @@
   background: #fdeaea;
   color: #b71c1c;
 }
+/* ============================================================
+   📱 FINAL RESPONSIVE LAYER FOR HEADER (CLEAN & PRODUCTION READY)
+   ============================================================ */
+
+/* Tablet (max-width: 992px) */
+@media (max-width: 992px) {
+
+  /* Navbar padding */
+  .custom-navbar {
+    padding: 0.65rem 0 !important;
+  }
+
+  /* Container padding */
+  .custom-navbar .container-fluid {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* Logo */
+  .main-logo {
+    height: 40px !important;
+  }
+
+  /* Collapse menu background */
+  .navbar-collapse {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(18px) !important;
+    border-radius: 14px !important;
+    padding: 1.2rem !important;
+    margin-top: 1rem !important;
+    box-shadow: 0px 8px 28px rgba(0,0,0,0.1);
+  }
+
+  /* Align nav vertically */
+  .navbar-nav-custom {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+  }
+
+  /* Nav link full width */
+  .nav-link-custom {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 0.9rem 1rem !important;
+    font-size: 1rem !important;
+    border-radius: 12px !important;
+  }
+
+  /* Dropdown toggle full width too */
+  .nav-dropdown-custom .dropdown-toggle {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 0.9rem 1rem !important;
+    font-size: 1rem !important;
+  }
+
+  /* Dropdown menu adapted */
+  .nav-dropdown-custom .dropdown-menu {
+    position: static !important;
+    margin-top: 12px !important;
+    width: 100% !important;
+    border-radius: 12px !important;
+    box-shadow: inset 0px 2px 12px rgba(0,0,0,0.1) !important;
+    padding: 0.5rem 0 !important;
+  }
+
+  /* Dropdown items */
+  .dropdown-item-custom {
+    text-align: center !important;
+    width: calc(100% - 1.6rem) !important;
+    margin: 0.3rem auto !important;
+    font-size: 0.95rem !important;
+  }
+
+  /* User Section Responsive */
+  .right-section {
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .header-user-menu {
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
+  .user-dropdown-menu {
+    position: static !important;
+    width: 100% !important;
+    margin-top: 12px !important;
+  }
+
+  /* Auth Buttons */
+  .auth-buttons {
+    width: 100% !important;
+    justify-content: center !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
+
+  .auth-btn {
+    width: 100% !important;
+    max-width: 240px !important;
+    font-size: 0.95rem !important;
+    padding: 0.85rem 1rem !important;
+  }
+}
+
+/* Mobile (max-width: 600px) */
+@media (max-width: 600px) {
+
+  /* Logo smaller */
+  .main-logo {
+    height: 34px !important;
+  }
+
+  .custom-navbar {
+    padding: 0.5rem 0 !important;
+  }
+
+  /* Adjust hamburger size */
+  .custom-toggler {
+    padding: 0.4rem !important;
+  }
+
+  .toggler-icon {
+    width: 18px !important;
+    height: 2px !important;
+  }
+
+  /* Nav text size */
+  .nav-link-custom,
+  .nav-dropdown-custom .dropdown-toggle {
+    font-size: 0.9rem !important;
+    padding: 0.75rem 0.9rem !important;
+  }
+
+  /* Dropdown items */
+  .dropdown-item-custom {
+    font-size: 0.85rem !important;
+    padding: 0.7rem 0.9rem !important;
+  }
+
+  /* User avatar smaller */
+  .user-avatar {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 16px !important;
+  }
+
+  .user-name {
+    font-size: 14px !important;
+  }
+}
+
+/* Extra Small Mobile (max-width: 400px) */
+@media (max-width: 400px) {
+
+  .main-logo {
+    height: 30px !important;
+  }
+
+  .nav-link-custom,
+  .nav-dropdown-custom .dropdown-toggle {
+    font-size: 0.82rem !important;
+    padding: 0.65rem 0.8rem !important;
+  }
+
+  .dropdown-item-custom {
+    font-size: 0.78rem !important;
+    padding: 0.6rem 0.85rem !important;
+  }
+
+  .auth-btn {
+    font-size: 0.85rem !important;
+    padding: 0.7rem 0.9rem !important;
+  }
+
+  .user-avatar {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 14px !important;
+  }
+
+  .user-name {
+    font-size: 13px !important;
+  }
+}

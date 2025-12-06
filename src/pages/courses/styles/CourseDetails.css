@@ -442,3 +442,115 @@
   gap: 12px;
   font-size: 15px;
 }
+/* ============================================================
+   📱 MOBILE + TABLET RESPONSIVE — COURSE DETAILS PAGE
+   ============================================================ */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .course-main-layout {
+    flex-direction: column;
+    padding: 0 18px;
+  }
+
+  .course-right {
+    position: static;
+    width: 100%;
+    margin-top: 20px;
+  }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+
+  /* HERO */
+  .course-banner {
+    padding: 40px 18px;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    text-align: center;
+  }
+
+  .course-title {
+    font-size: 26px !important;
+  }
+
+  .course-meta-row {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .course-enroll-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+  }
+
+  /* TWO COLUMN → ONE COLUMN */
+  .course-main-layout {
+    flex-direction: column;
+  }
+
+  .course-left,
+  .course-right {
+    width: 100%;
+  }
+
+  .sidebar-price {
+    font-size: 22px;
+  }
+
+  .sidebar-enroll-btn {
+    font-size: 15px;
+    padding: 12px;
+  }
+
+  /* LEARN GRID */
+  .learn-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .includes-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+/* Mobile Small (max-width: 480px) */
+@media (max-width: 480px) {
+
+  .course-title {
+    font-size: 22px !important;
+  }
+
+  .course-rating,
+  .course-language {
+    font-size: 14px;
+  }
+
+  .course-meta-row {
+    gap: 10px;
+  }
+
+  .course-enroll-btn {
+    width: 100%;
+  }
+
+  .sidebar-includes h4 {
+    font-size: 14px;
+  }
+
+  .includes-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .learn-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .what-you-will-learn,
+  .course-includes-box,
+  .requirements-box,
+  .description-box,
+  .curriculum-box {
+    padding: 18px;
+  }
+}

@@ -141,3 +141,125 @@
   color: #0f7273;
   cursor: pointer;
 }
+/* ============================================================
+   📱 MOBILE & TABLET RESPONSIVE — INTERNSHIPS LIST PAGE
+   ============================================================ */
+
+/* Tablet — max-width: 900px */
+@media (max-width: 900px) {
+
+  .jobs-page {
+    padding: 0 40px;
+    margin-top: 90px;
+  }
+
+  .jobs-title {
+    font-size: 30px;
+  }
+
+  .jobs-filter-bar {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .jobs-filter-select {
+    width: 100%;
+  }
+}
+
+/* Mobile — max-width: 600px */
+@media (max-width: 600px) {
+
+  .jobs-page {
+    padding: 0 20px;
+    margin-top: 80px;
+  }
+
+  .jobs-title {
+    font-size: 26px;
+    text-align: center;
+  }
+
+  .jobs-subtitle {
+    text-align: center;
+    font-size: 14px;
+  }
+
+  /* FILTER STACK */
+  .jobs-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .jobs-search,
+  .jobs-filter-select {
+    width: 100%;
+  }
+
+  /* CARD */
+  .job-card {
+    padding: 18px;
+  }
+
+  .job-title {
+    font-size: 20px;
+  }
+
+  .company-name {
+    font-size: 14px;
+  }
+
+  .job-info {
+    font-size: 13px;
+  }
+
+  .job-desc {
+    font-size: 14px;
+  }
+
+  /* TAGS */
+  .tags span {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  /* ACTION BUTTONS */
+  .job-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .view-btn,
+  .save-btn {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+/* Very Small — max-width: 400px */
+@media (max-width: 400px) {
+
+  .jobs-title {
+    font-size: 22px;
+  }
+
+  .jobs-page {
+    padding: 0 14px;
+  }
+
+  .job-card {
+    padding: 15px;
+  }
+
+  .job-title {
+    font-size: 18px;
+  }
+
+  .tags span {
+    font-size: 11px;
+    padding: 5px 9px;
+  }
+}
+

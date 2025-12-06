@@ -198,3 +198,130 @@
 .jd-company-item a:hover {
   text-decoration: underline;
 }
+/* ============================================================
+   📱 MOBILE & TABLET RESPONSIVE — INTERNSHIP DETAILS PAGE
+   ============================================================ */
+
+/* Remove desktop forcing for all devices below 1100px */
+@media (max-width: 1100px) {
+  body {
+    min-width: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  .jd-desktop-wrapper {
+    width: 100% !important;
+    transform: none !important;
+    padding: 0 15px !important;
+  }
+}
+
+/* Tablet — max-width: 900px */
+@media (max-width: 900px) {
+
+  .jd-header-card {
+    flex-direction: column;
+    text-align: left;
+    gap: 18px;
+    padding: 22px;
+  }
+
+  .jd-title {
+    font-size: 24px;
+  }
+
+  .jd-meta {
+    font-size: 14px;
+    flex-wrap: wrap;
+  }
+
+  .jd-header-right {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .jd-apply-btn,
+  .jd-save-btn {
+    flex: 1;
+    text-align: center;
+  }
+
+  .jd-company-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px;
+  }
+}
+
+/* Mobile — max-width: 600px */
+@media (max-width: 600px) {
+
+  .jd-header-card {
+    padding: 18px;
+  }
+
+  .jd-title {
+    font-size: 20px;
+  }
+
+  .jd-meta-item {
+    font-size: 13px;
+  }
+
+  .jd-apply-btn,
+  .jd-save-btn {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+
+  .jd-section-card {
+    padding: 18px;
+  }
+
+  .jd-section-title {
+    font-size: 18px;
+  }
+
+  .jd-company-about,
+  .jd-company-item,
+  .jd-list li,
+  .jd-education {
+    font-size: 14px;
+  }
+
+  .jd-tags {
+    gap: 8px;
+  }
+
+  .jd-tag {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+}
+
+/* Very Small — max-width: 400px */
+@media (max-width: 400px) {
+
+  .jd-title {
+    font-size: 18px;
+  }
+
+  .jd-apply-btn,
+  .jd-save-btn {
+    font-size: 13px;
+    padding: 9px 14px;
+    width: 100%;
+  }
+
+  .jd-section-title {
+    font-size: 16px;
+  }
+
+  .jd-section-card {
+    padding: 15px;
+  }
+
+  .jd-company-grid {
+    gap: 10px;
+  }
+}
