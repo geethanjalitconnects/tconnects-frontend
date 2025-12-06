@@ -5,6 +5,8 @@ import RiskCategoryModal from './RiskCategoryModal';
 import { Link } from "react-router-dom";
 
 
+
+
 const HeroSection = ({ navigateToJobsList, navigateToResumeMaking, onNavigate }) => {
   const [currentText, setCurrentText] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -190,14 +192,13 @@ const HeroSection = ({ navigateToJobsList, navigateToResumeMaking, onNavigate })
               
               {/* Updated Action Buttons with Navigation */}
               <div className="d-grid gap-3 d-sm-flex justify-content-sm-center hero-buttons">
-                <Button
-  variant="primary-custom"
-  size="lg"
-  className="px-4 explore-jobs-btn"
-  onClick={navigateToJobsList}
+   <Link 
+  to="/jobs" 
+  className="btn-primary-custom px-4 explore-jobs-btn"
 >
   Explore Jobs <i className="bi bi-arrow-right"></i>
-</Button>
+</Link>
+
 
                 <Button 
                   size="lg" 

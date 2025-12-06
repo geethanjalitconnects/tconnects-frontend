@@ -554,6 +554,23 @@ input::placeholder {
   gap: 6px;
 }
 
+.explore-jobs-btn {
+  position: relative;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+.hero-buttons {
+  position: relative;
+  z-index: 9999 !important;
+}
+.hero-content-overlay {
+  pointer-events: none !important;
+}
+
+.hero-buttons, 
+.hero-buttons * {
+  pointer-events: auto !important;
+}
 
 
 /* Comprehensive responsive breakpoints */
