@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation,useNavigate} from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 import { Toaster } from "react-hot-toast";   // ⭐ ADDED
@@ -102,6 +102,7 @@ function HomePage({ onCategoryClick }) {
 function App() {
   const [modalCategory, setModalCategory] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const hideHeader = location.pathname.startsWith("/course/");
 
