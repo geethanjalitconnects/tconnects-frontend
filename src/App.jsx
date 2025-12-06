@@ -36,7 +36,6 @@ import AppliedJobs from "./pages/candidate-dashboard/AppliedJobs";
 import AppliedInternships from "./pages/candidate-dashboard/AppliedInternships";
 import SavedJobs from "./pages/candidate-dashboard/SavedJobs";
 import SavedInternships from "./pages/candidate-dashboard/SavedInternships";
-import Messages from "./pages/candidate-dashboard/Messages";
 import Courses from "./pages/candidate-dashboard/Courses";
 
 /* Freelancer */
@@ -149,7 +148,6 @@ function App() {
     <Route path="saved-internships" element={<SavedInternships />} />
 
     {/* Freelancer Pages */}
-    <Route path="freelancer/overview" element={<FreelancerOverview />} />
     <Route path="freelancer/basic-information" element={<FreelancerBasicInfo />} />
     <Route path="freelancer/professional-details" element={<FreelancerProfessionalDetails />} />
     <Route path="freelancer/education" element={<FreelancerEducation />} />

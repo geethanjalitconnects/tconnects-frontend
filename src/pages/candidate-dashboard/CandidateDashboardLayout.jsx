@@ -14,7 +14,6 @@ const MAIN_LINKS = [
 ];
 
 const FREELANCER_LINKS = [
-  { to: "/candidate-dashboard/freelancer/overview", label: "Overview" },
   { to: "/candidate-dashboard/freelancer/basic-information", label: "Basic Information" },
   { to: "/candidate-dashboard/freelancer/professional-details", label: "Professional Details" },
   { to: "/candidate-dashboard/freelancer/education", label: "Education" },
@@ -84,14 +83,7 @@ export default function CandidateDashboardLayout() {
           </div>
 
           {/* MESSAGES (LAST ITEM) */}
-          <NavLink
-            to="/candidate-dashboard/messages"
-            className={({ isActive }) =>
-              isActive ? "cd-nav-link active" : "cd-nav-link"
-            }
-          >
-            Messages
-          </NavLink>
+      
         </nav>
       </aside>
 
