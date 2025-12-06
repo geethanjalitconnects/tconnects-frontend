@@ -83,7 +83,7 @@ import InternshipApplications from "./pages/recruiter-dashboard/applications/Int
 import EditJob from "./pages/recruiter-dashboard/jobs/EditJob";
 import EditInternship from "./pages/recruiter-dashboard/jobs/EditInternship";
 
-function HomePage({ onCategoryClick }) {
+function HomePage({ onCategoryClick,navigate }) {
   return (
     <>
       <HeroSection onCategoryClick={onCategoryClick} 
@@ -91,7 +91,7 @@ function HomePage({ onCategoryClick }) {
         navigateToResumeMaking={() => window.open("https://tconnects.vercel.app/", "_blank")}
         
         />
-        <AboutSection navigateToAboutUs={() => navigate("/about-us")} />
+      <AboutSection navigateToAboutUs={() => navigate("/about-us")} />
       <WhyChoose />
       <HowItWorks />
       <Footer />
@@ -119,7 +119,7 @@ function App() {
 
             <Routes>
               {/* PUBLIC ROUTES */}
-              <Route path="/" element={<HomePage onCategoryClick={setModalCategory} />} />
+              <Route path="/" element={<HomePage onCategoryClick={setModalCategory}navigate={navigate}  />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegistrationPage />} />
