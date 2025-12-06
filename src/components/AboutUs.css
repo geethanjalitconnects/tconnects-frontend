@@ -89,6 +89,19 @@
   top: 6px;
   left: 0;
 }
+.parent-company-link {
+  color: #006D77; /* TConnects teal */
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 2px solid rgba(0, 109, 119, 0.3);
+  padding-bottom: 2px;
+  transition: 0.2s ease-in-out;
+}
+
+.parent-company-link:hover {
+  color: #00555d;
+  border-bottom-color: #00555d;
+}
 
 /* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
