@@ -21,8 +21,16 @@ export default function FreelancerList() {
 
   return (
     <div className="fl-page">
-      <h2 className="fl-title">Discover Freelancers</h2>
 
+      {/* ================= HERO SECTION ================= */}
+      <section className="fl-hero">
+        <h1 className="fl-hero-title">Find Top Freelancers</h1>
+        <p className="fl-hero-subtitle">
+          Browse skilled professionals ready to work on your next project.
+        </p>
+      </section>
+
+      {/* ================= LIST SECTION ================= */}
       <div className="fl-grid">
         {freelancers.length === 0 ? (
           <p>No freelancers available.</p>
@@ -40,18 +48,17 @@ export default function FreelancerList() {
                 )}
               </div>
 
-              {/* NAME */}
               <h3 className="fl-name">{f.full_name || "Unnamed Freelancer"}</h3>
 
-              {/* Expertise (Not available in basic list, so fallback) */}
-              <p className="fl-expertise">Freelancer</p>
+              <p className="fl-expertise">
+                {f.professional?.expertise || "Freelancer"}
+              </p>
 
-              {/* Location */}
               <p className="fl-location">
                 {f.location || "Location Not Provided"}
               </p>
 
-              {/* Languages */}
+              {/* LANGUAGES */}
               <div className="fl-skills">
                 {Array.isArray(f.languages_known) &&
                 f.languages_known.length > 0 ? (
@@ -65,7 +72,7 @@ export default function FreelancerList() {
                 )}
               </div>
 
-              {/* VIEW PROFILE BUTTON */}
+              {/* VIEW PROFILE NAVIGATION */}
               <button
                 className="fl-view-btn"
                 onClick={() => navigate(`/freelancers/${f.id}`)}

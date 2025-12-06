@@ -25,12 +25,20 @@ export default function FreelancerProfile() {
   const professional = data.professional;
   const availability = data.availability;
   const education = data.education;
-  const payments = data.payments;
   const social = data.social;
 
   return (
-    <div className="fl-profile-page">
-      {/* HEADER */}
+    <div className="fl-page">
+
+      {/* ================= HERO SECTION ================= */}
+      <section className="fl-hero">
+        <h1 className="fl-hero-title">Freelancer Profile</h1>
+        <p className="fl-hero-subtitle">
+          A verified professional available for work.
+        </p>
+      </section>
+
+      {/* ================= PROFILE HEADER ================= */}
       <div className="fl-profile-header">
         <div className="fl-profile-img">
           {basic.profile_picture ? (
@@ -53,7 +61,7 @@ export default function FreelancerProfile() {
         </div>
       </div>
 
-      {/* ABOUT */}
+      {/* ================= ABOUT SECTION ================= */}
       <div className="fl-section">
         <h3 className="fl-section-title">About</h3>
         <p className="fl-paragraph">
@@ -61,7 +69,7 @@ export default function FreelancerProfile() {
         </p>
       </div>
 
-      {/* EDUCATION */}
+      {/* ================= EDUCATION ================= */}
       <div className="fl-section">
         <h3 className="fl-section-title">Education</h3>
         {education.length === 0 ? (
@@ -78,13 +86,18 @@ export default function FreelancerProfile() {
         )}
       </div>
 
-      {/* AVAILABILITY */}
+      {/* ================= AVAILABILITY ================= */}
       <div className="fl-section">
         <h3 className="fl-section-title">Availability</h3>
         {availability ? (
           <>
-            <p><strong>Status:</strong> {availability.is_available ? "Available" : "Not Available"}</p>
-            <p><strong>Timezone:</strong> {availability.time_zone}</p>
+            <p>
+              <strong>Status:</strong>{" "}
+              {availability.is_available ? "Available" : "Not Available"}
+            </p>
+            <p>
+              <strong>Timezone:</strong> {availability.time_zone}
+            </p>
             <p>
               <strong>Days:</strong>{" "}
               {availability.available_days?.join(", ") || "Not specified"}
@@ -95,7 +108,7 @@ export default function FreelancerProfile() {
         )}
       </div>
 
-      {/* SOCIAL LINKS */}
+      {/* ================= SOCIAL LINKS ================= */}
       <div className="fl-section">
         <h3 className="fl-section-title">Social Profiles</h3>
         <div className="fl-social-links">
@@ -105,7 +118,7 @@ export default function FreelancerProfile() {
         </div>
       </div>
 
-      {/* RATINGS */}
+      {/* ================= RATINGS ================= */}
       <div className="fl-section">
         <h3 className="fl-section-title">Ratings & Badges</h3>
         <p>No ratings or badges yet.</p>
