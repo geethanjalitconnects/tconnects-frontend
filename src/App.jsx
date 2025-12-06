@@ -133,8 +133,6 @@ function App() {
 <Route path="/mock-interview" element={<MockInterview />} />
 
 
-              
-
               {/* JOBS */}
               <Route path="/jobs" element={<JobsListPage />} />
               <Route path="/jobs/:slug" element={<JobDetailsPage />} />
