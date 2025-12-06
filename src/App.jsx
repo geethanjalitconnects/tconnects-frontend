@@ -137,22 +137,27 @@ function App() {
               <Route path="/internships/:id" element={<InternshipDetailsPage />} />
               <Route path="/apply-internship" element={<ApplyInternshipPage />} />
 
-              {/* CANDIDATE DASHBOARD */}
               <Route path="/candidate-dashboard/*" element={<CandidateDashboardLayout />}>
-                <Route index element={<Overview />} />
-                <Route path="overview" element={<Overview />} />
-                <Route path="profile" element={<Profile />} />
+    <Route index element={<Overview />} />
+    <Route path="overview" element={<Overview />} />
+    <Route path="profile" element={<Profile />} />
 
-                {/* Freelancer Pages */}
-                <Route path="freelancer/overview" element={<FreelancerOverview />} />
-                <Route path="freelancer/basic-information" element={<FreelancerBasicInfo />} />
-                <Route path="freelancer/professional-details" element={<FreelancerProfessionalDetails />} />
-                <Route path="freelancer/education" element={<FreelancerEducation />} />
-                <Route path="freelancer/availability" element={<FreelancerAvailability />} />
-                <Route path="freelancer/payment-method" element={<FreelancerPayment />} />
-                <Route path="freelancer/social-links" element={<FreelancerSocialLinks />} />
-                <Route path="freelancer/profile-preview" element={<FreelancerProfilePreview />} />
-              </Route>
+    {/* ⭐ FIXED: Add missing pages */}
+    <Route path="applied-jobs" element={<AppliedJobs />} />
+    <Route path="applied-internships" element={<AppliedInternships />} />
+    <Route path="saved-jobs" element={<SavedJobs />} />
+    <Route path="saved-internships" element={<SavedInternships />} />
+
+    {/* Freelancer Pages */}
+    <Route path="freelancer/overview" element={<FreelancerOverview />} />
+    <Route path="freelancer/basic-information" element={<FreelancerBasicInfo />} />
+    <Route path="freelancer/professional-details" element={<FreelancerProfessionalDetails />} />
+    <Route path="freelancer/education" element={<FreelancerEducation />} />
+    <Route path="freelancer/availability" element={<FreelancerAvailability />} />
+    <Route path="freelancer/payment-method" element={<FreelancerPayment />} />
+    <Route path="freelancer/social-links" element={<FreelancerSocialLinks />} />
+    <Route path="freelancer/profile-preview" element={<FreelancerProfilePreview />} />
+</Route>
 
               {/* RECRUITER DASHBOARD */}
               <Route path="/recruiter-dashboard/*" element={<RecruiterDashboardLayout />}>
