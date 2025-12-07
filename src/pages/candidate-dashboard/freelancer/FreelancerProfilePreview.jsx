@@ -57,6 +57,23 @@ export default function FreelancerProfilePreview() {
     }
   };
 
+  // ====================================================
+  // DELETE FREELANCER PROFILE ADDED HERE
+  // ====================================================
+  const deleteFreelancerProfile = async () => {
+    if (!window.confirm("Are you sure? This will permanently delete your freelancer profile.")) {
+      return;
+    }
+    try {
+      await api.delete("/api/profiles/freelancer/delete/");
+      toast.success("Freelancer profile deleted successfully.");
+      window.location.href = "/candidate-dashboard"; 
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete freelancer profile.");
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
 
   const basic = data.basic || {};
@@ -68,7 +85,6 @@ export default function FreelancerProfilePreview() {
   const ratings = Array.isArray(data.ratings) ? data.ratings : [];
   const badges = Array.isArray(data.badges) ? data.badges : [];
 
-  // Safely derive initials
   const initials = (basic.full_name || "User Name")
     .split(" ")
     .map(w => w[0] || "")
@@ -79,7 +95,6 @@ export default function FreelancerProfilePreview() {
     <div className="fr-page">
       <div className="fr-card">
 
-        {/* HEADER */}
         <h2 className="fr-title">Profile Preview</h2>
 
         <div className="fr-preview-header">
@@ -182,7 +197,7 @@ export default function FreelancerProfilePreview() {
           ))}
         </div>
 
-        {/* PUBLISH BUTTON */}
+        {/* ACTIONS */}
         <div className="fr-actions">
           <button
             className="fr-btn fr-btn-primary"
@@ -190,6 +205,14 @@ export default function FreelancerProfilePreview() {
             onClick={publishProfile}
           >
             {basic.is_published ? "Profile Already Published" : "Publish Profile"}
+          </button>
+
+          {/* DELETE BUTTON ADDED HERE */}
+          <button
+            className="fr-btn fr-btn-danger"
+            onClick={deleteFreelancerProfile}
+          >
+            Delete Freelancer Profile
           </button>
         </div>
 
