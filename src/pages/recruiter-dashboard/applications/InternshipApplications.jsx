@@ -1,165 +1,123 @@
-// InternshipApplications.jsx
 import React, { useEffect, useState } from "react";
 import api from "../../../config/api";
-import "../RecruiterDashboard.css";
-
-
-const INTERNS_URL = "/api/recruiter/applications/internships/";
-const INTERNS_ITEM_URL = (id) => `/api/recruiter/applications/internships/${id}/`;
+import "../../../pages/recruiter-dashboard/RecruiterDashboard.css";
 
 export default function InternshipApplications() {
+  const [internships, setInternships] = useState([]);
+  const [selectedInternship, setSelectedInternship] = useState("");
   const [applications, setApplications] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState("");
-  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  // Load recruiter's posted internships
   useEffect(() => {
-    fetchApplications();
-    // eslint-disable-next-line
-  }, [statusFilter]);
+    fetchInternships();
+  }, []);
 
-  const fetchApplications = async () => {
-    setLoading(true);
-    setError("");
+  const fetchInternships = async () => {
     try {
-      const params = {};
-      if (statusFilter) params.status = statusFilter;
-      const res = await api.get(INTERNS_URL, { params });
-      setApplications(res.data || []);
+      const res = await api.get("/api/recruiter/internships/");
+      setInternships(res.data);
     } catch (err) {
-      console.error("Failed to fetch internship applications", err);
-      setError("Failed to load applications.");
-    } finally {
-      setLoading(false);
+      console.error("Failed to load internships", err);
     }
   };
 
-  const handleStatusChange = async (id, newStatus) => {
+  const fetchApplicants = async (internshipId) => {
+    if (!internshipId) return;
+    setLoading(true);
     try {
-      await api.patch(INTERNS_ITEM_URL(id), { status: newStatus });
-      setApplications((prev) =>
-        prev.map((a) => (a.id === id ? { ...a, status: newStatus } : a))
+      const res = await api.get(
+        `/api/applications/internship/${internshipId}/applicants/`
       );
+      setApplications(res.data);
+    } catch (err) {
+      console.error("Failed to fetch internship applicants", err);
+    }
+    setLoading(false);
+  };
+
+  const updateStatus = async (applicationId, newStatus) => {
+    try {
+      await api.patch(
+        `/api/applications/internship/${applicationId}/status/`,
+        { status: newStatus }
+      );
+      fetchApplicants(selectedInternship);
     } catch (err) {
       console.error("Failed to update status", err);
-      setError("Failed to update status.");
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this application?")) return;
-    try {
-      await api.delete(INTERNS_ITEM_URL(id));
-      setApplications((prev) => prev.filter((a) => a.id !== id));
-    } catch (err) {
-      console.error("Failed to delete application", err);
-      setError("Failed to delete application.");
     }
   };
 
   return (
-    <div className="rd-applications-page">
-      <div className="rd-page-header">
-        <h2 className="rd-page-title">Internship Applications</h2>
-        <p className="rd-page-subtitle">Review candidates who applied for internships</p>
-      </div>
+    <div className="dashboard-container">
 
-      <div className="rd-filter-container">
+      <h2 className="dashboard-title">Internship Applications</h2>
+
+      {/* PREMIUM DROPDOWN */}
+      <div className="rd-dropdown-wrapper">
+        <label className="rd-dropdown-label">Select Internship</label>
+
         <select
-          className="rd-filter-select"
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
+          className="rd-dropdown-select"
+          value={selectedInternship}
+          onChange={(e) => {
+            setSelectedInternship(e.target.value);
+            fetchApplicants(e.target.value);
+          }}
         >
-          <option value="">All statuses</option>
-          <option value="received">Received</option>
-          <option value="reviewing">Reviewing</option>
-          <option value="interview">Interview</option>
-          <option value="selected">Selected</option>
-          <option value="rejected">Rejected</option>
+          <option value="">Select an Internship</option>
+          {internships.map((intern) => (
+            <option key={intern.id} value={intern.id}>
+              {intern.title}
+            </option>
+          ))}
         </select>
-
-        <button className="rd-save-btn" onClick={fetchApplications}>
-          Refresh
-        </button>
       </div>
 
-      {loading && <p>Loading applications...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      <div className="rd-applications-list">
-        {applications.length === 0 && !loading && <p>No applications found.</p>}
-
-        {applications.map((app) => (
-          <div key={app.id} className="rd-application-card">
-            <div className="rd-app-card-header">
-              <div>
-                <div className="rd-job-title">{app.internship_title || app.job_title || "Internship"}</div>
-                <div className="rd-applicant-info">
-                  <div className="rd-applicant-name">{app.applicant_name || app.name}</div>
-                  <div className="rd-email-phone">
-                    {app.email} {app.phone ? `• ${app.phone}` : null}
-                  </div>
-                  {app.location && <div className="rd-location">{app.location}</div>}
-                </div>
+      {/* Applications */}
+      {loading ? (
+        <p>Loading applicants...</p>
+      ) : applications.length === 0 ? (
+        <p>No applications found.</p>
+      ) : (
+        <div className="applications-list">
+          {applications.map((app) => (
+            <div key={app.id} className="application-card">
+              
+              <div className="application-info">
+                <h4>{app.candidate_name}</h4>
+                <p>Email: {app.email}</p>
+                <p>
+                  Resume:{" "}
+                  <a href={app.resume} target="_blank" rel="noopener noreferrer">
+                    View Resume
+                  </a>
+                </p>
               </div>
 
-              <div style={{ textAlign: "right" }}>
-                <div style={{ marginBottom: 8 }}>
-                  <select
-                    className="rd-filter-select"
-                    value={app.status || ""}
-                    onChange={(e) => handleStatusChange(app.id, e.target.value)}
-                    title="Change status"
-                  >
-                    <option value="received">Received</option>
-                    <option value="reviewing">Reviewing</option>
-                    <option value="interview">Interview</option>
-                    <option value="selected">Selected</option>
-                    <option value="rejected">Rejected</option>
-                  </select>
-                </div>
+              <div className="application-status">
+                <span className={`status-badge status-${app.status}`}>
+                  {app.status}
+                </span>
 
-                <div>
-                  {app.resume_url ? (
-                    <a
-                      className="rd-view-resume-btn"
-                      href={app.resume_url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      View Resume
-                    </a>
-                  ) : (
-                    <span className="rd-resume-btn" style={{ opacity: 0.6 }}>
-                      No resume
-                    </span>
-                  )}
-                </div>
-
-                <div style={{ marginTop: 8 }}>
-                  <button className="rd-action-btn delete" onClick={() => handleDelete(app.id)}>
-                    Delete
-                  </button>
-                </div>
+                <select
+                  className="status-dropdown"
+                  value={app.status}
+                  onChange={(e) => updateStatus(app.id, e.target.value)}
+                >
+                  <option value="applied">Applied</option>
+                  <option value="reviewing">Reviewing</option>
+                  <option value="shortlisted">Shortlisted</option>
+                  <option value="interview">Interview</option>
+                  <option value="hired">Hired</option>
+                  <option value="rejected">Rejected</option>
+                </select>
               </div>
+
             </div>
-
-            {app.skills?.length > 0 && (
-              <div className="rd-skills-row" style={{ marginTop: 12 }}>
-                {app.skills.map((s, idx) => (
-                  <div key={idx} className="rd-skill-tag">
-                    {s}
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div style={{ marginTop: 12, color: "#547878" }}>
-              Applied: {new Date(app.created_at || app.applied_at || Date.now()).toLocaleString()}
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

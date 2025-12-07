@@ -1087,6 +1087,82 @@ textarea.rd-input {
   font-size: 15px;
   color: #3e7072;
 }
+/* ==========================================================
+   PREMIUM RECRUITER DROPDOWN UI (Updated for Job/Internship)
+========================================================== */
+
+/* Dropdown wrapper */
+.rd-dropdown-wrapper {
+  margin: 0 auto 25px auto;
+  max-width: 350px;
+}
+
+/* Label */
+.rd-dropdown-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #064e53;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Dropdown Select */
+.rd-dropdown-select {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #f7ffff;
+  border: 2px solid #cdecec;
+  font-size: 15px;
+  color: #064e53;
+  outline: none;
+  transition: 0.2s ease;
+  appearance: none;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Hover */
+.rd-dropdown-select:hover {
+  border-color: #0f7777;
+}
+
+/* Focus animation */
+.rd-dropdown-select:focus {
+  border-color: #0f7777;
+  box-shadow: 0 0 0 4px rgba(15, 119, 119, 0.25);
+}
+
+/* Dropdown Arrow Icon */
+.rd-dropdown-wrapper {
+  position: relative;
+}
+
+.rd-dropdown-wrapper::after {
+  content: "▾";
+  font-size: 18px;
+  color: #0f7777;
+  position: absolute;
+  right: 16px;
+  top: 52px;
+  pointer-events: none;
+}
+
+/* =============================
+   RESPONSIVE DROPDOWN
+============================= */
+@media (max-width: 768px) {
+  .rd-dropdown-wrapper {
+    max-width: 100%;
+    margin-bottom: 18px;
+  }
+
+  .rd-dropdown-select {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}
+
 /* ============================================================
    📱 RESPONSIVE DESIGN — TABLET (900px ↓)
 ============================================================ */
