@@ -803,6 +803,42 @@
   }
 }
 
+/* MOBILE COLOR CONSISTENCY: keep card text/icon colors stable on touch devices */
+@media (max-width: 767px), (hover: none) {
+  .how-it-works-item:hover::before,
+  .how-it-works-item:hover::after,
+  .how-it-works-item:active::before,
+  .how-it-works-item:active::after {
+    opacity: 0 !important;
+    background: transparent !important;
+  }
+
+  .how-it-works-item:hover h4,
+  .how-it-works-item:active h4,
+  .how-it-works-item:hover p,
+  .how-it-works-item:active p,
+  .how-it-works-item:hover .animate-icon,
+  .how-it-works-item:active .animate-icon,
+  .how-it-works-item:hover .icon-circle,
+  .how-it-works-item:active .icon-circle {
+    color: inherit !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transform: none !important;
+  }
+
+  .how-it-works-item h4 {
+    color: #006064 !important;
+    background: rgba(0, 96, 100, 0.05) !important;
+  }
+
+  .how-it-works-item p {
+    color: #00838f !important;
+    background: rgba(0, 131, 143, 0.05) !important;
+  }
+}
+
 /* Landscape Mobile Optimization */
 @media (max-width: 767px) and (orientation: landscape) {
   .how-it-works-section {

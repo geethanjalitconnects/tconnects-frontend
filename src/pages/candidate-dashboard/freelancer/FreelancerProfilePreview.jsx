@@ -20,7 +20,7 @@ export default function FreelancerProfilePreview() {
   useEffect(() => {
     const loadProfile = async () => {
       try {
-        const res = await api.get("/api/profiles/freelancer/profile-preview/");
+        const res = await api.get("/api/profiles/freelancer/preview/");
 
         setData({
           basic: res.data.basic || {},
@@ -57,20 +57,21 @@ export default function FreelancerProfilePreview() {
     }
   };
 
-  // ====================================================
-  // DELETE FREELANCER PROFILE ADDED HERE
-  // ====================================================
-  const deleteFreelancerProfile = async () => {
-    if (!window.confirm("Are you sure? This will permanently delete your freelancer profile.")) {
+  // ⭐ DELETE FREELANCER PROFILE
+  const deleteProfile = async () => {
+    if (!window.confirm("Are you sure you want to delete your freelancer profile? This cannot be undone.")) {
       return;
     }
+
     try {
       await api.delete("/api/profiles/freelancer/delete/");
       toast.success("Freelancer profile deleted successfully.");
-      window.location.href = "/candidate-dashboard"; 
+
+      // optional redirect
+      window.location.href = "/candidate-dashboard/overview";
     } catch (error) {
       console.error(error);
-      toast.error("Failed to delete freelancer profile.");
+      toast.error("Failed to delete profile.");
     }
   };
 
@@ -113,7 +114,7 @@ export default function FreelancerProfilePreview() {
           </div>
         </div>
 
-        {/* BASIC INFORMATION */}
+        {/* BASIC INFO */}
         <div className="fr-section">
           <h4 className="fr-section-title">Basic Info</h4>
           <div className="fr-info-row"><span>Phone:</span> {basic.phone_number || "N/A"}</div>
@@ -121,7 +122,7 @@ export default function FreelancerProfilePreview() {
           <div className="fr-info-row"><span>Languages:</span> {Array.isArray(basic.languages_known) ? basic.languages_known.join(", ") : "N/A"}</div>
         </div>
 
-        {/* PROFESSIONAL DETAILS */}
+        {/* PROFESSIONAL */}
         <div className="fr-section">
           <h4 className="fr-section-title">Professional Details</h4>
           <div className="fr-info-row"><span>Expertise:</span> {professional.expertise || "N/A"}</div>
@@ -148,17 +149,13 @@ export default function FreelancerProfilePreview() {
         {/* AVAILABILITY */}
         <div className="fr-section">
           <h4 className="fr-section-title">Availability</h4>
-          {availability ? (
-            <>
-              <div className="fr-info-row"><span>Status:</span> {availability.is_available ? "Available" : "Occupied"}</div>
-              <div className="fr-info-row"><span>From:</span> {availability.available_from || "N/A"}</div>
-              <div className="fr-info-row"><span>To:</span> {availability.available_to || "N/A"}</div>
-              <div className="fr-info-row"><span>Timezone:</span> {availability.time_zone || "N/A"}</div>
-              <div className="fr-info-row"><span>Days:</span> {Array.isArray(availability.available_days) ? availability.available_days.join(", ") : "No days selected"}</div>
-            </>
-          ) : (
-            <p className="fr-empty">No availability added</p>
-          )}
+          <>
+            <div className="fr-info-row"><span>Status:</span> {availability.is_available ? "Available" : "Occupied"}</div>
+            <div className="fr-info-row"><span>From:</span> {availability.available_from || "N/A"}</div>
+            <div className="fr-info-row"><span>To:</span> {availability.available_to || "N/A"}</div>
+            <div className="fr-info-row"><span>Timezone:</span> {availability.time_zone || "N/A"}</div>
+            <div className="fr-info-row"><span>Days:</span> {Array.isArray(availability.available_days) ? availability.available_days.join(", ") : "No days selected"}</div>
+          </>
         </div>
 
         {/* PAYMENT METHODS */}
@@ -176,7 +173,7 @@ export default function FreelancerProfilePreview() {
           )}
         </div>
 
-        {/* SOCIAL LINKS */}
+        {/* SOCIAL */}
         <div className="fr-section">
           <h4 className="fr-section-title">Social Links</h4>
           <div className="fr-info-row"><span>LinkedIn:</span> {social.linkedin_url || "N/A"}</div>
@@ -184,35 +181,15 @@ export default function FreelancerProfilePreview() {
           <div className="fr-info-row"><span>Portfolio:</span> {social.portfolio_url || "N/A"}</div>
         </div>
 
-        {/* RATINGS */}
-        <div className="fr-section">
-          <h4 className="fr-section-title">Ratings</h4>
-          {ratings.length === 0 ? (
-            <p className="fr-empty">No ratings yet</p>
-          ) : ratings.map((r, i) => (
-            <div key={i} className="fr-rating-item">
-              <div>{"★".repeat(r.stars)}</div>
-              {r.comment && <p>{r.comment}</p>}
-            </div>
-          ))}
-        </div>
-
-        {/* ACTIONS */}
+        {/* ACTION BUTTONS */}
         <div className="fr-actions">
-          <button
-            className="fr-btn fr-btn-primary"
-            disabled={basic.is_published}
-            onClick={publishProfile}
-          >
+          <button className="fr-btn fr-btn-primary" disabled={basic.is_published} onClick={publishProfile}>
             {basic.is_published ? "Profile Already Published" : "Publish Profile"}
           </button>
 
-          {/* DELETE BUTTON ADDED HERE */}
-          <button
-            className="fr-btn fr-btn-danger"
-            onClick={deleteFreelancerProfile}
-          >
-            Delete Freelancer Profile
+          {/* ⭐ DELETE BUTTON */}
+          <button className="fr-btn fr-btn-danger" onClick={deleteProfile}>
+            Delete Profile
           </button>
         </div>
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../../config/api";
+import api from "../../../config/api";
 import "./FreelancerList.css";
 import { useNavigate } from "react-router-dom";
 
@@ -54,7 +54,7 @@ export default function FreelancerList() {
 
               {/* EXPERTISE */}
               <p className="fl-expertise">
-                {f.professional?.expertise || "Freelancer"}
+                {f.professional?.expertise || f.basic?.professional?.expertise || "Freelancer"}
               </p>
 
               {/* LOCATION */}
@@ -77,7 +77,7 @@ export default function FreelancerList() {
               {/* VIEW PROFILE BUTTON */}
               <button
                 className="fl-view-btn"
-               onClick={() => navigate(`/freelancers/${f.user.id}`)}
+               onClick={() => navigate(`/freelancers/${f.id || f.basic?.user?.id || f.basic?.id}`)}
 
 
               >

@@ -110,10 +110,6 @@ const Header = () => {
 </NavDropdown.Item>
 
             </NavDropdown>
-
-            <Nav.Link as={Link} to="/blogs" className="nav-link-custom" onClick={closeMobileMenu}>
-              <span className="nav-text">Blogs</span>
-            </Nav.Link>
           </Nav>
 
           <div className="right-section">

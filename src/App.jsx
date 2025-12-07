@@ -186,7 +186,8 @@ function App() {
                 <Route path="applications/internships" element={<InternshipApplications />} />
               </Route>
 
-              <Route path="*" element={<HomePage />} />
+              <Route path="*" element={<div>Page Not Found</div>} />
+
             </Routes>
 
             {/* MODAL */}

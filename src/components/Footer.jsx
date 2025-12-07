@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { BsInstagram, BsLinkedin } from 'react-icons/bs';
 import './Footer.css';
 
@@ -38,17 +39,25 @@ const Footer = () => {
           <Col md={2} className="mb-4 mb-md-0">
             <h6 className="text-dark-blue mb-3 footer-heading">Find Work</h6>
             <Nav className="flex-column">
-              <Nav.Link href="#browse-jobs" className="footer-link p-0 mb-2">Jobs</Nav.Link>
-              <Nav.Link href="#browse-jobs" className="footer-link p-0 mb-2">Internships</Nav.Link>
-              <Nav.Link href="#skill-development" className="footer-link p-0 mb-2">Freelance</Nav.Link>
+              <Nav.Link as={Link} to="/jobs" className="footer-link p-0 mb-2">Jobs</Nav.Link>
+              <Nav.Link as={Link} to="/internships" className="footer-link p-0 mb-2">Internships</Nav.Link>
+              <Nav.Link as={Link} to="/freelancers" className="footer-link p-0 mb-2">Freelance</Nav.Link>
             </Nav>
           </Col>
           <Col md={2} className="mb-4 mb-md-0">
             <h6 className="text-dark-blue mb-3 footer-heading">Learning</h6>
             <Nav className="flex-column">
-              <Nav.Link href="#post-a-job" className="footer-link p-0 mb-2">Skill Development</Nav.Link>
-              <Nav.Link href="#search-talent" className="footer-link p-0 mb-2">Resume Building</Nav.Link>
-              <Nav.Link href="#pricing" className="footer-link p-0 mb-2">Schedule a mock interview</Nav.Link>
+              <Nav.Link as={Link} to="/courses" className="footer-link p-0 mb-2">Skill Development</Nav.Link>
+              <Nav.Link
+                as="a"
+                href="https://tconnects.vercel.app/"
+                target="_self"
+                rel="noopener noreferrer"
+                className="footer-link p-0 mb-2"
+              >
+                Resume Building
+              </Nav.Link>
+              <Nav.Link as={Link} to="/mock-interview" className="footer-link p-0 mb-2">Schedule a mock interview</Nav.Link>
             </Nav>
           </Col>
         </Row>

@@ -186,6 +186,30 @@
   }
 }
 
+/* Ensure footer title/description and links are centered and stacked cleanly on small devices */
+@media (max-width: 600px) {
+  .footer-title,
+  .footer-description,
+  .footer-columns {
+    text-align: center !important;
+  }
+
+  .footer-columns .footer-column {
+    margin-bottom: 1rem !important;
+  }
+
+  .footer-link {
+    display: inline-block !important;
+    margin: 0.35rem 0 !important;
+    width: auto !important;
+  }
+
+  .footer-social-links {
+    justify-content: center !important;
+    margin-top: 1rem !important;
+  }
+}
+
 /* Extra Small Mobile (max-width: 400px) */
 @media (max-width: 400px) {
 
