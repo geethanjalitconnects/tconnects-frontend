@@ -2,37 +2,7 @@
    GLOBAL RESET + INTER FONT
 ---------------------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-/* ✅ CRITICAL FIX - ADD THIS AT THE TOP */
-.cd-layout {
-  margin-top: 90px !important; 
-  min-height: calc(100vh - 90px) !important;
-  background: linear-gradient(135deg,#e6f7f7,#bfeef0,#81d7d7) !important;
-  display: flex !important;
-  flex-direction: row !important;
-  position: relative !important;
-  width: 100% !important;
-  overflow-x: hidden !important;
-}
 
-.cd-sidebar {
-  width: 240px !important;
-  position: fixed !important;
-  top: 90px !important;
-  left: 0 !important;
-  height: calc(100vh - 90px) !important;
-  z-index: 50 !important;
-  background: linear-gradient(180deg,#0f7072,#199d9c) !important;
-  flex-shrink: 0 !important;
-}
-
-.cd-main {
-  margin-left: 240px !important;
-  width: calc(100% - 240px) !important;
-  padding: 30px 40px !important;
-  min-height: calc(100vh - 90px) !important;
-  box-sizing: border-box !important;
-  flex: 1 !important;
-}
 * {
   box-sizing: border-box;
   font-family: "Inter", sans-serif !important;
@@ -46,10 +16,10 @@ body, html {
 }
 
 /* ----------------------------------------------------------
-   MAIN LAYOUT — FIXED & PERFECT WIDTH HANDLING
+   MAIN LAYOUT
 ---------------------------------------------------------- */
 .cd-layout {
-  margin-top: 90px; 
+  margin-top: 90px;
   min-height: calc(100vh - 90px);
   background: linear-gradient(135deg,#e6f7f7,#bfeef0,#81d7d7);
   display: flex;
@@ -60,7 +30,7 @@ body, html {
 }
 
 /* ----------------------------------------------------------
-   SIDEBAR — SINGLE DEFINITION
+   SIDEBAR
 ---------------------------------------------------------- */
 .cd-sidebar {
   width: 240px;
@@ -75,6 +45,7 @@ body, html {
   border-right: 1px solid rgba(255,255,255,0.08);
   z-index: 50;
   flex-shrink: 0;
+  transition: left 0.3s ease;
 }
 
 /* Sidebar Scrollbar */
@@ -115,6 +86,7 @@ body, html {
   font-size: 15px;
   font-weight: 500;
   transition: background 0.2s ease;
+  display: block;
 }
 
 .cd-nav-link:hover {
@@ -127,7 +99,7 @@ body, html {
 }
 
 /* ----------------------------------------------------------
-   FREELANCER DROPDOWN — FIXED SPACING + FULL WIDTH
+   FREELANCER DROPDOWN
 ---------------------------------------------------------- */
 .cd-dropdown {
   margin-top: 8px;
@@ -145,6 +117,8 @@ body, html {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  text-align: left;
 }
 
 .cd-dropdown-toggle:hover {
@@ -185,6 +159,7 @@ body, html {
   text-decoration: none;
   color: rgba(255,255,255,0.85);
   transition: background 0.2s ease;
+  display: block;
 }
 
 .cd-dropdown-item:hover {
@@ -198,39 +173,7 @@ body, html {
 }
 
 /* ----------------------------------------------------------
-   COLLAPSED SIDEBAR MODE
----------------------------------------------------------- */
-.cd-layout.collapsed .cd-sidebar {
-  width: 70px;
-}
-
-.cd-layout.collapsed .cd-nav-link {
-  font-size: 0;
-  padding: 12px 6px;
-  text-align: center;
-}
-
-.cd-layout.collapsed .cd-nav-link::before {
-  content: "•";
-  font-size: 18px;
-}
-
-.cd-layout.collapsed .cd-dropdown-toggle {
-  font-size: 0;
-  padding: 12px 6px;
-}
-
-.cd-layout.collapsed .cd-dropdown-menu {
-  display: none;
-}
-
-.cd-layout.collapsed .cd-main {
-  margin-left: 70px;
-  width: calc(100% - 70px);
-}
-
-/* ----------------------------------------------------------
-   ✅ MAIN CONTENT AREA — THE FIX IS HERE
+   MAIN CONTENT AREA
 ---------------------------------------------------------- */
 .cd-main {
   margin-left: 240px;
@@ -240,6 +183,7 @@ body, html {
   box-sizing: border-box;
   overflow-x: hidden;
   flex: 1;
+  transition: margin-left 0.3s ease, width 0.3s ease;
 }
 
 .cd-content {
@@ -255,46 +199,36 @@ body, html {
 }
 
 /* ----------------------------------------------------------
-   RESPONSIVE (Mobile)
+   MOBILE HAMBURGER BUTTON
 ---------------------------------------------------------- */
-@media (max-width: 900px) {
-  .cd-sidebar {
-    position: fixed;
-    left: -260px;
-    top: 90px;
-    z-index: 999;
-    transition: left 0.3s ease;
-  }
+.cd-hamburger {
+  display: none;
+  position: fixed;
+  top: 100px;
+  left: 15px;
+  z-index: 2000;
+  background: #0f7173;
+  border: 2px solid white;
+  color: white;
+  font-size: 24px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
-  .cd-layout.sidebar-open .cd-sidebar {
-    left: 0;
-  }
+.cd-hamburger:hover {
+  background: #1bb2b0;
+  transform: scale(1.05);
+}
 
-  /* When sidebar opens on small screens, push main content instead of overlaying */
-  .cd-layout.sidebar-open .cd-main {
-    margin-left: 240px !important;
-    width: calc(100% - 240px) !important;
-    transition: margin-left 0.25s ease, width 0.25s ease;
-  }
-
-  .cd-main {
-    margin-left: 0 !important;
-    width: 100% !important;
-    padding: 20px 30px;
-    transition: margin-left 0.25s ease, width 0.25s ease;
-  }
-
-  /* Shift fixed UI chrome (hamburger, toast notifications) when sidebar opens */
-  .cd-layout.sidebar-open .cd-hamburger,
-  .cd-layout.sidebar-open .cd-toast,
-  .cd-layout.sidebar-open .cd-top-left-btn {
-    transform: translateX(240px) !important;
-    transition: transform 0.25s ease !important;
-  }
+.cd-hamburger:active {
+  transform: scale(0.95);
 }
 
 /* ----------------------------------------------------------
-   ENSURE CARDS DON'T OVERFLOW
+   CARDS & COMPONENTS
 ---------------------------------------------------------- */
 .cd-stats-grid,
 .cd-form-grid {
@@ -359,13 +293,15 @@ body, html {
   display: flex;
   gap: 16px;
   align-items: center;
-  box-shadow: 0 3px 10px rgba(0, 90, 90, 0.1);
+  box-shadow: 0 4px 12px rgba(15, 113, 115, 0.15);
+  border: 1px solid rgba(15, 113, 115, 0.1);
   border-left: 5px solid #0f7173;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .cd-stat-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(15, 113, 115, 0.25);
 }
 
 .cd-stat-icon {
@@ -564,6 +500,7 @@ body, html {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 120, 120, 0.3);
 }
+
 .cd-required {
   color: red;
   margin-left: 4px;
@@ -576,7 +513,7 @@ body, html {
   padding: 12px 18px;
   border-radius: 8px;
   position: fixed;
-  top: 90px;
+  top: 100px;
   right: 20px;
   z-index: 999;
   box-shadow: 0 4px 12px rgba(0, 80, 80, 0.3);
@@ -838,202 +775,253 @@ body, html {
   background: #d4edda;
   color: #155724;
 }
-/* =============== EXPERIENCE DROPDOWN =============== */
 
-.cd-input {
-  padding: 14px 16px;
-  border: 2px solid #d9eeee;
-  background: #f8ffff;
-  border-radius: 10px;
-  font-size: 15px;
-  width: 100%;
-  transition: 0.2s ease;
-}
-
-.cd-input:focus {
-  border-color: #0f7173;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(15, 113, 115, 0.2);
-}
-/* ============================================
-   📱 MOBILE & TABLET RESPONSIVE DESIGN
-   ============================================ */
-
-/* Tablet (max-width: 900px) */
+/* ----------------------------------------------------------
+   📱 TABLET RESPONSIVE (max-width: 900px)
+---------------------------------------------------------- */
 @media (max-width: 900px) {
+  /* Show hamburger button */
+  .cd-hamburger {
+    display: block;
+  }
 
-  /* Sidebar slides out */
+  /* Hide sidebar by default */
   .cd-sidebar {
-    left: -260px !important;
-    top: 90px !important;
-    width: 240px !important;
-    height: calc(100vh - 90px) !important;
-    transition: left 0.3s ease !important;
-    z-index: 999 !important;
+    left: -260px;
+    z-index: 999;
   }
 
-  /* Sidebar open state */
+  /* Show sidebar when open */
   .cd-layout.sidebar-open .cd-sidebar {
-    left: 0 !important;
+    left: 0;
   }
 
-  /* Main content becomes full-width */
+  /* Main content full width */
   .cd-main {
     margin-left: 0 !important;
     width: 100% !important;
-    padding: 22px 20px !important;
+    padding: 20px 18px;
   }
 
-  /* Reduce padding for cards & grids */
+  /* Overlay when sidebar is open */
+  .cd-layout.sidebar-open::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 500;
+    animation: fadeIn 0.3s ease;
+  }
+
+  /* Hamburger position adjustment when sidebar is open */
+  .cd-layout.sidebar-open .cd-hamburger {
+    left: 250px;
+  }
+
+  /* Form grid adjustment */
+  .cd-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cd-full-width {
+    grid-column: span 2;
+  }
+
+  /* Cards padding reduction */
   .cd-welcome-card,
   .cd-stat-card,
   .cd-profile-card,
   .cd-job-card,
+  .cd-saved-card,
   .cd-message-item,
   .cd-course-card,
-  .cd-saved-card,
   .cd-application-card {
-    padding: 18px !important;
-  }
-
-  .cd-form-grid {
-    grid-template-columns: 1fr 1fr !important;
-  }
-
-  .cd-full-width {
-    grid-column: span 2 !important;
+    padding: 16px;
   }
 }
 
-/* Mobile Large (max-width: 600px) */
+/* ----------------------------------------------------------
+   📱 MOBILE RESPONSIVE (max-width: 600px)
+---------------------------------------------------------- */
 @media (max-width: 600px) {
-
-  /* HERO top margin adjust */
+  /* Layout adjustments */
   .cd-layout {
-    margin-top: 70px !important;
+    margin-top: 70px;
   }
 
-  /* SIDEBAR */
   .cd-sidebar {
-    width: 220px !important;
+    top: 70px;
+    height: calc(100vh - 70px);
+    width: 220px;
   }
 
-  /* MAIN CONTENT AREA */
+  .cd-hamburger {
+    top: 80px;
+    left: 12px;
+    font-size: 22px;
+    padding: 7px 13px;
+  }
+
+  /* Add padding to content when hamburger is visible */
+  .cd-content {
+    padding-top: 60px;
+  }
+
+  /* Main content */
   .cd-main {
-    padding: 18px 16px !important;
+    padding: 16px 14px;
   }
 
-  /* WELCOME CARD */
+  /* Welcome card */
   .cd-welcome-card {
-    padding: 18px !important;
+    padding: 18px;
   }
 
   .cd-welcome-title {
-    font-size: 18px !important;
+    font-size: 18px;
   }
 
   .cd-welcome-text {
-    font-size: 13px !important;
+    font-size: 13px;
   }
 
-  /* DASHBOARD CARDS STACK */
+  /* Stats grid - single column */
   .cd-stats-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .cd-stat-card {
+    padding: 16px;
   }
 
   .cd-stat-number {
-    font-size: 20px !important;
+    font-size: 20px;
   }
 
-  /* PROFILE FORM */
+  .cd-stat-label {
+    font-size: 13px;
+  }
+
+  /* Form grid - single column */
   .cd-form-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
   }
 
   .cd-full-width {
-    grid-column: span 1 !important;
+    grid-column: span 1;
   }
 
-  /* COURSE CARDS */
-  .cd-course-card {
-    flex-direction: column !important;
-    text-align: center !important;
-  }
-
-  /* APPLICATION CARDS */
-  .cd-application-card {
-    flex-direction: column !important;
-    gap: 12px !important;
-    text-align: center;
+  /* Job/Application cards - stack vertically */
+  .cd-application-card,
+  .cd-job-card,
+  .cd-saved-card {
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+    align-items: flex-start;
   }
 
   .cd-status {
     width: 100%;
-    display: inline-block;
+    text-align: center;
   }
 
-  /* MESSAGE ITEMS */
+  /* Course cards */
+  .cd-course-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .cd-course-status {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Message items */
   .cd-message-item {
-    flex-direction: column !important;
-    text-align: left !important;
-  }
-}
-
-/* Mobile Small (max-width: 400px) */
-@media (max-width: 400px) {
-
-  .cd-sidebar {
-    width: 200px !important;
+    gap: 12px;
   }
 
-  .cd-main {
-    padding: 14px !important;
+  .cd-message-avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
   }
 
-  .cd-welcome-title {
-    font-size: 16px !important;
-  }
-
-  .cd-stat-card {
-    padding: 14px !important;
-  }
-
-  .cd-stat-number {
-    font-size: 18px !important;
-  }
-
+  /* Save button */
   .cd-save-btn {
-    width: 100% !important;
+    width: 100%;
   }
 
-  /* Text scaling */
+  /* Section titles */
   .cd-profile-title,
   .cd-section-title {
-    font-size: 16px !important;
+    font-size: 18px;
   }
 
   .cd-profile-subtitle {
-    font-size: 13px !important;
+    font-size: 13px;
+  }
+
+  /* Toast notification */
+  .cd-toast {
+    top: 80px;
+    right: 12px;
+    left: 12px;
+    font-size: 13px;
   }
 }
-/* MOBILE HAMBURGER BUTTON */
-.cd-hamburger {
-  display: none;
-  position: fixed;
-  top: 95px;
-  left: 15px;
-  z-index: 2000;
-  background: white;
-  border: none;
-  font-size: 28px;
-  padding: 6px 12px;
-  border-radius: 6px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.20);
-}
 
-/* Show only on small screens */
-@media (max-width: 900px) {
+/* ----------------------------------------------------------
+   📱 EXTRA SMALL MOBILE (max-width: 400px)
+---------------------------------------------------------- */
+@media (max-width: 400px) {
+  .cd-sidebar {
+    width: 200px;
+  }
+
+  .cd-main {
+    padding: 12px;
+  }
+
+  .cd-welcome-title {
+    font-size: 16px;
+  }
+
+  .cd-welcome-card {
+    padding: 14px;
+  }
+
+  .cd-stat-card,
+  .cd-profile-card,
+  .cd-job-card,
+  .cd-saved-card,
+  .cd-message-item,
+  .cd-course-card,
+  .cd-application-card {
+    padding: 14px;
+  }
+
+  .cd-stat-number {
+    font-size: 18px;
+  }
+
+  .cd-profile-title,
+  .cd-section-title {
+    font-size: 16px;
+  }
+
+  .cd-profile-subtitle {
+    font-size: 12px;
+  }
+
   .cd-hamburger {
-    display: block;
+    font-size: 18px;
+    padding: 5px 10px;
   }
 }
