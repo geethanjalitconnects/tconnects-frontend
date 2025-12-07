@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import api from "../../../config/api";   // ← your global API
+import api from "../../config/api";
+  // ← your global API
 import "./RecruiterDashboard.css";       // keep your styling
 
 export default function RecruiterOverview() {
