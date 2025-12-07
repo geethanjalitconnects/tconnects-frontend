@@ -1072,21 +1072,145 @@ textarea.rd-input {
   background: #0c5e5e;
 }
 /* Page Header */
-.rd-page-header {
-  margin-bottom: 20px;
+/* =============================
+   PAGE HEADER
+============================= */
+
+.rd-section-header {
+  margin-bottom: 25px;
 }
 
-.rd-page-title {
-  font-size: 26px;
-  font-weight: 700;
+.rd-section-title {
+  font-size: 28px;
+  font-weight: 800;
   color: #064e53;
 }
 
-.rd-page-subtitle {
-  margin-top: 4px;
+.rd-section-subtitle {
+  color: #3a7a7a;
+  margin-top: 6px;
   font-size: 15px;
-  color: #3e7072;
 }
+
+/* =============================
+   DROPDOWN
+============================= */
+
+.rd-dropdown-wrapper {
+  margin-bottom: 25px;
+}
+
+.rd-dropdown-label {
+  font-size: 15px;
+  color: #064e53;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.rd-dropdown-select {
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 16px;
+  border: 2px solid #cfeeee;
+  border-radius: 12px;
+  background: #faffff;
+  outline: none;
+  transition: 0.2s;
+}
+
+.rd-dropdown-select:focus {
+  border-color: #0f7777;
+  box-shadow: 0 0 0 3px rgba(0, 140, 140, 0.18);
+}
+
+/* =============================
+   APPLICATION CARD
+============================= */
+
+.rd-applications-list {
+  margin-top: 18px;
+}
+
+.rd-empty-text {
+  font-size: 16px;
+  color: #777;
+}
+
+.rd-application-card {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  border: 2px solid #e2f6f6;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 14px rgba(0, 80, 80, 0.08);
+  transition: 0.2s ease-in-out;
+}
+
+.rd-application-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Header */
+.rd-app-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rd-job-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #073f43;
+}
+
+.rd-status-badge {
+  padding: 6px 14px;
+  background: #e6f9f9;
+  border-radius: 10px;
+  color: #0a6d6d;
+  font-weight: 600;
+}
+
+/* Applicant Info */
+.rd-email-phone,
+.rd-location {
+  color: #064e53;
+  margin-bottom: 6px;
+}
+
+/* Skill Chips */
+.rd-skills-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.rd-skill-tag {
+  background: #e6f7f7;
+  color: #064e53;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+/* Resume Button */
+.rd-view-resume-btn {
+  display: inline-block;
+  margin-top: 18px;
+  background: #0f7173;
+  padding: 12px 20px;
+  color: #fff;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s ease-in-out;
+}
+
+.rd-view-resume-btn:hover {
+  background: #0b5c5d;
+}
+
 /* ==========================================================
    PREMIUM RECRUITER DROPDOWN UI (Updated for Job/Internship)
 ========================================================== */

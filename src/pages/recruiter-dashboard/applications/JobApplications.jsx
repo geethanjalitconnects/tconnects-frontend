@@ -1,56 +1,51 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../config/api";
-import "../../../pages/recruiter-dashboard/RecruiterDashboard.css";
+import "../../../components/RecruiterDashboard.css";
 
 export default function JobApplications() {
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState("");
   const [applications, setApplications] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  // Load recruiter's posted jobs
   useEffect(() => {
-    fetchRecruiterJobs();
+    fetchJobs();
   }, []);
 
-  const fetchRecruiterJobs = async () => {
+  const fetchJobs = async () => {
     try {
       const res = await api.get("/api/recruiter/jobs/");
       setJobs(res.data);
-    } catch (err) {
-      console.error("Failed to load jobs", err);
+    } catch (error) {
+      console.error("Failed to fetch jobs", error);
     }
   };
 
-  const fetchApplicants = async (jobId) => {
-    if (!jobId) return;
-    setLoading(true);
+  const fetchApplications = async (jobId) => {
+    if (!jobId) {
+      setApplications([]);
+      return;
+    }
+
     try {
-      const res = await api.get(`/api/applications/job/${jobId}/applicants/`);
+      const res = await api.get(`/api/recruiter/applications/jobs/${jobId}/`);
       setApplications(res.data);
-    } catch (err) {
-      console.error("Failed to fetch job applicants", err);
-    }
-    setLoading(false);
-  };
-
-  const updateStatus = async (applicationId, newStatus) => {
-    try {
-      await api.patch(`/api/applications/job/${applicationId}/status/`, {
-        status: newStatus,
-      });
-      fetchApplicants(selectedJob);
-    } catch (err) {
-      console.error("Failed to update status", err);
+    } catch (error) {
+      console.error("Failed to fetch job applications", error);
     }
   };
 
   return (
-    <div className="dashboard-container">
+    <div className="rd-applications-page">
 
-      <h2 className="dashboard-title">Job Applications</h2>
+      {/* Page Header */}
+      <div className="rd-section-header">
+        <h2 className="rd-section-title">Job Applications</h2>
+        <p className="rd-section-subtitle">
+          Review applicants who applied for your job postings
+        </p>
+      </div>
 
-      {/* PREMIUM DROPDOWN */}
+      {/* Dropdown */}
       <div className="rd-dropdown-wrapper">
         <label className="rd-dropdown-label">Select Job</label>
 
@@ -59,7 +54,7 @@ export default function JobApplications() {
           value={selectedJob}
           onChange={(e) => {
             setSelectedJob(e.target.value);
-            fetchApplicants(e.target.value);
+            fetchApplications(e.target.value);
           }}
         >
           <option value="">Select a Job</option>
@@ -71,50 +66,48 @@ export default function JobApplications() {
         </select>
       </div>
 
-      {/* Applications List */}
-      {loading ? (
-        <p>Loading applicants...</p>
-      ) : applications.length === 0 ? (
-        <p>No applications found.</p>
-      ) : (
-        <div className="applications-list">
-          {applications.map((app) => (
-            <div key={app.id} className="application-card">
-              
-              <div className="application-info">
-                <h4>{app.candidate_name}</h4>
-                <p>Email: {app.email}</p>
-                <p>
-                  Resume:{" "}
-                  <a href={app.resume} target="_blank" rel="noopener noreferrer">
-                    View Resume
-                  </a>
-                </p>
+      {/* Applications */}
+      <div className="rd-applications-list">
+        {applications.length === 0 ? (
+          <p className="rd-empty-text">No applications found.</p>
+        ) : (
+          applications.map((app) => (
+            <div className="rd-application-card" key={app.id}>
+              <div className="rd-app-card-header">
+                <h3 className="rd-job-title">{app.full_name}</h3>
+                <span className="rd-status-badge">{app.status}</span>
               </div>
 
-              <div className="application-status">
-                <span className={`status-badge status-${app.status}`}>
-                  {app.status}
-                </span>
+              <div className="rd-applicant-info">
+                <p className="rd-email-phone">📧 {app.email}</p>
+                <p className="rd-email-phone">📞 {app.phone}</p>
+                <p className="rd-location">📍 {app.location}</p>
+              </div>
 
-                <select
-                  className="status-dropdown"
-                  value={app.status}
-                  onChange={(e) => updateStatus(app.id, e.target.value)}
+              {/* Skills */}
+              <div className="rd-skills-row">
+                {app.skills?.map((skill, idx) => (
+                  <span key={idx} className="rd-skill-tag">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+
+              {/* Resume */}
+              {app.resume && (
+                <a
+                  href={app.resume}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rd-view-resume-btn"
                 >
-                  <option value="applied">Applied</option>
-                  <option value="reviewing">Reviewing</option>
-                  <option value="shortlisted">Shortlisted</option>
-                  <option value="interview">Interview</option>
-                  <option value="hired">Hired</option>
-                  <option value="rejected">Rejected</option>
-                </select>
-              </div>
-
+                  View Resume
+                </a>
+              )}
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </div>
     </div>
   );
 }

@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../config/api";
-import "../../../pages/recruiter-dashboard/RecruiterDashboard.css";
+import "../../../components/RecruiterDashboard.css";
 
 export default function InternshipApplications() {
   const [internships, setInternships] = useState([]);
   const [selectedInternship, setSelectedInternship] = useState("");
   const [applications, setApplications] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  // Load recruiter's posted internships
   useEffect(() => {
     fetchInternships();
   }, []);
@@ -17,43 +15,39 @@ export default function InternshipApplications() {
     try {
       const res = await api.get("/api/recruiter/internships/");
       setInternships(res.data);
-    } catch (err) {
-      console.error("Failed to load internships", err);
+    } catch (error) {
+      console.error("Failed to fetch internships", error);
     }
   };
 
-  const fetchApplicants = async (internshipId) => {
-    if (!internshipId) return;
-    setLoading(true);
+  const fetchApplications = async (internshipId) => {
+    if (!internshipId) {
+      setApplications([]);
+      return;
+    }
+
     try {
       const res = await api.get(
-        `/api/applications/internship/${internshipId}/applicants/`
+        `/api/recruiter/applications/internships/${internshipId}/`
       );
       setApplications(res.data);
-    } catch (err) {
-      console.error("Failed to fetch internship applicants", err);
-    }
-    setLoading(false);
-  };
-
-  const updateStatus = async (applicationId, newStatus) => {
-    try {
-      await api.patch(
-        `/api/applications/internship/${applicationId}/status/`,
-        { status: newStatus }
-      );
-      fetchApplicants(selectedInternship);
-    } catch (err) {
-      console.error("Failed to update status", err);
+    } catch (error) {
+      console.error("Failed to fetch internship applications", error);
     }
   };
 
   return (
-    <div className="dashboard-container">
+    <div className="rd-applications-page">
 
-      <h2 className="dashboard-title">Internship Applications</h2>
+      {/* Page Header */}
+      <div className="rd-section-header">
+        <h2 className="rd-section-title">Internship Applications</h2>
+        <p className="rd-section-subtitle">
+          View applicants who applied for your posted internships
+        </p>
+      </div>
 
-      {/* PREMIUM DROPDOWN */}
+      {/* Dropdown */}
       <div className="rd-dropdown-wrapper">
         <label className="rd-dropdown-label">Select Internship</label>
 
@@ -62,62 +56,60 @@ export default function InternshipApplications() {
           value={selectedInternship}
           onChange={(e) => {
             setSelectedInternship(e.target.value);
-            fetchApplicants(e.target.value);
+            fetchApplications(e.target.value);
           }}
         >
           <option value="">Select an Internship</option>
-          {internships.map((intern) => (
-            <option key={intern.id} value={intern.id}>
-              {intern.title}
+          {internships.map((i) => (
+            <option key={i.id} value={i.id}>
+              {i.title}
             </option>
           ))}
         </select>
       </div>
 
-      {/* Applications */}
-      {loading ? (
-        <p>Loading applicants...</p>
-      ) : applications.length === 0 ? (
-        <p>No applications found.</p>
-      ) : (
-        <div className="applications-list">
-          {applications.map((app) => (
-            <div key={app.id} className="application-card">
-              
-              <div className="application-info">
-                <h4>{app.candidate_name}</h4>
-                <p>Email: {app.email}</p>
-                <p>
-                  Resume:{" "}
-                  <a href={app.resume} target="_blank" rel="noopener noreferrer">
-                    View Resume
-                  </a>
-                </p>
+      {/* Applications List */}
+      <div className="rd-applications-list">
+        {applications.length === 0 ? (
+          <p className="rd-empty-text">No applications found.</p>
+        ) : (
+          applications.map((app) => (
+            <div className="rd-application-card" key={app.id}>
+              <div className="rd-app-card-header">
+                <h3 className="rd-job-title">{app.full_name}</h3>
+                <span className="rd-status-badge">{app.status}</span>
               </div>
 
-              <div className="application-status">
-                <span className={`status-badge status-${app.status}`}>
-                  {app.status}
-                </span>
+              <div className="rd-applicant-info">
+                <p className="rd-email-phone">📧 {app.email}</p>
+                <p className="rd-email-phone">📞 {app.phone}</p>
+                <p className="rd-location">📍 {app.location}</p>
+              </div>
 
-                <select
-                  className="status-dropdown"
-                  value={app.status}
-                  onChange={(e) => updateStatus(app.id, e.target.value)}
+              {/* Skills */}
+              <div className="rd-skills-row">
+                {app.skills?.map((skill, idx) => (
+                  <span key={idx} className="rd-skill-tag">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+
+              {/* Resume Button */}
+              {app.resume && (
+                <a
+                  href={app.resume}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rd-view-resume-btn"
                 >
-                  <option value="applied">Applied</option>
-                  <option value="reviewing">Reviewing</option>
-                  <option value="shortlisted">Shortlisted</option>
-                  <option value="interview">Interview</option>
-                  <option value="hired">Hired</option>
-                  <option value="rejected">Rejected</option>
-                </select>
-              </div>
-
+                  View Resume
+                </a>
+              )}
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </div>
     </div>
   );
 }
