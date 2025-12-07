@@ -45,7 +45,20 @@ body, html {
   border-right: 1px solid rgba(255,255,255,0.08);
   z-index: 50;
   flex-shrink: 0;
-  transition: left 0.3s ease;
+}
+
+/* Desktop: No transition needed */
+@media (min-width: 901px) {
+  .cd-sidebar {
+    transition: none;
+  }
+}
+
+/* Mobile: Add slide transition */
+@media (max-width: 900px) {
+  .cd-sidebar {
+    transition: left 0.3s ease;
+  }
 }
 
 /* Sidebar Scrollbar */
@@ -67,6 +80,8 @@ body, html {
   font-size: 20px;
   font-weight: 700;
   cursor: pointer;
+  color: white;
+  user-select: none;
 }
 
 /* ----------------------------------------------------------
@@ -183,7 +198,20 @@ body, html {
   box-sizing: border-box;
   overflow-x: hidden;
   flex: 1;
-  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* Desktop: No transition */
+@media (min-width: 901px) {
+  .cd-main {
+    transition: none;
+  }
+}
+
+/* Mobile: Add transition */
+@media (max-width: 900px) {
+  .cd-main {
+    transition: margin-left 0.3s ease, width 0.3s ease;
+  }
 }
 
 .cd-content {
@@ -193,38 +221,58 @@ body, html {
   box-sizing: border-box;
 }
 
+/* Only add top padding on mobile when hamburger is visible */
+@media (max-width: 900px) {
+  .cd-content {
+    padding-top: 60px;
+  }
+}
+
+@media (min-width: 901px) {
+  .cd-content {
+    padding-top: 0;
+  }
+}
+
 /* Remove duplicate header */
 .cd-header { 
   display: none !important; 
 }
 
 /* ----------------------------------------------------------
-   MOBILE HAMBURGER BUTTON
+   MOBILE HAMBURGER BUTTON - HIDDEN ON DESKTOP
 ---------------------------------------------------------- */
 .cd-hamburger {
   display: none;
-  position: fixed;
-  top: 100px;
-  left: 15px;
-  z-index: 2000;
-  background: #0f7173;
-  border: 2px solid white;
-  color: white;
-  font-size: 24px;
-  padding: 8px 14px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-.cd-hamburger:hover {
-  background: #1bb2b0;
-  transform: scale(1.05);
-}
+/* Only show on mobile/tablet */
+@media (max-width: 900px) {
+  .cd-hamburger {
+    display: block;
+    position: fixed;
+    top: 100px;
+    left: 15px;
+    z-index: 2000;
+    background: #0f7173;
+    border: 2px solid white;
+    color: white;
+    font-size: 24px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
 
-.cd-hamburger:active {
-  transform: scale(0.95);
+  .cd-hamburger:hover {
+    background: #1bb2b0;
+    transform: scale(1.05);
+  }
+
+  .cd-hamburger:active {
+    transform: scale(0.95);
+  }
 }
 
 /* ----------------------------------------------------------
@@ -412,8 +460,14 @@ body, html {
 
 .cd-form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .cd-form-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .cd-form-group {
@@ -780,10 +834,6 @@ body, html {
    📱 TABLET RESPONSIVE (max-width: 900px)
 ---------------------------------------------------------- */
 @media (max-width: 900px) {
-  /* Show hamburger button */
-  .cd-hamburger {
-    display: block;
-  }
 
   /* Hide sidebar by default */
   .cd-sidebar {
@@ -803,7 +853,7 @@ body, html {
     padding: 20px 18px;
   }
 
-  /* Overlay when sidebar is open */
+  /* Overlay when sidebar is open - ONLY ON MOBILE */
   .cd-layout.sidebar-open::after {
     content: '';
     position: fixed;
@@ -840,6 +890,17 @@ body, html {
   .cd-course-card,
   .cd-application-card {
     padding: 16px;
+  }
+}
+
+/* DESKTOP ONLY - Ensure no overlay */
+@media (min-width: 901px) {
+  .cd-layout::after {
+    display: none !important;
+  }
+  
+  .cd-layout.sidebar-open::after {
+    display: none !important;
   }
 }
 
