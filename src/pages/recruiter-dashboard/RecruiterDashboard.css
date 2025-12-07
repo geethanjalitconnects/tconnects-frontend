@@ -1271,6 +1271,48 @@ textarea.rd-input {
   top: 52px;
   pointer-events: none;
 }
+/* ===========================================
+   TOP-LEFT CORNER ACTION BUTTON (BACK BUTTON)
+=========================================== */
+
+.rd-top-left-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 50;
+}
+
+.rd-back-btn {
+  background: #0f7777;
+  color: white;
+  padding: 10px 18px;
+  font-size: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
+}
+
+.rd-back-btn:hover {
+  background: #0c5e5e;
+  transform: translateY(-2px);
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+  .rd-top-left-btn {
+    top: 12px;
+    left: 12px;
+  }
+
+  .rd-back-btn {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+}
+
 
 /* =============================
    RESPONSIVE DROPDOWN
