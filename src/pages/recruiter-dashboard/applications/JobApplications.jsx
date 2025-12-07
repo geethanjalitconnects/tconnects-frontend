@@ -6,12 +6,7 @@ export default function JobApplications() {
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState("");
   const [applications, setApplications] = useState([]);
-  <div className="rd-top-left-btn">
-  <button className="rd-back-btn" onClick={() => navigate(-1)}>
-    ← Back
-  </button>
-</div>
-
+  
 
   useEffect(() => {
     fetchJobs();
