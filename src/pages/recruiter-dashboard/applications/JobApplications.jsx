@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../config/api";
-import "../../../components/RecruiterDashboard.css";
+import "../../../RecruiterDashboard.css";
 
 export default function JobApplications() {
   const [jobs, setJobs] = useState([]);
