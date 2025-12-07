@@ -1092,14 +1092,14 @@ textarea.rd-input {
   font-size: 15px;
 }
 
-/* =============================
-   DROPDOWN
-============================= */
+/* ===========================================
+   LEFT-ALIGNED PREMIUM DROPDOWN WRAPPER
+=========================================== */
 .rd-dropdown-wrapper {
-  width: 350px;                /* fixed width for strong layout */
-  margin: 0 0 25px 0;          /* remove auto-center */
-  text-align: left;            /* label + input align left */
+  width: 350px;            /* fixed width for neat UI */
+  margin: 0 0 25px 0;      /* no auto-centering, aligned left */
 }
+
 .rd-dropdown-label {
   font-size: 15px;
   font-weight: 600;
@@ -1120,15 +1120,39 @@ textarea.rd-input {
   transition: 0.2s ease;
   appearance: none;
   cursor: pointer;
-  position: relative;
 }
 
+/* Hover */
 .rd-dropdown-select:hover {
   border-color: #0f7777;
 }
+
+/* Focus */
 .rd-dropdown-select:focus {
   border-color: #0f7777;
   box-shadow: 0 0 0 4px rgba(15, 119, 119, 0.25);
+}
+
+/* Dropdown Arrow */
+.rd-dropdown-wrapper {
+  position: relative;
+}
+
+.rd-dropdown-wrapper::after {
+  content: "▾";
+  font-size: 18px;
+  color: #0f7777;
+  position: absolute;
+  right: 16px;
+  top: 52px;
+  pointer-events: none;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .rd-dropdown-wrapper {
+    width: 100%;     /* full width on mobile */
+  }
 }
 
 /* =============================
