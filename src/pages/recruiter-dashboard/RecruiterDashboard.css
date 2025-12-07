@@ -184,10 +184,18 @@
     left: 0;
   }
 
+  /* When sidebar opens on small screens, push main content instead of overlaying */
+  .rd-layout.sidebar-open .rd-main {
+    margin-left: 240px !important;
+    width: calc(100% - 240px) !important;
+    transition: margin-left 0.25s ease, width 0.25s ease;
+  }
+
   .rd-main {
     margin-left: 0 !important;
     width: 100% !important;
     padding: 20px 22px;
+    transition: margin-left 0.25s ease, width 0.25s ease;
   }
 }
 /* ================================
