@@ -283,6 +283,14 @@ body, html {
     padding: 20px 30px;
     transition: margin-left 0.25s ease, width 0.25s ease;
   }
+
+  /* Shift fixed UI chrome (hamburger, toast notifications) when sidebar opens */
+  .cd-layout.sidebar-open .cd-hamburger,
+  .cd-layout.sidebar-open .cd-toast,
+  .cd-layout.sidebar-open .cd-top-left-btn {
+    transform: translateX(240px) !important;
+    transition: transform 0.25s ease !important;
+  }
 }
 
 /* ----------------------------------------------------------

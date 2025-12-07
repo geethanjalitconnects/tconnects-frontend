@@ -1399,6 +1399,15 @@ textarea.rd-input {
     grid-template-columns: 1fr !important;
   }
 
+  /* Shift fixed UI chrome (hamburger, top-left button, toasts) when sidebar opens */
+  .rd-layout.sidebar-open .rd-hamburger,
+  .rd-layout.sidebar-open .rd-top-left-btn,
+  .rd-layout.sidebar-open .rd-top-left-btn *,
+  .rd-layout.sidebar-open .rd-toast {
+    transform: translateX(240px) !important;
+    transition: transform 0.25s ease !important;
+  }
+
   .rd-full,
   .rd-form-group.full {
     grid-column: span 1 !important;
