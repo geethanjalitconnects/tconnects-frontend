@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../../../config/api";
+import api from "../../config/api";
 import "./FreelancerList.css";
 import { useNavigate } from "react-router-dom";
 
