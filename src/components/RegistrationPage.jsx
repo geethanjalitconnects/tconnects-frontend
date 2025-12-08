@@ -1,9 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api, { API_BASE_URL } from '../config/api';
 import './RegistrationPage.css';
-
-import { AuthContext } from '../context/AuthContext';
 
 const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
   const [userType, setUserType] = useState('candidate');
@@ -18,7 +16,6 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext);
 
   const personalEmailDomains = [
     'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com',
@@ -112,8 +109,12 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
         role: userType
       });
 
-      // If backend returned user, use it to update global auth state
-      const returnedUser = response.data.user;
+      const userData = {
+        id: response.data.user?.id,
+        name: response.data.user?.full_name,
+        email: response.data.user?.email,
+        role: response.data.user?.role
+      };
 
       // Show success popup
       setShowSuccessModal(true);
@@ -121,11 +122,8 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
       setTimeout(() => {
         setShowSuccessModal(false);
 
-        // Update global auth state so Header updates immediately
-        returnedUser && setUser && setUser(returnedUser);
-
         // Redirect based on role
-        if ((returnedUser?.role || userType) === 'candidate') {
+        if (userType === 'candidate') {
           navigate('/candidate-dashboard');
         } else {
           navigate('/recruiter-dashboard');
@@ -133,12 +131,7 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
 
         // Notify parent component
         if (typeof onRegisterSuccess === 'function') {
-          onRegisterSuccess(returnedUser || {
-            id: response.data.user?.id,
-            full_name: response.data.user?.full_name,
-            email: response.data.user?.email,
-            role: response.data.user?.role
-          });
+          onRegisterSuccess(userData);
         }
       }, 2000);
 
