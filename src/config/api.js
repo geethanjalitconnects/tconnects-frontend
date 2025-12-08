@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
-  "https://tconnects-backend.onrender.com";
+  "https://tconnects-backend-staging.onrender.com";
 
 // 🔥 GLOBAL settings — REQUIRED for cookie authentication
 axios.defaults.baseURL = API_BASE_URL;
