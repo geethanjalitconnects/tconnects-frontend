@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api, { API_BASE_URL } from '../config/api';
 import './LoginPage.css';
+
+import { AuthContext } from '../context/AuthContext';
 
 const LoginPage = ({ onLoginSuccess, navigateToRegister }) => {
   const [userType, setUserType] = useState('candidate');
@@ -16,6 +18,7 @@ const LoginPage = ({ onLoginSuccess, navigateToRegister }) => {
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -67,6 +70,8 @@ const LoginPage = ({ onLoginSuccess, navigateToRegister }) => {
       }
 
       // Notify parent (e.g., header) about logged-in user
+      // Update global auth state so Header updates immediately
+      setUser && setUser(userData);
       onLoginSuccess && onLoginSuccess(userData);
     }, 1200);
   };

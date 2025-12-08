@@ -10,9 +10,15 @@ axios.defaults.baseURL = API_BASE_URL;
 axios.defaults.withCredentials = true; // <-- Most important line
 axios.defaults.headers.common["Content-Type"] = "application/json";
 
+// IMPORTANT: let axios automatically read the csrftoken cookie and send it
+axios.defaults.xsrfCookieName = "csrftoken";      // cookie name that Django sets
+axios.defaults.xsrfHeaderName = "X-CSRFToken";    // header name axios will send
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
+  xsrfCookieName: "csrftoken",
+  xsrfHeaderName: "X-CSRFToken",
 });
 
 export default api;
