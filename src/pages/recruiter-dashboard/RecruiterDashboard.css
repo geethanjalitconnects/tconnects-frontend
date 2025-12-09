@@ -176,8 +176,8 @@
    MAIN CONTENT AREA
 ========================================================= */
 .rd-main {
-  margin-left: 240px;
-  width: calc(100% - 240px);
+  margin-left: 240px !important;
+  width: calc(100% - 240px) !important;
   padding: 30px 40px;
   min-height: 100vh;
   box-sizing: border-box;
@@ -385,6 +385,652 @@
   transform: translateY(-2px);
 }
 
+/* =========================================
+   COMPANY PROFILE – MATCH CANDIDATE UI
+========================================= */
+.rd-company-profile-page {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* White card container */
+.rd-profile-card {
+  background: #ffffff;
+  padding: 26px;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 120, 120, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Form styles */
+.rd-input,
+.rd-textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #cdecec;
+  border-radius: 10px;
+  background: #fdfefe;
+  font-size: 15px;
+  transition: 0.2s ease;
+}
+
+.rd-input:focus,
+.rd-textarea:focus {
+  border-color: #0f7173;
+  box-shadow: 0 0 0 3px rgba(15, 113, 115, 0.25);
+}
+
+.rd-textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+/* PAGE CONTAINER */
+.rd-postjob-page {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Card Subtitles */
+.rd-card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #064e53;
+  margin-bottom: 10px;
+}
+
+/* =========================================
+   HIGHLIGHTED SCHEDULE JOB CARD
+========================================= */
+.rd-schedule-card {
+  background: linear-gradient(135deg, #e3fafb, #f0ffff);
+  border-left: 6px solid #0f7173;
+  padding: 26px;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 80, 80, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-top: 10px;
+}
+
+/* Optional stronger highlight for title */
+.rd-schedule-card .rd-card-title {
+  color: #0d5e60;
+}
+
+.rd-schedule-info {
+  font-size: 14px;
+  color: #337375;
+  margin-bottom: 10px;
+}
+
+/* =========================================
+   MANAGE JOBS PAGE
+========================================= */
+.rd-managejobs-page {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.rd-job-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Each Job Card */
+.rd-job-card {
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 120, 120, 0.12);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  border-left: 6px solid #0f7173;
+}
+
+.rd-job-card-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Job Title */
+.rd-job-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0a4a4e;
+}
+
+/* Posted Date */
+.rd-job-meta {
+  font-size: 14px;
+  color: #516c6f;
+}
+
+.rd-job-meta span {
+  font-weight: 600;
+  color: #083e43;
+}
+
+/* Status Badge */
+.rd-job-status {
+  margin-top: 4px;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.rd-job-status.active {
+  background: #dff6f5;
+  color: #0c6568;
+  border: 1px solid #0c6568;
+}
+
+.rd-job-status.closed {
+  background: #ffe5e5;
+  color: #b73333;
+  border: 1px solid #b73333;
+}
+
+/* Action Buttons */
+.rd-job-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rd-action-btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* Edit Button */
+.rd-action-btn.edit {
+  background: #e3f8f7;
+  color: #0c6568;
+  border: 1px solid #0c6568;
+}
+
+.rd-action-btn.edit:hover {
+  background: #cdeeed;
+}
+
+/* View Applications */
+.rd-action-btn.apps {
+  background: #0f7173;
+  color: white;
+}
+
+.rd-action-btn.apps:hover {
+  background: #0d5e60;
+}
+
+/* Delete */
+.rd-action-btn.delete {
+  background: #ffe5e5;
+  color: #b73333;
+  border: 1px solid #b73333;
+}
+
+.rd-action-btn.delete:hover {
+  background: #ffcccc;
+}
+
+.rd-edit-id {
+  font-size: 14px;
+  color: #568b8d;
+  margin-bottom: 18px;
+}
+
+/* ================================
+   EDIT + POST JOB SHARED LAYOUT
+================================ */
+.rd-edit-wrapper {
+  width: 100%;
+  padding: 20px 40px;
+}
+
+.rd-edit-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #064e53;
+  margin-bottom: 6px;
+}
+
+.rd-edit-subtitle {
+  font-size: 16px;
+  color: #51898f;
+  margin-bottom: 28px;
+}
+
+/* Card */
+.rd-card {
+  background: #ffffff;
+  padding: 32px;
+  border-radius: 20px;
+  box-shadow: 0 4px 14px rgba(0, 120, 120, 0.08);
+  margin-bottom: 35px;
+  width: 100%;
+}
+
+.rd-card-heading {
+  font-size: 22px;
+  font-weight: 700;
+  color: #064e53;
+  margin-bottom: 20px;
+}
+
+/* Grid 3 columns */
+.rd-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.rd-form-group.full {
+  grid-column: 1 / span 3;
+}
+
+/* Form */
+.rd-form-group label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f585c;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.rd-input {
+  padding: 16px;
+  border: 2px solid #cfecec;
+  border-radius: 12px;
+  background: #f9ffff;
+  width: 100%;
+  transition: 0.2s ease;
+}
+
+.rd-input:focus {
+  border-color: #0f7173;
+  box-shadow: 0 0 0 3px rgba(15, 113, 115, 0.15);
+  outline: none;
+}
+
+textarea.rd-input {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Highlight Schedule Box */
+.rd-schedule-box {
+  background: #f3fcfc !important;
+  border: 2px solid #d4efef;
+}
+
+/* =============================
+   JOB APPLICATIONS PAGE
+============================= */
+.rd-applications-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 40px;
+}
+
+/* ------- Filter Bar ------- */
+.rd-filter-bar {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+}
+
+.rd-filter-input {
+  padding: 10px 14px;
+  border: 2px solid #d2eeee;
+  border-radius: 8px;
+  background: #f8ffff;
+  color: #0a4d4f;
+  font-size: 14px;
+  width: 200px;
+  cursor: pointer;
+}
+
+.rd-filter-input:focus {
+  border-color: #0f7173;
+  outline: none;
+}
+
+/* Filters Row */
+.rd-filter-container {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.rd-filter-select {
+  padding: 12px 16px;
+  border: 2px solid #cceeee;
+  border-radius: 10px;
+  background: #f7ffff;
+  font-size: 15px;
+  min-width: 220px;
+  outline: none;
+}
+
+.rd-filter-select:focus {
+  border-color: #0f7777;
+  box-shadow: 0 0 0 3px rgba(0, 150, 150, 0.2);
+}
+
+/* ------- Applications Card ------- */
+.rd-applications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.rd-app-card {
+  background: #ffffff;
+  padding: 22px 28px;
+  border-radius: 14px;
+  border: 2px solid #e3f6f6;
+  box-shadow: 0 4px 12px rgba(0, 120, 120, 0.08);
+  margin-bottom: 22px;
+}
+
+.rd-app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rd-app-job {
+  font-size: 19px;
+  font-weight: 700;
+  color: #064e53;
+}
+
+.rd-status-dropdown {
+  padding: 10px 16px;
+  border: 2px solid #cdecec;
+  background: #f7ffff;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+/* ------- Applicant Info ------- */
+.rd-app-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 8px;
+  color: #064e53;
+}
+
+.rd-app-email,
+.rd-app-phone,
+.rd-app-location {
+  font-size: 14px;
+  color: #0a6467;
+}
+
+/* ------- Skills ------- */
+.rd-skill-row {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.rd-skill-tag {
+  padding: 6px 14px;
+  background: #e6f8f8;
+  border: 1px solid #b6e8e8;
+  font-size: 14px;
+  color: #064e53;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+/* ------- Resume Button ------- */
+.rd-resume-btn {
+  display: inline-block;
+  margin-top: 10px;
+  background: #0f7173;
+  padding: 10px 18px;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.rd-resume-btn:hover {
+  background: #0c5c5d;
+}
+
+/* Status dropdown aligned right */
+.rd-app-status {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+/* Make skill chips neat */
+.rd-skill-chip {
+  background: #e8f9f9;
+  padding: 6px 12px;
+  border-radius: 12px;
+  margin-right: 8px;
+  font-size: 14px;
+  color: #086f75;
+  display: inline-block;
+}
+
+/* ==============================
+   APPLICATION CARD
+============================== */
+.rd-application-card {
+  background: #ffffff;
+  border: 2px solid #e2f6f6;
+  border-radius: 18px;
+  padding: 28px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 14px rgba(0, 80, 80, 0.08);
+  transition: 0.2s ease-in-out;
+}
+
+.rd-application-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Header */
+.rd-app-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rd-status-badge {
+  padding: 6px 14px;
+  background: #e6f9f9;
+  border-radius: 10px;
+  color: #0a6d6d;
+  font-weight: 600;
+}
+
+/* Applicant Info */
+.rd-applicant-info {
+  margin-top: 18px;
+}
+
+.rd-applicant-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.rd-email-phone,
+.rd-location {
+  font-size: 15px;
+  color: #084e53;
+  margin-bottom: 6px;
+}
+
+/* Skill Tags */
+.rd-skills-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+/* Resume Button */
+.rd-view-resume-btn {
+  display: inline-block;
+  margin-top: 18px;
+  background: #0f7173;
+  padding: 12px 22px;
+  color: #fff;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.2s ease-in-out;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.rd-view-resume-btn:hover {
+  background: #0c5e5e;
+}
+
+/* =============================
+   PAGE HEADER
+============================= */
+.rd-section-header {
+  margin-bottom: 25px;
+}
+
+.rd-section-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #064e53;
+}
+
+.rd-section-subtitle {
+  color: #3a7a7a;
+  margin-top: 6px;
+  font-size: 15px;
+}
+
+.rd-empty-text {
+  font-size: 16px;
+  color: #777;
+}
+
+/* ===========================================
+   LEFT-ALIGNED PREMIUM DROPDOWN WRAPPER
+=========================================== */
+.rd-dropdown-wrapper {
+  width: 350px;
+  margin: 0 0 25px 0;
+  position: relative;
+}
+
+.rd-dropdown-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #064e53;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.rd-dropdown-select {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #f7ffff;
+  border: 2px solid #cdecec;
+  font-size: 15px;
+  color: #064e53;
+  outline: none;
+  transition: 0.2s ease;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* Hover */
+.rd-dropdown-select:hover {
+  border-color: #0f7777;
+}
+
+/* Focus */
+.rd-dropdown-select:focus {
+  border-color: #0f7777;
+  box-shadow: 0 0 0 4px rgba(15, 119, 119, 0.25);
+}
+
+/* Dropdown Arrow */
+.rd-dropdown-wrapper::after {
+  content: "▾";
+  font-size: 18px;
+  color: #0f7777;
+  position: absolute;
+  right: 16px;
+  top: 52px;
+  pointer-events: none;
+}
+
+/* ===========================================
+   TOP-LEFT CORNER ACTION BUTTON (BACK BUTTON)
+=========================================== */
+.rd-top-left-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 50;
+}
+
+.rd-back-btn {
+  background: #0f7777;
+  color: white;
+  padding: 10px 18px;
+  font-size: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
+}
+
+.rd-back-btn:hover {
+  background: #0c5e5e;
+  transform: translateY(-2px);
+}
+
 /* ============================================================
    📱 RESPONSIVE DESIGN — TABLET (900px ↓)
 ============================================================ */
@@ -407,8 +1053,8 @@
 
   /* MAIN CONTENT FULL WIDTH */
   .rd-main {
-    margin-left: 0;
-    width: 100%;
+    margin-left: 0 !important;
+    width: 100% !important;
     padding: 70px 20px 20px 20px;
   }
 
@@ -433,6 +1079,37 @@
   .cd-stats-grid {
     grid-template-columns: 1fr 1fr;
     gap: 16px;
+  }
+
+  /* JOB CARD */
+  .rd-job-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .rd-job-card-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  /* APPLICATION CARDS */
+  .rd-app-card,
+  .rd-application-card {
+    padding: 22px;
+  }
+
+  .rd-app-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  /* Shift fixed UI chrome when sidebar opens */
+  .rd-layout.sidebar-open .rd-top-left-btn {
+    transform: translateX(240px);
+    transition: transform 0.25s ease;
   }
 }
 
@@ -497,6 +1174,12 @@
     width: 100%;
   }
 
+  .rd-action-btn,
+  .rd-view-resume-btn {
+    width: 100%;
+    text-align: center;
+  }
+
   /* FORMS AND TEXT INPUTS */
   .rd-input,
   .rd-textarea {
@@ -505,6 +1188,58 @@
   }
 
   .rd-label {
+    font-size: 14px;
+  }
+
+  /* FILTER BAR */
+  .rd-filter-bar,
+  .rd-filter-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .rd-filter-input,
+  .rd-filter-select {
+    width: 100%;
+  }
+
+  /* JOB CARD MOBILE */
+  .rd-job-card {
+    padding: 18px;
+  }
+
+  .rd-job-title {
+    font-size: 18px;
+  }
+
+  /* APPLICATION CARD MOBILE */
+  .rd-application-card {
+    padding: 20px;
+  }
+
+  .rd-applicant-name {
+    font-size: 16px;
+  }
+
+  /* DROPDOWN */
+  .rd-dropdown-wrapper {
+    width: 100%;
+  }
+
+  .rd-dropdown-select {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+
+  /* TOP BUTTON */
+  .rd-top-left-btn {
+    top: 12px;
+    left: 12px;
+  }
+
+  .rd-back-btn {
+    padding: 8px 14px;
     font-size: 14px;
   }
 }
@@ -536,6 +1271,25 @@
   /* STATS */
   .cd-stat-number {
     font-size: 18px;
+  }
+
+  /* JOB CARD TEXT */
+  .rd-job-title {
+    font-size: 16px;
+  }
+
+  .rd-job-meta {
+    font-size: 12px;
+  }
+
+  /* APPLICATION CARD SMALL */
+  .rd-applicant-name {
+    font-size: 15px;
+  }
+
+  .rd-skill-tag {
+    padding: 5px 10px;
+    font-size: 12px;
   }
 
   /* FORMS */
