@@ -25,6 +25,9 @@ export default function CandidateDashboard() {
   const [activeLink, setActiveLink] = useState("overview");
   const [freelancerOpen, setFreelancerOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  
+  // User info - in real app, this would come from authentication
+  const userName = "Geethanjali";
 
   const handleBackToHome = () => {
     window.location.href = "/";
@@ -38,7 +41,7 @@ export default function CandidateDashboard() {
   const renderContent = () => {
     switch (activeLink) {
       case "overview":
-        return <OverviewPage />;
+        return <OverviewPage userName={userName} />;
       case "profile":
         return <ProfilePage />;
       case "applied-jobs":
@@ -51,8 +54,22 @@ export default function CandidateDashboard() {
         return <SavedInternshipsPage />;
       case "courses":
         return <CoursesPage />;
+      case "basic-info":
+        return <BasicInformationPage />;
+      case "professional":
+        return <ProfessionalDetailsPage />;
+      case "education":
+        return <EducationPage />;
+      case "availability":
+        return <AvailabilityPage />;
+      case "payment":
+        return <PaymentMethodPage />;
+      case "social":
+        return <SocialLinksPage />;
+      case "preview":
+        return <ProfilePreviewPage />;
       default:
-        return <div>Select a page from the sidebar</div>;
+        return <OverviewPage userName={userName} />;
     }
   };
 
@@ -172,11 +189,11 @@ export default function CandidateDashboard() {
 }
 
 // Overview Page Component
-function OverviewPage() {
+function OverviewPage({ userName }) {
   return (
     <div className="cd-overview">
       <div className="cd-welcome-card">
-        <h2 className="cd-welcome-title">Welcome back, John!</h2>
+        <h2 className="cd-welcome-title">Welcome, {userName}!</h2>
         <p className="cd-welcome-text">
           Track your job applications, manage your profile, and explore new opportunities.
         </p>
@@ -238,10 +255,7 @@ function OverviewPage() {
 function ProfilePage() {
   return (
     <div className="cd-profile">
-      <div className="cd-section-header">
-        <h2 className="cd-profile-title">My Profile</h2>
-        <p className="cd-profile-subtitle">Manage your personal information</p>
-      </div>
+      <h1 className="cd-page-title">Manage Your Personal Information</h1>
 
       <div className="cd-profile-card">
         <h3 className="cd-section-title">Personal Information</h3>
@@ -281,8 +295,7 @@ function ProfilePage() {
 function AppliedJobsPage() {
   return (
     <div className="cd-applied">
-      <h2 className="cd-section-title">Applied Jobs</h2>
-      <p className="cd-section-subtitle">Track your job applications</p>
+      <h1 className="cd-page-title">Track Your Job Applications</h1>
 
       <div className="cd-job-card">
         <div className="cd-job-info">
@@ -309,8 +322,7 @@ function AppliedJobsPage() {
 function AppliedInternshipsPage() {
   return (
     <div className="cd-applied">
-      <h2 className="cd-section-title">Applied Internships</h2>
-      <p className="cd-section-subtitle">Track your internship applications</p>
+      <h1 className="cd-page-title">Track Your Internship Applications</h1>
 
       <div className="cd-job-card">
         <div className="cd-job-info">
@@ -328,8 +340,7 @@ function AppliedInternshipsPage() {
 function SavedJobsPage() {
   return (
     <div className="cd-saved">
-      <h2 className="cd-section-title">Saved Jobs</h2>
-      <p className="cd-section-subtitle">Jobs you've bookmarked</p>
+      <h1 className="cd-page-title">Your Bookmarked Jobs</h1>
 
       <div className="cd-saved-card">
         <div className="cd-saved-info">
@@ -346,8 +357,7 @@ function SavedJobsPage() {
 function SavedInternshipsPage() {
   return (
     <div className="cd-saved">
-      <h2 className="cd-section-title">Saved Internships</h2>
-      <p className="cd-section-subtitle">Internships you've bookmarked</p>
+      <h1 className="cd-page-title">Your Bookmarked Internships</h1>
 
       <div className="cd-saved-card">
         <div className="cd-saved-info">
@@ -364,8 +374,7 @@ function SavedInternshipsPage() {
 function CoursesPage() {
   return (
     <div className="cd-courses">
-      <h2 className="cd-section-title">My Courses</h2>
-      <p className="cd-section-subtitle">Continue your learning journey</p>
+      <h1 className="cd-page-title">Continue Your Learning Journey</h1>
 
       <div className="cd-course-card">
         <div className="cd-course-info">
@@ -389,6 +398,230 @@ function CoursesPage() {
           </div>
         </div>
         <span className="cd-course-status cd-status-completed">Completed</span>
+      </div>
+    </div>
+  );
+}
+
+// Freelancer Pages
+function BasicInformationPage() {
+  return (
+    <div className="fr-page">
+      <div className="fr-card">
+        <h1 className="cd-page-title">Basic Information</h1>
+        <p className="fr-lead">Tell us about yourself</p>
+        
+        <div className="fr-row">
+          <label className="fr-label">Full Name</label>
+          <input type="text" className="fr-input" placeholder="Enter your full name" />
+        </div>
+        
+        <div className="fr-row">
+          <label className="fr-label">Professional Title</label>
+          <input type="text" className="fr-input" placeholder="e.g. Full Stack Developer" />
+        </div>
+        
+        <div className="fr-row">
+          <label className="fr-label">Bio</label>
+          <textarea className="fr-textarea" placeholder="Write a brief bio..."></textarea>
+        </div>
+        
+        <div className="fr-actions">
+          <button className="fr-btn fr-btn-primary">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProfessionalDetailsPage() {
+  return (
+    <div className="fr-page">
+      <div className="fr-card">
+        <h1 className="cd-page-title">Professional Details</h1>
+        <p className="fr-lead">Share your expertise and skills</p>
+        
+        <div className="fr-row">
+          <label className="fr-label">Years of Experience</label>
+          <input type="number" className="fr-input" placeholder="e.g. 5" />
+        </div>
+        
+        <div className="fr-row">
+          <label className="fr-label">Skills</label>
+          <input type="text" className="fr-input" placeholder="React, Node.js, MongoDB..." />
+        </div>
+        
+        <div className="fr-row">
+          <label className="fr-label">Hourly Rate ($)</label>
+          <input type="number" className="fr-input" placeholder="e.g. 50" />
+        </div>
+        
+        <div className="fr-actions">
+          <button className="fr-btn fr-btn-primary">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EducationPage() {
+  return (
+    <div className="fr-page">
+      <div className="fr-card">
+        <h1 className="cd-page-title">Education</h1>
+        <p className="fr-lead">Add your educational background</p>
+        
+        <div className="fr-row">
+          <label className="fr-label">Degree</label>
+          <input type="text" className="fr-input" placeholder="e.g. Bachelor of Science" />
+        </div>
+        
+        <div className="fr-row">
+          <label className="fr-label">Institution</label>
+          <input type="text" className="fr-input" placeholder="University name" />
+        </div>
+        
+        <div className="fr-two-col">
+          <div className="fr-row">
+            <label className="fr-label">Start Year</label>
+            <input type="text" className="fr-input" placeholder="2018" />
+          </div>
+          <div className="fr-row">
+            <label className="fr-label">End Year</label>
+            <input type="text" className="fr-input" placeholder="2022" />
+          </div>
+        </div>
+        
+        <div className="fr-actions">
+          <button className="fr-btn fr-btn-primary">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AvailabilityPage() {
+  return (
+    <div className="fr-page">
+      <div className="fr-card">
+        <h1 className="cd-page-title">Availability</h1>
+        <p className="fr-lead">Set your working hours and availability</p>
+        
+        <div className="fr-row">
+          <label className="fr-label">Available Hours per Week</label>
+          <input type="number" className="fr-input" placeholder="e.g. 40" />
+        </div>
+        
+        <div className="fr-row">
+          <label className="fr-label">Time Zone</label>
+          <select className="fr-select">
+            <option>Select timezone</option>
+            <option>EST (UTC-5)</option>
+            <option>PST (UTC-8)</option>
+            <option>IST (UTC+5:30)</option>
+          </select>
+        </div>
+        
+        <div className="fr-actions">
+          <button className="fr-btn fr-btn-primary">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PaymentMethodPage() {
+  return (
+    <div className="fr-page">
+      <div className="fr-card">
+        <h1 className="cd-page-title">Payment Method</h1>
+        <p className="fr-lead">Add your payment details</p>
+        
+        <div className="fr-row">
+          <label className="fr-label">Payment Type</label>
+          <select className="fr-select">
+            <option>Select payment method</option>
+            <option>Bank Transfer</option>
+            <option>PayPal</option>
+            <option>Stripe</option>
+          </select>
+        </div>
+        
+        <div className="fr-row">
+          <label className="fr-label">Account Details</label>
+          <input type="text" className="fr-input" placeholder="Enter account details" />
+        </div>
+        
+        <div className="fr-actions">
+          <button className="fr-btn fr-btn-primary">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SocialLinksPage() {
+  return (
+    <div className="fr-page">
+      <div className="fr-card">
+        <h1 className="cd-page-title">Social Links & Ratings</h1>
+        <p className="fr-lead">Connect your social profiles</p>
+        
+        <div className="fr-row">
+          <label className="fr-label">LinkedIn</label>
+          <input type="url" className="fr-input" placeholder="https://linkedin.com/in/username" />
+        </div>
+        
+        <div className="fr-row">
+          <label className="fr-label">GitHub</label>
+          <input type="url" className="fr-input" placeholder="https://github.com/username" />
+        </div>
+        
+        <div className="fr-row">
+          <label className="fr-label">Portfolio Website</label>
+          <input type="url" className="fr-input" placeholder="https://yourwebsite.com" />
+        </div>
+        
+        <div className="fr-actions">
+          <button className="fr-btn fr-btn-primary">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProfilePreviewPage() {
+  return (
+    <div className="fr-page">
+      <div className="fr-card">
+        <h1 className="cd-page-title">Profile Preview</h1>
+        <p className="fr-lead">This is how your profile appears to others</p>
+        
+        <div className="fr-preview-header">
+          <div className="fr-avatar-placeholder-large">JD</div>
+          <div className="fr-preview-basic">
+            <h3>John Doe</h3>
+            <p>Full Stack Developer</p>
+            <p>5 years experience • $50/hr</p>
+          </div>
+        </div>
+        
+        <div className="fr-section">
+          <h3 className="fr-section-title">About</h3>
+          <p className="fr-bio">
+            Experienced full-stack developer specializing in React and Node.js with a passion for creating elegant solutions to complex problems.
+          </p>
+        </div>
+        
+        <div className="fr-section">
+          <h3 className="fr-section-title">Skills</h3>
+          <div className="fr-tags">
+            <span className="fr-tag">React</span>
+            <span className="fr-tag">Node.js</span>
+            <span className="fr-tag">MongoDB</span>
+            <span className="fr-tag">TypeScript</span>
+          </div>
+        </div>
       </div>
     </div>
   );

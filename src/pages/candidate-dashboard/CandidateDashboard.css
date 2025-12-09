@@ -375,6 +375,15 @@ body, html {
   margin-bottom: 8px;
 }
 
+/* Page Title H1 */
+.cd-page-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #064e53;
+  margin-bottom: 24px;
+  line-height: 1.2;
+}
+
 .cd-profile-title {
   font-size: 22px;
   font-weight: 800;
@@ -786,6 +795,11 @@ body, html {
     padding: 20px 16px 100px 16px !important;
   }
 
+  .cd-page-title {
+    font-size: 22px !important;
+    margin-bottom: 20px !important;
+  }
+
   .cd-welcome-card {
     padding: 20px 20px !important;
   }
@@ -874,6 +888,11 @@ body, html {
 @media (max-width: 400px) {
   .cd-main {
     padding: 16px 12px 100px 12px !important;
+  }
+
+  .cd-page-title {
+    font-size: 20px !important;
+    margin-bottom: 18px !important;
   }
 
   .cd-welcome-card {
