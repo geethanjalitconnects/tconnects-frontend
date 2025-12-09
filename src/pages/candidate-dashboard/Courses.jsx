@@ -28,7 +28,6 @@ export default function Courses() {
 
       {courses.map((course) => (
         <div key={course.id} className="cd-course-card" onClick={() => 
-          // Navigate to Learn route: /course/learn/:slug/:id (matches App.jsx)
           navigate(`/course/learn/${course.slug}/${course.id}`)
         }>
           <div className="cd-course-info">

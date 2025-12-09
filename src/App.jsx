@@ -281,6 +281,8 @@ function App() {
                 <Route path="applied-internships" element={<AppliedInternships />} />
                 <Route path="saved-jobs" element={<SavedJobs />} />
                 <Route path="saved-internships" element={<SavedInternships />} />
+                <Route path="courses" element={<Courses />} />
+
                 
                 {/* Freelancer Pages */}
                 <Route path="freelancer/basic-information" element={<FreelancerBasicInfo />} />

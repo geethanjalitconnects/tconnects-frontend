@@ -9,22 +9,30 @@ const RecruiterDashboardLayout = () => {
   const [openJobs, setOpenJobs] = useState(false);
   const [openApplications, setOpenApplications] = useState(false);
 
-  // ⭐ Added sidebar toggle for mobile
+  // Sidebar toggle for mobile
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className={`rd-layout ${sidebarOpen ? "sidebar-open" : ""}`}>
 
-      {/* ⭐ MOBILE HAMBURGER BUTTON */}
+      {/* MOBILE HAMBURGER BUTTON */}
       <button className="rd-hamburger" onClick={() => setSidebarOpen(!sidebarOpen)}>
         ☰
       </button>
 
       {/* SIDEBAR */}
       <aside className="rd-sidebar">
-        <div className="rd-sidebar-top" onClick={() => navigate("/")}>
+        <div className="rd-sidebar-top">
           <h2 className="rd-logo">TConnects</h2>
         </div>
+
+        {/* BACK TO HOME BUTTON */}
+        <button 
+          className="rd-back-to-home-btn"
+          onClick={() => navigate("/")}
+        >
+          ← Back to Home
+        </button>
 
         <nav className="rd-nav">
 
@@ -146,7 +154,7 @@ const RecruiterDashboardLayout = () => {
       {/* MAIN CONTENT */}
       <main
         className="rd-main"
-        onClick={() => setSidebarOpen(false)} // close sidebar when tapping outside
+        onClick={() => setSidebarOpen(false)}
       >
         <div className="rd-content">
           <Outlet />
