@@ -145,7 +145,10 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const hideHeader = location.pathname.startsWith("/course/");
+  const hideHeader = location.pathname.startsWith("/course/")||
+  location.pathname.startsWith("/candidate-dashboard")||
+  location.pathname.startsWith("/recruiter-dashboard");
+  
 
   // Auto-check authentication on mount (fixes Safari issue)
   const { user: authUser, isChecking } = useAuthCheck((userData) => {
