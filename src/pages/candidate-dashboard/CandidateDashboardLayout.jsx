@@ -24,28 +24,53 @@ const FREELANCER_LINKS = [
 ];
 
 export default function CandidateDashboardLayout() {
-
   const [freelancerOpen, setFreelancerOpen] = useState(false);
-
-  // ⭐ Added this
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
   const navigate = useNavigate();
 
   return (
     <div className={`cd-layout ${sidebarOpen ? "sidebar-open" : ""}`}>
       
       {/* ⭐ Mobile Hamburger Button */}
-      <button className="cd-hamburger" onClick={() => setSidebarOpen(!sidebarOpen)}>
+      <button 
+        className="cd-hamburger" 
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        aria-label="Toggle sidebar"
+      >
         ☰
       </button>
+
+      {/* ⭐ Overlay for mobile - clicks close sidebar */}
+      {sidebarOpen && (
+        <div 
+          className="cd-sidebar-overlay" 
+          onClick={() => setSidebarOpen(false)} 
+        />
+      )}
 
       {/* SIDEBAR */}
       <aside className="cd-sidebar">
         <div className="cd-sidebar-top">
-          <div className="cd-logo" onClick={() => navigate("/candidate-dashboard/overview")}>
+          <div 
+            className="cd-logo" 
+            onClick={() => {
+              navigate("/candidate-dashboard/overview");
+              setSidebarOpen(false);
+            }}
+          >
             TConnects
           </div>
+          
+          {/* ⭐ Back to Home Button */}
+          <button 
+            className="cd-home-btn" 
+            onClick={() => {
+              navigate("/");
+              setSidebarOpen(false);
+            }}
+          >
+            ← Back to Home
+          </button>
         </div>
 
         <nav className="cd-nav">
@@ -56,7 +81,7 @@ export default function CandidateDashboardLayout() {
               className={({ isActive }) =>
                 isActive ? "cd-nav-link active" : "cd-nav-link"
               }
-              onClick={() => setSidebarOpen(false)}  // ⭐ CLOSE SIDEBAR
+              onClick={() => setSidebarOpen(false)}
             >
               {item.label}
             </NavLink>
@@ -79,7 +104,7 @@ export default function CandidateDashboardLayout() {
                   className={({ isActive }) =>
                     isActive ? "cd-dropdown-item active" : "cd-dropdown-item"
                   }
-                  onClick={() => setSidebarOpen(false)}  // ⭐ CLOSE SIDEBAR
+                  onClick={() => setSidebarOpen(false)}
                 >
                   {item.label}
                 </NavLink>
@@ -90,7 +115,7 @@ export default function CandidateDashboardLayout() {
       </aside>
 
       {/* MAIN CONTENT */}
-      <main className="cd-main" onClick={() => setSidebarOpen(false)}>
+      <main className="cd-main">
         <section className="cd-content">
           <Outlet />
         </section>

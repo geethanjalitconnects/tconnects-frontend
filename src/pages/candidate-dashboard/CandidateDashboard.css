@@ -19,8 +19,8 @@ body, html {
    MAIN LAYOUT
 ---------------------------------------------------------- */
 .cd-layout {
-  margin-top: 90px !important; 
-  min-height: calc(100vh - 90px) !important;
+  margin-top: 0 !important; 
+  min-height: 100vh !important;
   background: linear-gradient(135deg,#e6f7f7,#bfeef0,#81d7d7) !important;
   display: flex !important;
   flex-direction: row !important;
