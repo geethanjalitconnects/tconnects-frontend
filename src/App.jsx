@@ -93,27 +93,14 @@ const useAuthCheck = (onAuthChange) => {
     const checkAuth = async () => {
       try {
         console.log('🔍 Checking authentication...');
-        
-        // Call /me endpoint to verify authentication
         const response = await api.get('/api/auth/me/');
-        
         if (response.data) {
-          console.log('✅ User authenticated:', response.data);
           setUser(response.data);
-          
-          // Notify parent component
-          if (onAuthChange) {
-            onAuthChange(response.data);
-          }
+          onAuthChange?.(response.data);
         }
-      } catch (error) {
-        console.log('❌ Not authenticated or session expired');
+      } catch {
         setUser(null);
-        
-        // Notify parent that user is logged out
-        if (onAuthChange) {
-          onAuthChange(null);
-        }
+        onAuthChange?.(null);
       } finally {
         setIsChecking(false);
       }
@@ -121,21 +108,15 @@ const useAuthCheck = (onAuthChange) => {
 
     checkAuth();
 
-    // Listen for logout events
     const handleLogout = () => {
-      console.log('👋 Logout event received');
       setUser(null);
-      if (onAuthChange) {
-        onAuthChange(null);
-      }
+      onAuthChange?.(null);
     };
 
     window.addEventListener('auth:logout', handleLogout);
 
-    return () => {
-      window.removeEventListener('auth:logout', handleLogout);
-    };
-  }, [onAuthChange]);
+    return () => window.removeEventListener('auth:logout', handleLogout);
+  }, []); // <-- ONLY RUN ONCE
 
   return { user, isChecking };
 };
