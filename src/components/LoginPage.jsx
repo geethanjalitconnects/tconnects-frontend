@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api, { API_BASE_URL } from '../config/api';
+import api from '../config/api';
 import './LoginPage.css';
 
-const LoginPage = ({ onLoginSuccess, navigateToRegister }) => {
+const LoginPage = ({ onLoginSuccess }) => {
   const [userType, setUserType] = useState('candidate');
   const [showOTPForm, setShowOTPForm] = useState(false);
   const [loginMethod, setLoginMethod] = useState('otp');
@@ -53,27 +53,27 @@ const LoginPage = ({ onLoginSuccess, navigateToRegister }) => {
     }, 2000);
   };
 
-
-
-  // Common login success handler (no localStorage)
+  // Common login success handler
   const handleLoginSuccess = (userData) => {
+    console.log('✅ Login successful, user data:', userData);
     showSuccessPopup('Login successful!');
+    
+    // Notify parent component immediately
+    if (onLoginSuccess) {
+      onLoginSuccess(userData);
+    }
+    
+    // Navigate after showing success
     setTimeout(() => {
-      // Redirect based on role
       if (userData.role === 'candidate') {
         navigate('/candidate-dashboard');
       } else if (userData.role === 'recruiter') {
         navigate('/recruiter-dashboard');
       }
-
-      // Notify parent (e.g., header) about logged-in user
-      onLoginSuccess && onLoginSuccess(userData);
     }, 1200);
   };
 
-  // ------------------------
   // Submit handler (OTP or password)
-  // ------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -89,34 +89,40 @@ const LoginPage = ({ onLoginSuccess, navigateToRegister }) => {
 
     try {
       if (loginMethod === 'otp') {
+        console.log('📧 Sending OTP to:', formData.email);
+        
         const response = await api.post('/api/auth/send-otp/', {
           email: formData.email,
           role: userType
         });
 
+        console.log('✅ OTP response:', response.data);
+        
         if (response.data) {
           setShowOTPForm(true);
-          showSuccessPopup('OTP sent successfully!');
+          showSuccessPopup('OTP sent successfully! Check your email.');
         }
       } else {
-        // Password login — backend sets HttpOnly cookies
+        // Password login
+        console.log('🔐 Password login for:', formData.email);
+        
         const response = await api.post('/api/auth/login/', {
           email: formData.email,
           password: formData.password,
           role: userType
         });
 
+        console.log('✅ Login response:', response.data);
+        
         const userData = response.data.user;
-
         if (userData) {
           handleLoginSuccess(userData);
         } else {
-          // Fallback error
           setError('Login failed. Please try again.');
         }
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('❌ Login error:', error);
       const errorMsg = error.response?.data?.detail ||
                        error.response?.data?.message ||
                        'Login failed. Please try again.';
@@ -126,9 +132,7 @@ const LoginPage = ({ onLoginSuccess, navigateToRegister }) => {
     }
   };
 
-  // ------------------------
   // OTP helpers
-  // ------------------------
   const handleOtpChange = (index, value) => {
     if (!/^\d*$/.test(value)) return;
 
@@ -200,21 +204,24 @@ const LoginPage = ({ onLoginSuccess, navigateToRegister }) => {
     setError('');
 
     try {
-      // verify-otp returns user and backend sets cookies
+      console.log('🔐 Verifying OTP:', otpValue);
+      
       const response = await api.post('/api/auth/verify-otp/', {
         email: formData.email,
         code: otpValue,
         role: userType
       });
 
+      console.log('✅ OTP verification response:', response.data);
+      
       const userData = response.data.user;
-
       if (userData) {
         handleLoginSuccess(userData);
       } else {
         setError('OTP verification failed. Please try again.');
       }
     } catch (error) {
+      console.error('❌ OTP verification error:', error);
       setError(error.response?.data?.detail || 'Invalid or expired OTP.');
       setOtpValues(['', '', '', '', '', '']);
       setTimeout(() => document.querySelector('input[data-index="0"]')?.focus(), 100);

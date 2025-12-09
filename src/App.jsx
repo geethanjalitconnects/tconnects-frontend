@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { Routes, Route, useLocation,useNavigate} from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-import { Toaster } from "react-hot-toast";   // ⭐ ADDED
+import { Toaster } from "react-hot-toast";
 
 /* AUTH CONTEXT */
 import { AuthProvider } from "./context/AuthContext";
@@ -29,7 +29,6 @@ import CourseDetails from "./pages/courses/CourseDetails";
 import LearnCourse from "./pages/courses/LearnCourse";
 
 import MockInterview from "./pages/mock-interview/MockInterview";
-
 
 /* ================= CANDIDATE DASHBOARD ================= */
 import CandidateDashboardLayout from "./pages/candidate-dashboard/CandidateDashboardLayout";
@@ -61,7 +60,6 @@ import InternshipDetailsPage from "./pages/internships/InternshipDetailsPage";
 import FreelancerList from "./pages/freelancers/FreelancerList";
 import FreelancerProfile from "./pages/freelancers/FreelancerProfile";
 
-
 /* ================= APPLY PAGES ================= */
 import ApplyJobPage from "./pages/apply/ApplyJobPage";
 import ApplyInternshipPage from "./pages/apply/ApplyInternshipPage";
@@ -83,15 +81,74 @@ import InternshipApplications from "./pages/recruiter-dashboard/applications/Int
 import EditJob from "./pages/recruiter-dashboard/jobs/EditJob";
 import EditInternship from "./pages/recruiter-dashboard/jobs/EditInternship";
 
-function HomePage({ onCategoryClick,navigate }) {
+/* ================= AUTH CHECK HOOK ================= */
+import api from "./config/api";
+
+// Custom hook to check authentication on mount (fixes Safari issue)
+const useAuthCheck = (onAuthChange) => {
+  const [isChecking, setIsChecking] = useState(true);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        console.log('🔍 Checking authentication...');
+        
+        // Call /me endpoint to verify authentication
+        const response = await api.get('/api/auth/me/');
+        
+        if (response.data) {
+          console.log('✅ User authenticated:', response.data);
+          setUser(response.data);
+          
+          // Notify parent component
+          if (onAuthChange) {
+            onAuthChange(response.data);
+          }
+        }
+      } catch (error) {
+        console.log('❌ Not authenticated or session expired');
+        setUser(null);
+        
+        // Notify parent that user is logged out
+        if (onAuthChange) {
+          onAuthChange(null);
+        }
+      } finally {
+        setIsChecking(false);
+      }
+    };
+
+    checkAuth();
+
+    // Listen for logout events
+    const handleLogout = () => {
+      console.log('👋 Logout event received');
+      setUser(null);
+      if (onAuthChange) {
+        onAuthChange(null);
+      }
+    };
+
+    window.addEventListener('auth:logout', handleLogout);
+
+    return () => {
+      window.removeEventListener('auth:logout', handleLogout);
+    };
+  }, [onAuthChange]);
+
+  return { user, isChecking };
+};
+
+/* ================= HOME PAGE ================= */
+function HomePage({ onCategoryClick, navigate }) {
   return (
     <>
-      
-      <HeroSection onCategoryClick={onCategoryClick} 
-      navigateToJobsList={() => navigate("/jobs")}
+      <HeroSection 
+        onCategoryClick={onCategoryClick} 
+        navigateToJobsList={() => navigate("/jobs")}
         navigateToResumeMaking={() => window.open("https://tconnects.vercel.app/", "_blank")}
-        
-        />
+      />
       <AboutSection navigateToAboutUs={() => navigate("/about-us")} />
       <WhyChoose />
       <HowItWorks />
@@ -103,41 +160,123 @@ function HomePage({ onCategoryClick,navigate }) {
 /* ================= MAIN APP ================= */
 function App() {
   const [modalCategory, setModalCategory] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
 
   const hideHeader = location.pathname.startsWith("/course/");
 
+  // Auto-check authentication on mount (fixes Safari issue)
+  const { user: authUser, isChecking } = useAuthCheck((userData) => {
+    console.log('🔄 Auth state changed:', userData);
+    setCurrentUser(userData);
+  });
+
+  // Handle login success from LoginPage
+  const handleLoginSuccess = (userData) => {
+    console.log('✅ Login success:', userData);
+    setCurrentUser(userData);
+  };
+
+  // Handle registration success from RegistrationPage
+  const handleRegisterSuccess = (userData) => {
+    console.log('✅ Registration success:', userData);
+    setCurrentUser(userData);
+  };
+
+  // Handle logout
+  const handleLogout = async () => {
+    try {
+      await api.post('/api/auth/logout/');
+      console.log('👋 Logged out successfully');
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setCurrentUser(null);
+      // Trigger global logout event
+      window.dispatchEvent(new CustomEvent('auth:logout'));
+      navigate('/');
+    }
+  };
+
+  // Show loading while checking auth
+  if (isChecking) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '1.2rem',
+        fontFamily: 'system-ui, -apple-system, sans-serif'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ 
+            marginBottom: '1rem',
+            fontSize: '2rem'
+          }}>⏳</div>
+          <div>Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <AuthProvider>
+    <AuthProvider value={{ currentUser, setCurrentUser }}>
       <SavedJobsProvider>
         <SavedInternshipsProvider>
           <div>
+            <Toaster position="top-right" />
 
-            <Toaster position="top-right" />  {/* ⭐ ADDED HERE */}
-
-            {!hideHeader && <Header />}
+            {!hideHeader && (
+              <Header 
+                currentUser={currentUser} 
+                onLogout={handleLogout}
+              />
+            )}
 
             <Routes>
               {/* PUBLIC ROUTES */}
-              <Route path="/" element={<HomePage onCategoryClick={setModalCategory}navigate={navigate}  />} />
+              <Route 
+                path="/" 
+                element={
+                  <HomePage 
+                    onCategoryClick={setModalCategory}
+                    navigate={navigate}  
+                  />
+                } 
+              />
               <Route path="/about-us" element={<AboutUs />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegistrationPage />} />
+              
+              {/* AUTH ROUTES - Pass handlers */}
+              <Route 
+                path="/login" 
+                element={
+                  <LoginPage 
+                    onLoginSuccess={handleLoginSuccess}
+                  />
+                } 
+              />
+              <Route 
+                path="/register" 
+                element={
+                  <RegistrationPage 
+                    onRegisterSuccess={handleRegisterSuccess}
+                  />
+                } 
+              />
 
               {/* FREELANCERS PUBLIC PAGES */}
-<Route path="/freelancers" element={<FreelancerList />} />
-<Route path="/freelancers/:id" element={<FreelancerProfile />} />
-
-
+              <Route path="/freelancers" element={<FreelancerList />} />
+              <Route path="/freelancers/:id" element={<FreelancerProfile />} />
 
               {/* COURSES */}
               <Route path="/course/learn/:slug/:id" element={<LearnCourse />} />
               <Route path="/course/:slug/:id" element={<CourseDetails />} />
               <Route path="/courses" element={<CoursesList />} />
+              
               {/* MOCK INTERVIEW */}
-<Route path="/mock-interview" element={<MockInterview />} />
-
+              <Route path="/mock-interview" element={<MockInterview />} />
 
               {/* JOBS */}
               <Route path="/jobs" element={<JobsListPage />} />
@@ -149,26 +288,25 @@ function App() {
               <Route path="/internships/:id" element={<InternshipDetailsPage />} />
               <Route path="/apply-internship" element={<ApplyInternshipPage />} />
 
+              {/* CANDIDATE DASHBOARD */}
               <Route path="/candidate-dashboard/*" element={<CandidateDashboardLayout />}>
-    <Route index element={<Overview />} />
-    <Route path="overview" element={<Overview />} />
-    <Route path="profile" element={<Profile />} />
-
-    {/* ⭐ FIXED: Add missing pages */}
-    <Route path="applied-jobs" element={<AppliedJobs />} />
-    <Route path="applied-internships" element={<AppliedInternships />} />
-    <Route path="saved-jobs" element={<SavedJobs />} />
-    <Route path="saved-internships" element={<SavedInternships />} />
-
-    {/* Freelancer Pages */}
-    <Route path="freelancer/basic-information" element={<FreelancerBasicInfo />} />
-    <Route path="freelancer/professional-details" element={<FreelancerProfessionalDetails />} />
-    <Route path="freelancer/education" element={<FreelancerEducation />} />
-    <Route path="freelancer/availability" element={<FreelancerAvailability />} />
-    <Route path="freelancer/payment-method" element={<FreelancerPayment />} />
-    <Route path="freelancer/social-links" element={<FreelancerSocialLinks />} />
-    <Route path="freelancer/profile-preview" element={<FreelancerProfilePreview />} />
-</Route>
+                <Route index element={<Overview />} />
+                <Route path="overview" element={<Overview />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="applied-jobs" element={<AppliedJobs />} />
+                <Route path="applied-internships" element={<AppliedInternships />} />
+                <Route path="saved-jobs" element={<SavedJobs />} />
+                <Route path="saved-internships" element={<SavedInternships />} />
+                
+                {/* Freelancer Pages */}
+                <Route path="freelancer/basic-information" element={<FreelancerBasicInfo />} />
+                <Route path="freelancer/professional-details" element={<FreelancerProfessionalDetails />} />
+                <Route path="freelancer/education" element={<FreelancerEducation />} />
+                <Route path="freelancer/availability" element={<FreelancerAvailability />} />
+                <Route path="freelancer/payment-method" element={<FreelancerPayment />} />
+                <Route path="freelancer/social-links" element={<FreelancerSocialLinks />} />
+                <Route path="freelancer/profile-preview" element={<FreelancerProfilePreview />} />
+              </Route>
 
               {/* RECRUITER DASHBOARD */}
               <Route path="/recruiter-dashboard/*" element={<RecruiterDashboardLayout />}>
@@ -187,7 +325,6 @@ function App() {
               </Route>
 
               <Route path="*" element={<div>Page Not Found</div>} />
-
             </Routes>
 
             {/* MODAL */}

@@ -7,13 +7,23 @@ import api from "../config/api";
 import "./Header.css";
 import { AuthContext } from "../context/AuthContext";
 
-const Header = () => {
+const Header = ({ currentUser, onLogout }) => {
   const [scrolled, setScrolled] = useState(false);
-  const { user, setUser } = useContext(AuthContext);
+  const { user: contextUser, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const menuRef = useRef(null);
+
+  // Use currentUser prop if available, fallback to context
+  const user = currentUser || contextUser;
+
+  // Sync context with prop changes
+  useEffect(() => {
+    if (currentUser && setUser) {
+      setUser(currentUser);
+    }
+  }, [currentUser, setUser]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -31,7 +41,7 @@ const Header = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ⭐ THIS IS WHAT MAKES MOBILE MENU CLOSE
+  // Close mobile menu helper
   const closeMobileMenu = () => {
     const nav = document.querySelector(".navbar-collapse");
     if (nav?.classList.contains("show")) {
@@ -39,14 +49,50 @@ const Header = () => {
     }
   };
 
-  const logoutUser = () => {
+  // Logout handler - use prop if available, fallback to local logic
+  const logoutUser = async () => {
     setDropdownOpen(false);
-    api.post("/api/auth/logout/").finally(() => {
-      setUser(null);
+    
+    try {
+      // Call logout endpoint
+      await api.post("/api/auth/logout/");
+      console.log("✅ Logout successful");
+      
+      // Clear context user
+      if (setUser) {
+        setUser(null);
+      }
+      
+      // Use prop callback if available
+      if (onLogout) {
+        onLogout();
+      }
+      
+      // Navigate to home
       navigate("/");
-      closeMobileMenu(); // ⭐ NEW
-    });
+      closeMobileMenu();
+      
+    } catch (error) {
+      console.error("❌ Logout error:", error);
+      
+      // Still clear state on error
+      if (setUser) {
+        setUser(null);
+      }
+      
+      if (onLogout) {
+        onLogout();
+      }
+      
+      navigate("/");
+      closeMobileMenu();
+    }
   };
+
+  // Debug logging to track user state
+  useEffect(() => {
+    console.log("🎨 Header rendering with user:", user);
+  }, [user]);
 
   return (
     <Navbar expand="lg" className={`custom-navbar fixed-top ${scrolled ? "scrolled" : ""}`}>
@@ -69,7 +115,7 @@ const Header = () => {
               <span className="nav-text">Home</span>
             </Nav.Link>
 
-            {/* ⭐ FIND WORK — NOW AUTO CLOSES */}
+            {/* FIND WORK DROPDOWN */}
             <NavDropdown
               title={<span className="nav-text dropdown-title">Find Work <FaChevronDown className="dropdown-icon" /></span>}
               className="nav-dropdown-custom"
@@ -86,7 +132,7 @@ const Header = () => {
               </NavDropdown.Item>
             </NavDropdown>
 
-            {/* ⭐ LEARNING — NOW AUTO CLOSES */}
+            {/* LEARNING DROPDOWN */}
             <NavDropdown
               title={<span className="nav-text dropdown-title">Learning <FaChevronDown className="dropdown-icon" /></span>}
               className="nav-dropdown-custom"
@@ -99,16 +145,15 @@ const Header = () => {
                 Schedule a Mock Interview
               </NavDropdown.Item>
               <NavDropdown.Item
-  as="a"
-  href="https://tconnects.vercel.app/"
-  target="_self"
-  rel="noopener noreferrer"
-  className="dropdown-item-custom"
-  onClick={closeMobileMenu}
->
-  Resume Building
-</NavDropdown.Item>
-
+                as="a"
+                href="https://tconnects.vercel.app/"
+                target="_self"
+                rel="noopener noreferrer"
+                className="dropdown-item-custom"
+                onClick={closeMobileMenu}
+              >
+                Resume Building
+              </NavDropdown.Item>
             </NavDropdown>
           </Nav>
 
@@ -121,11 +166,11 @@ const Header = () => {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
                 <div className="user-avatar">
-                  {user.full_name?.charAt(0)?.toUpperCase()}
+                  {user.full_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || "U"}
                 </div>
 
                 <div className="user-name">
-                  Hi, {user.full_name?.split(" ")[0]}
+                  Hi, {user.full_name?.split(" ")[0] || user.email?.split("@")[0] || "User"}
                 </div>
 
                 <div
@@ -134,9 +179,10 @@ const Header = () => {
                 >
                   <button
                     className="user-dropdown-item"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       setDropdownOpen(false);
-                      closeMobileMenu(); // ⭐ NEW
+                      closeMobileMenu();
                       navigate(
                         user.role === "candidate"
                           ? "/candidate-dashboard"
@@ -149,7 +195,10 @@ const Header = () => {
 
                   <button
                     className="user-dropdown-item logout-item"
-                    onClick={logoutUser}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      logoutUser();
+                    }}
                   >
                     ↪ Logout
                   </button>
