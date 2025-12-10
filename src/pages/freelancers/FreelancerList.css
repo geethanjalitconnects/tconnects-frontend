@@ -63,23 +63,27 @@
 
 /* PROFILE IMAGE */
 .fl-img-container img {
-  width: 90px;
-  height: 90px;
+  width: 85px;
+  height: 85px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #cde8ef;
+  display: block;
+  position: relative;
+  z-index: 1;
 }
 
 .fl-placeholder {
-  width: 90px;
-  height: 90px;
+  width: 85px;
+  height: 85px;
   border-radius: 50%;
-  background: #e0f7fb;
-  color: #0096a6;
-  font-size: 32px;
+  background: #e6f7f8;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #008b8f;
+  font-size: 28px;
+  position: relative;
+  z-index: 0;
 }
 
 
@@ -344,7 +348,22 @@
 .fl-social-links a:hover {
   text-decoration: underline;
 }
-
+.badge-available {
+  background: #28a745;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+}
+.badge-occupied {
+  background: #ff8c42;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+}
 
 
 /* ============================================
