@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import WelcomeModal from "../components/WelcomeModal";
+import WelcomeModal from "./components/WelcomeModal";
 
 import { Toaster } from "react-hot-toast";
 
