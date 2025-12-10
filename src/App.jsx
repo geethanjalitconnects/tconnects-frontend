@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import WelcomeModal from "../components/WelcomeModal";
 
 import { Toaster } from "react-hot-toast";
 
@@ -122,14 +123,17 @@ const useAuthCheck = (onAuthChange) => {
 };
 
 /* ================= HOME PAGE ================= */
-function HomePage({ onCategoryClick, navigate }) {
+function HomePage({ onCategoryClick, navigate, currentUser }) {
   return (
     <>
+      <WelcomeModal currentUser={currentUser} />
+      
       <HeroSection 
         onCategoryClick={onCategoryClick} 
         navigateToJobsList={() => navigate("/jobs")}
         navigateToResumeMaking={() => window.open("https://tconnects.vercel.app/", "_blank")}
       />
+
       <AboutSection navigateToAboutUs={() => navigate("/about-us")} />
       <WhyChoose />
       <HowItWorks />
@@ -137,6 +141,7 @@ function HomePage({ onCategoryClick, navigate }) {
     </>
   );
 }
+
 
 /* ================= MAIN APP ================= */
 function App() {
