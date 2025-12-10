@@ -364,6 +364,39 @@
   font-weight: 600;
   font-size: 13px;
 }
+/* Avatar Letter Style */
+.fl-avatar-letter {
+  width: 80px;
+  height: 80px;
+  background: #e6f7f9;
+  color: #0097a7;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  font-weight: 600;
+}
+
+/* Availability Badges */
+.fl-badge {
+  width: fit-content;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  margin: 8px auto;
+  font-weight: 500;
+}
+
+.badge-available {
+  background: #d8f9d8;
+  color: #0a8a0a;
+}
+
+.badge-occupied {
+  background: #ffe5cc;
+  color: #d96b00;
+}
 
 
 /* ============================================
