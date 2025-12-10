@@ -388,7 +388,7 @@
 }
 
 /* =========================================
-   COMPANY PROFILE – MATCH CANDIDATE UI
+   COMPANY PROFILE
 ========================================= */
 .rd-company-profile-page {
   padding: 20px;
@@ -397,18 +397,6 @@
   gap: 18px;
 }
 
-/* White card container */
-.rd-profile-card {
-  background: #ffffff;
-  padding: 26px;
-  border-radius: 16px;
-  box-shadow: 0 4px 14px rgba(0, 120, 120, 0.12);
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
-
-/* Form styles */
 .rd-input,
 .rd-textarea {
   width: 100%;
@@ -462,7 +450,6 @@
   margin-top: 10px;
 }
 
-/* Optional stronger highlight for title */
 .rd-schedule-card .rd-card-title {
   color: #0d5e60;
 }
@@ -508,14 +495,12 @@
   gap: 6px;
 }
 
-/* Job Title */
 .rd-job-title {
   font-size: 20px;
   font-weight: 700;
   color: #0a4a4e;
 }
 
-/* Posted Date */
 .rd-job-meta {
   font-size: 14px;
   color: #516c6f;
@@ -526,7 +511,6 @@
   color: #083e43;
 }
 
-/* Status Badge */
 .rd-job-status {
   margin-top: 4px;
   padding: 4px 10px;
@@ -549,7 +533,6 @@
   border: 1px solid #b73333;
 }
 
-/* Action Buttons */
 .rd-job-card-actions {
   display: flex;
   align-items: center;
@@ -566,7 +549,6 @@
   transition: 0.2s;
 }
 
-/* Edit Button */
 .rd-action-btn.edit {
   background: #e3f8f7;
   color: #0c6568;
@@ -577,7 +559,6 @@
   background: #cdeeed;
 }
 
-/* View Applications */
 .rd-action-btn.apps {
   background: #0f7173;
   color: white;
@@ -587,7 +568,6 @@
   background: #0d5e60;
 }
 
-/* Delete */
 .rd-action-btn.delete {
   background: #ffe5e5;
   color: #b73333;
@@ -625,7 +605,6 @@
   margin-bottom: 28px;
 }
 
-/* Card */
 .rd-card {
   background: #ffffff;
   padding: 32px;
@@ -642,7 +621,6 @@
   margin-bottom: 20px;
 }
 
-/* Grid 3 columns */
 .rd-grid-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -653,7 +631,6 @@
   grid-column: 1 / span 3;
 }
 
-/* Form */
 .rd-form-group label {
   font-size: 15px;
   font-weight: 600;
@@ -662,27 +639,11 @@
   display: block;
 }
 
-.rd-input {
-  padding: 16px;
-  border: 2px solid #cfecec;
-  border-radius: 12px;
-  background: #f9ffff;
-  width: 100%;
-  transition: 0.2s ease;
-}
-
-.rd-input:focus {
-  border-color: #0f7173;
-  box-shadow: 0 0 0 3px rgba(15, 113, 115, 0.15);
-  outline: none;
-}
-
 textarea.rd-input {
   min-height: 120px;
   resize: vertical;
 }
 
-/* Highlight Schedule Box */
 .rd-schedule-box {
   background: #f3fcfc !important;
   border: 2px solid #d4efef;
@@ -698,7 +659,6 @@ textarea.rd-input {
   padding: 20px 40px;
 }
 
-/* ------- Filter Bar ------- */
 .rd-filter-bar {
   display: flex;
   gap: 15px;
@@ -725,7 +685,6 @@ textarea.rd-input {
   outline: none;
 }
 
-/* Filters Row */
 .rd-filter-container {
   display: flex;
   gap: 18px;
@@ -747,7 +706,6 @@ textarea.rd-input {
   box-shadow: 0 0 0 3px rgba(0, 150, 150, 0.2);
 }
 
-/* ------- Applications Card ------- */
 .rd-applications-list {
   display: flex;
   flex-direction: column;
@@ -784,7 +742,6 @@ textarea.rd-input {
   font-size: 15px;
 }
 
-/* ------- Applicant Info ------- */
 .rd-app-name {
   font-size: 16px;
   font-weight: 600;
@@ -799,7 +756,6 @@ textarea.rd-input {
   color: #0a6467;
 }
 
-/* ------- Skills ------- */
 .rd-skill-row {
   display: flex;
   gap: 8px;
@@ -816,7 +772,6 @@ textarea.rd-input {
   font-weight: 500;
 }
 
-/* ------- Resume Button ------- */
 .rd-resume-btn {
   display: inline-block;
   margin-top: 10px;
@@ -832,14 +787,12 @@ textarea.rd-input {
   background: #0c5c5d;
 }
 
-/* Status dropdown aligned right */
 .rd-app-status {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 12px;
 }
 
-/* Make skill chips neat */
 .rd-skill-chip {
   background: #e8f9f9;
   padding: 6px 12px;
@@ -850,9 +803,6 @@ textarea.rd-input {
   display: inline-block;
 }
 
-/* ==============================
-   APPLICATION CARD
-============================== */
 .rd-application-card {
   background: #ffffff;
   border: 2px solid #e2f6f6;
@@ -867,7 +817,6 @@ textarea.rd-input {
   transform: translateY(-3px);
 }
 
-/* Header */
 .rd-app-card-header {
   display: flex;
   justify-content: space-between;
@@ -882,7 +831,6 @@ textarea.rd-input {
   font-weight: 600;
 }
 
-/* Applicant Info */
 .rd-applicant-info {
   margin-top: 18px;
 }
@@ -900,7 +848,6 @@ textarea.rd-input {
   margin-bottom: 6px;
 }
 
-/* Skill Tags */
 .rd-skills-row {
   display: flex;
   gap: 10px;
@@ -908,7 +855,6 @@ textarea.rd-input {
   flex-wrap: wrap;
 }
 
-/* Resume Button */
 .rd-view-resume-btn {
   display: inline-block;
   margin-top: 18px;
@@ -953,7 +899,7 @@ textarea.rd-input {
 }
 
 /* ===========================================
-   LEFT-ALIGNED PREMIUM DROPDOWN WRAPPER
+   DROPDOWN WRAPPER
 =========================================== */
 .rd-dropdown-wrapper {
   width: 350px;
@@ -983,18 +929,15 @@ textarea.rd-input {
   cursor: pointer;
 }
 
-/* Hover */
 .rd-dropdown-select:hover {
   border-color: #0f7777;
 }
 
-/* Focus */
 .rd-dropdown-select:focus {
   border-color: #0f7777;
   box-shadow: 0 0 0 4px rgba(15, 119, 119, 0.25);
 }
 
-/* Dropdown Arrow */
 .rd-dropdown-wrapper::after {
   content: "▾";
   font-size: 18px;
@@ -1006,7 +949,7 @@ textarea.rd-input {
 }
 
 /* ===========================================
-   TOP-LEFT CORNER ACTION BUTTON (BACK BUTTON)
+   TOP-LEFT CORNER ACTION BUTTON
 =========================================== */
 .rd-top-left-btn {
   position: absolute;
@@ -1037,12 +980,10 @@ textarea.rd-input {
    📱 RESPONSIVE DESIGN — TABLET (900px ↓)
 ============================================================ */
 @media (max-width: 900px) {
-  /* Show hamburger on mobile */
   .rd-hamburger {
     display: block;
   }
 
-  /* SIDEBAR COLLAPSE - FULL OVERLAY */
   .rd-sidebar {
     left: -100%;
     width: 100%;
@@ -1051,12 +992,10 @@ textarea.rd-input {
     top: 0;
   }
 
-  /* Sidebar open - FULL SCREEN OVERLAY */
   .rd-layout.sidebar-open .rd-sidebar {
     left: 0;
   }
 
-  /* MAIN CONTENT FULL WIDTH - NO SHIFT */
   .rd-main {
     margin-left: 0 !important;
     width: 100% !important;
@@ -1064,13 +1003,11 @@ textarea.rd-input {
     padding-top: 70px;
   }
 
-  /* Keep hamburger visible and in place when sidebar opens */
   .rd-layout.sidebar-open .rd-hamburger {
     left: 15px;
     z-index: 10001;
   }
 
-  /* GRID → 1 COLUMN */
   .rd-grid,
   .rd-grid-3 {
     grid-template-columns: 1fr;
@@ -1081,13 +1018,11 @@ textarea.rd-input {
     grid-column: span 1;
   }
 
-  /* STATS GRID */
   .cd-stats-grid {
     grid-template-columns: 1fr 1fr;
     gap: 16px;
   }
 
-  /* JOB CARD */
   .rd-job-card {
     flex-direction: column;
     align-items: flex-start;
@@ -1100,7 +1035,6 @@ textarea.rd-input {
     flex-wrap: wrap;
   }
 
-  /* APPLICATION CARDS */
   .rd-app-card,
   .rd-application-card {
     padding: 22px;
@@ -1112,12 +1046,10 @@ textarea.rd-input {
     gap: 10px;
   }
 
-  /* Shift fixed UI chrome when sidebar opens */
   .rd-layout.sidebar-open .rd-top-left-btn {
     transform: translateX(0);
   }
 
-  /* Add backdrop/overlay effect when sidebar is open */
   .rd-layout.sidebar-open::before {
     content: '';
     position: fixed;
@@ -1134,7 +1066,6 @@ textarea.rd-input {
    📱 MOBILE RESPONSIVE (600px ↓)
 ============================================================ */
 @media (max-width: 600px) {
-  /* SIDEBAR: Full width overlay */
   .rd-sidebar {
     width: 100%;
     left: -100%;
@@ -1144,12 +1075,10 @@ textarea.rd-input {
     left: 15px;
   }
 
-  /* MAIN AREA */
   .rd-main {
     padding: 60px 16px 16px 16px;
   }
 
-  /* WELCOME CARD */
   .cd-welcome-card {
     padding: 18px;
   }
@@ -1162,12 +1091,10 @@ textarea.rd-input {
     font-size: 13px;
   }
 
-  /* STATS GRID → SINGLE COLUMN */
   .cd-stats-grid {
     grid-template-columns: 1fr;
   }
 
-  /* STAT CARD */
   .cd-stat-card {
     padding: 16px;
     gap: 12px;
@@ -1177,7 +1104,6 @@ textarea.rd-input {
     font-size: 20px;
   }
 
-  /* PAGE TITLE */
   .rd-page-title {
     font-size: 20px;
   }
@@ -1186,7 +1112,6 @@ textarea.rd-input {
     font-size: 13px;
   }
 
-  /* BUTTONS FULL WIDTH */
   .rd-save-btn {
     width: 100%;
   }
@@ -1197,7 +1122,6 @@ textarea.rd-input {
     text-align: center;
   }
 
-  /* FORMS AND TEXT INPUTS */
   .rd-input,
   .rd-textarea {
     font-size: 14px;
@@ -1208,7 +1132,6 @@ textarea.rd-input {
     font-size: 14px;
   }
 
-  /* FILTER BAR */
   .rd-filter-bar,
   .rd-filter-container {
     flex-direction: column;
@@ -1221,7 +1144,6 @@ textarea.rd-input {
     width: 100%;
   }
 
-  /* JOB CARD MOBILE */
   .rd-job-card {
     padding: 18px;
   }
@@ -1230,7 +1152,6 @@ textarea.rd-input {
     font-size: 18px;
   }
 
-  /* APPLICATION CARD MOBILE */
   .rd-application-card {
     padding: 20px;
   }
@@ -1239,7 +1160,6 @@ textarea.rd-input {
     font-size: 16px;
   }
 
-  /* DROPDOWN */
   .rd-dropdown-wrapper {
     width: 100%;
   }
@@ -1249,7 +1169,6 @@ textarea.rd-input {
     padding: 12px 14px;
   }
 
-  /* TOP BUTTON */
   .rd-top-left-btn {
     top: 12px;
     left: 12px;
@@ -1265,7 +1184,6 @@ textarea.rd-input {
    📱 SMALL PHONES (400px ↓)
 ============================================================ */
 @media (max-width: 400px) {
-  /* SIDEBAR: Full width overlay */
   .rd-sidebar {
     width: 100%;
     left: -100%;
@@ -1275,22 +1193,18 @@ textarea.rd-input {
     left: 15px;
   }
 
-  /* MAIN CONTENT */
   .rd-main {
     padding: 55px 12px 12px 12px;
   }
 
-  /* WELCOME */
   .cd-welcome-title {
     font-size: 16px;
   }
 
-  /* STATS */
   .cd-stat-number {
     font-size: 18px;
   }
 
-  /* JOB CARD TEXT */
   .rd-job-title {
     font-size: 16px;
   }
@@ -1299,7 +1213,6 @@ textarea.rd-input {
     font-size: 12px;
   }
 
-  /* APPLICATION CARD SMALL */
   .rd-applicant-name {
     font-size: 15px;
   }
@@ -1309,14 +1222,13 @@ textarea.rd-input {
     font-size: 12px;
   }
 
-  /* FORMS */
   .rd-input,
   .rd-textarea {
     font-size: 13px;
   }
 
-  /* SAVE BUTTON */
   .rd-save-btn {
     font-size: 14px;
     padding: 12px;
   }
+}
