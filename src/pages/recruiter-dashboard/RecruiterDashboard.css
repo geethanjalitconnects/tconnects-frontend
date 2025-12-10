@@ -194,11 +194,12 @@
   position: fixed;
   top: 15px;
   left: 15px;
-  z-index: 150;
-  background: #ffffff;
+  z-index: 10000;
+  background: #0f7173;
   border: none;
-  font-size: 28px;
-  padding: 8px 14px;
+  font-size: 24px;
+  color: white;
+  padding: 10px 14px;
   border-radius: 8px;
   box-shadow: 0px 3px 12px rgba(0,0,0,0.2);
   cursor: pointer;
@@ -207,6 +208,7 @@
 
 .rd-hamburger:hover {
   transform: scale(1.05);
+  background: #0d5e60;
 }
 
 /* ================================
@@ -1046,6 +1048,7 @@ textarea.rd-input {
     width: 100%;
     transition: left 0.3s ease-in-out;
     z-index: 9999;
+    top: 0;
   }
 
   /* Sidebar open - FULL SCREEN OVERLAY */
@@ -1057,12 +1060,14 @@ textarea.rd-input {
   .rd-main {
     margin-left: 0 !important;
     width: 100% !important;
-    padding: 70px 20px 20px 20px;
+    padding: 20px;
+    padding-top: 70px;
   }
 
-  /* Keep hamburger in place when sidebar opens */
+  /* Keep hamburger visible and in place when sidebar opens */
   .rd-layout.sidebar-open .rd-hamburger {
     left: 15px;
+    z-index: 10001;
   }
 
   /* GRID → 1 COLUMN */
@@ -1315,4 +1320,3 @@ textarea.rd-input {
     font-size: 14px;
     padding: 12px;
   }
-}
