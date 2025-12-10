@@ -33,17 +33,19 @@ export default function FreelancerList() {
           const pro = f.professional || {};
           const availability = f.availability || {};
 
-          const profilePic = basic.profile_picture;
-          const name = basic.full_name || "Unnamed Freelancer";
-          const expertise = pro.expertise || "Not Provided";
+          const fullName = basic.full_name?.trim() || "Unnamed Freelancer";
+          const firstLetter = fullName.charAt(0).toUpperCase();
+
+          const profilePic = basic.profile_picture || null;
+          const expertise = pro.expertise || "Freelancer";
           const location = basic.location || "Location Not Provided";
 
           const languages = basic.languages_known
             ? basic.languages_known.split(",").map((l) => l.trim())
             : [];
 
-          const isAvailable = availability.is_available;
-          const isOccupied = availability.is_occupied;
+          const isAvailable = availability.is_available === true;
+          const isOccupied = availability.is_occupied === true;
 
           return (
             <div key={index} className="fl-card">
@@ -51,16 +53,14 @@ export default function FreelancerList() {
               {/* IMAGE */}
               <div className="fl-img-container">
                 {profilePic ? (
-                  <img src={profilePic} alt={name} />
+                  <img src={profilePic} alt={fullName} />
                 ) : (
-                  <div className="fl-placeholder">
-                    {name.charAt(0).toUpperCase()}
-                  </div>
+                  <div className="fl-placeholder">{firstLetter}</div>
                 )}
               </div>
 
               {/* NAME */}
-              <h3 className="fl-name">{name}</h3>
+              <h3 className="fl-name">{fullName}</h3>
 
               {/* EXPERTISE */}
               <p className="fl-expertise">{expertise}</p>
@@ -73,6 +73,7 @@ export default function FreelancerList() {
                 {isAvailable && !isOccupied && (
                   <span className="badge-available">Available for Work</span>
                 )}
+
                 {isOccupied && (
                   <span className="badge-occupied">Currently Occupied</span>
                 )}
