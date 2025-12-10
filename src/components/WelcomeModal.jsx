@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./WelcomeModal.css"; // paste the CSS from below
 // Put your TC-only logo at public/assets/tc-only.png (or update the path below)
-const TC_LOGO = "/assets/TconnectsNewLogo.png";
+import TC_LOGO from "../assets/TconnectsNewLogo.png";
+
 
 export default function WelcomeModal({ currentUser }) {
   const navigate = useNavigate();
