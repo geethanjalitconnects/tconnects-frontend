@@ -7,17 +7,17 @@ import { useNavigate } from "react-router-dom";
 
 export default function FreelancerBasicInfo() {
   const [form, setForm] = useState({
-    full_name: "",
-    phone_number: "",
-    location: "",
-    languages_known: "",
-    is_published: false,   // ← NEW FIELD
-  });
+  phone_number: "",
+  location: "",
+  languages_known: "",
+  is_published: false
+});
+
 
   const [preview, setPreview] = useState(null);
   const [profilePicFile, setProfilePicFile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { user: currentUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // ================================
@@ -135,23 +135,22 @@ export default function FreelancerBasicInfo() {
         <div className="fr-row">
           <label className="fr-label">Email</label>
           <input
-            name="email"
-            value={currentUser?.email || ""}
-            className="fr-input"
-            readOnly
+          value={user?.email || ""}
+          className="fr-input"
+          readOnly
           />
+
         </div>
 
         {/* Full name */}
         <div className="fr-row">
           <label className="fr-label">Full name</label>
           <input
-            name="full_name"
-            value={form.full_name}
-            onChange={handleChange}
-            className="fr-input"
-            required
+          value={user?.full_name || ""}
+          className="fr-input"
+          readOnly
           />
+
         </div>
 
         {/* Phone + Location */}
@@ -166,7 +165,6 @@ export default function FreelancerBasicInfo() {
               required
             />
           </div>
-
           <div>
             <label className="fr-label">Location</label>
             <input
