@@ -13,14 +13,30 @@ export default function FreelancerProfile() {
   useEffect(() => {
     const loadProfile = async () => {
       try {
+        console.log("=== FREELANCER PROFILE DEBUG ===");
         console.log("Loading profile with ID:", id);
-        // ✅ FIXED: Use correct endpoint - /freelancers/ (plural, no "public")
+        console.log("Full API URL:", `/api/profiles/freelancers/${id}/`);
+        
         const res = await api.get(`/api/profiles/freelancers/${id}/`);
+        
+        console.log("✅ Profile loaded successfully!");
         console.log("Profile data received:", res.data);
         setData(res.data);
       } catch (err) {
-        console.error("Error loading profile:", err);
-        setError(err.response?.data?.error || "Failed to load profile");
+        console.error("❌ Error loading profile:", err);
+        console.error("Error response:", err.response);
+        console.error("Error data:", err.response?.data);
+        console.error("Status code:", err.response?.status);
+        
+        let errorMessage = "Failed to load profile";
+        
+        if (err.response?.status === 404) {
+          errorMessage = "Profile not found. This profile may not be published yet.";
+        } else if (err.response?.data?.error) {
+          errorMessage = err.response.data.error;
+        }
+        
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
