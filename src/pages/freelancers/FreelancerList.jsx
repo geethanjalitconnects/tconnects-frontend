@@ -26,17 +26,31 @@ export default function FreelancerList() {
   }, []);
 
   const handleViewProfile = (freelancer) => {
-    // Try different possible ID fields
-    const profileId = freelancer.id || freelancer.user_id || freelancer.profile_id;
+    // Log the entire object to debug
+    console.log("Full freelancer object:", freelancer);
     
-    console.log("Navigating with ID:", profileId); // Debug log
-    console.log("Full freelancer object:", freelancer); // Debug log
+    // Try multiple possible ID locations
+    const profileId = 
+      freelancer.id || 
+      freelancer.user_id || 
+      freelancer.profile_id ||
+      freelancer.user ||
+      (freelancer.basic && freelancer.basic.id) ||
+      (freelancer.basic && freelancer.basic.user_id);
+    
+    console.log("Found ID:", profileId);
+    console.log("ID type:", typeof profileId);
     
     if (profileId) {
+      console.log("Navigating to:", `/freelancers/${profileId}`);
       navigate(`/freelancers/${profileId}`);
     } else {
-      console.error("No valid ID found for freelancer:", freelancer);
-      alert("Unable to view profile - missing ID");
+      console.error("No valid ID found!");
+      console.error("Available keys:", Object.keys(freelancer));
+      if (freelancer.basic) {
+        console.error("Basic keys:", Object.keys(freelancer.basic));
+      }
+      alert("Unable to view profile - missing ID. Check console for details.");
     }
   };
 
