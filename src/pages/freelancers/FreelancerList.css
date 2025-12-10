@@ -397,6 +397,23 @@
   background: #ffe5cc;
   color: #d96b00;
 }
+.fl-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.fl-available {
+  background: #d4f8d4;
+  color: #1d7a1d;
+}
+
+.fl-occupied {
+  background: #ffe4c4;
+  color: #b05900;
+}
 
 
 /* ============================================

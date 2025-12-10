@@ -1,125 +1,125 @@
+// src/pages/freelancers/FreelancerProfile.jsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../config/api";
-import "./FreelancerList.css";
+import "./FreelancerList.css";    // keep your same UI styling
 
 export default function FreelancerProfile() {
   const { id } = useParams();
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  // ============================
+  // LOAD PUBLIC FREELANCER DATA
+  // ============================
   useEffect(() => {
     const loadProfile = async () => {
       try {
-        const res = await api.get(`/api/profiles/freelancers/${id}/`);
+        const res = await api.get(`/api/profiles/freelancer/public/${id}/`);
         setData(res.data);
-      } catch (error) {
-        console.error("Error loading freelancer profile:", error);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
     loadProfile();
   }, [id]);
 
-  if (!data) return <p className="loading">Loading profile...</p>;
+  if (loading) return <p className="loading">Loading...</p>;
+  if (!data) return <p>Profile not found</p>;
 
-  const basic = data.basic;
-  const professional = data.professional;
-  const availability = data.availability;
-  const education = data.education;
-  const social = data.social;
+  const { basic, professional, availability, education, social } = data;
+
+  // Badge color
+  const statusBadge = availability?.is_available
+    ? { text: "Available for Work", class: "fl-available" }
+    : { text: "Currently Occupied", class: "fl-occupied" };
 
   return (
-    <div className="fl-page">
-
-      {/* ================= HERO SECTION ================= */}
-      <section className="fl-hero">
-        <h1>Freelancer Profile</h1>
-        <p>A verified professional available for work.</p>
-      </section>
+    <div className="fl-profile-page">
 
       {/* ================= PROFILE HEADER ================= */}
-      <div className="fl-profile-header">
-        <div className="fl-profile-img">
+      <div className="fl-card fl-profile-header">
+
+        {/* Avatar */}
+        <div className="fl-profile-photo">
           {basic.profile_picture ? (
-            <img src={basic.profile_picture} alt="Profile" />
+            <img src={basic.profile_picture} alt="Freelancer" />
           ) : (
-            <div className="fl-placeholder-lg">
-              {basic.full_name?.charAt(0).toUpperCase()}
+            <div className="fl-avatar-placeholder">
+              {basic.full_name ? basic.full_name.charAt(0).toUpperCase() : "U"}
             </div>
           )}
         </div>
 
-        <div className="fl-profile-main">
-          <h2 className="fl-profile-name">{basic.full_name}</h2>
-          <p className="fl-profile-expertise">
+        <div className="fl-profile-info">
+          <h2 className="fl-name">{basic.full_name}</h2>
+
+          {/* Expertise */}
+          <p className="fl-expertise">
             {professional?.expertise || "Freelancer"}
           </p>
-          <p className="fl-profile-location">{basic.location}</p>
 
-          <button className="fl-hire-btn">Hire This Freelancer</button>
+          {/* Availability */}
+          <span className={`fl-badge ${statusBadge.class}`}>
+            {statusBadge.text}
+          </span>
+
+          {/* Location */}
+          <p className="fl-location">{basic.location || "Location Not Provided"}</p>
+
+          {/* Languages */}
+          <div className="fl-lang-row">
+            {basic.languages_known
+              ?.split(",")
+              .map((lang) => (
+                <span key={lang} className="fl-lang-pill">{lang.trim()}</span>
+              ))}
+          </div>
         </div>
       </div>
 
       {/* ================= ABOUT ================= */}
-      <div className="fl-section">
-        <h3 className="fl-section-title">About</h3>
-        <p className="fl-paragraph">
-          {professional?.bio || "This freelancer has not added a bio yet."}
-        </p>
+      <div className="fl-card fl-section">
+        <h3>About</h3>
+        <p>{professional?.bio || "No bio provided."}</p>
       </div>
 
       {/* ================= EDUCATION ================= */}
-      <div className="fl-section">
-        <h3 className="fl-section-title">Education</h3>
+      <div className="fl-card fl-section">
+        <h3>Education</h3>
         {education.length === 0 ? (
-          <p>No education details available.</p>
+          <p>No education details.</p>
         ) : (
-          education.map((edu, i) => (
-            <div key={i} className="fl-edu-item">
+          education.map((edu) => (
+            <div key={edu.id} className="fl-edu-item">
               <strong>{edu.degree}</strong> — {edu.institution}
               <div className="fl-edu-year">
                 {edu.start_year} - {edu.end_year}
               </div>
+              {edu.description && <p>{edu.description}</p>}
             </div>
           ))
         )}
       </div>
 
       {/* ================= AVAILABILITY ================= */}
-      <div className="fl-section">
-        <h3 className="fl-section-title">Availability</h3>
-        {availability ? (
-          <>
-            <p>
-              <strong>Status:</strong>{" "}
-              {availability.is_available ? "Available" : "Not Available"}
-            </p>
-            <p>
-              <strong>Timezone:</strong> {availability.time_zone || "Not specified"}
-            </p>
-            <p>
-              <strong>Days:</strong>{" "}
-              {availability.available_days?.join(", ") || "Not specified"}
-            </p>
-          </>
-        ) : (
-          <p>Availability not provided.</p>
-        )}
+      <div className="fl-card fl-section">
+        <h3>Availability</h3>
+        <p><strong>Status:</strong> {statusBadge.text}</p>
+        <p><strong>Timezone:</strong> {availability?.time_zone}</p>
+        <p><strong>Working Days:</strong> {availability?.available_days?.join(", ")}</p>
       </div>
 
       {/* ================= SOCIAL LINKS ================= */}
-      <div className="fl-section">
-        <h3 className="fl-section-title">Social Profiles</h3>
-        <div className="fl-social-links">
-          {social?.linkedin_url && <a href={social.linkedin_url}>LinkedIn</a>}
-          {social?.github_url && <a href={social.github_url}>GitHub</a>}
-          {social?.portfolio_url && <a href={social.portfolio_url}>Portfolio</a>}
+      <div className="fl-card fl-section">
+        <h3>Social Links</h3>
+        <div className="fl-social">
+          {social?.linkedin_url && <a href={social.linkedin_url} target="_blank">LinkedIn</a>}
+          {social?.github_url && <a href={social.github_url} target="_blank">GitHub</a>}
+          {social?.portfolio_url && <a href={social.portfolio_url} target="_blank">Portfolio</a>}
         </div>
-      </div>
-
-      {/* ================= RATINGS ================= */}
-      <div className="fl-section">
-        <h3 className="fl-section-title">Ratings & Badges</h3>
-        <p>No ratings or badges yet.</p>
       </div>
     </div>
   );
