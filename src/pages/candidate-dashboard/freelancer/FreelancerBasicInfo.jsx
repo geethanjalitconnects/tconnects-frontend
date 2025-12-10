@@ -7,12 +7,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function FreelancerBasicInfo() {
   const [form, setForm] = useState({
-  phone_number: "",
-  location: "",
-  languages_known: "",
-  is_published: false
-});
-
+    phone_number: "",
+    location: "",
+    languages_known: "",
+    is_published: false,
+  });
 
   const [preview, setPreview] = useState(null);
   const [profilePicFile, setProfilePicFile] = useState(null);
@@ -20,9 +19,7 @@ export default function FreelancerBasicInfo() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // ================================
-  // 1️⃣ LOAD EXISTING FREELANCER DATA
-  // ================================
+  // Load existing freelancer data
   useEffect(() => {
     const fetchBasicInfo = async () => {
       try {
@@ -30,11 +27,10 @@ export default function FreelancerBasicInfo() {
         const data = res.data;
 
         setForm({
-          full_name: data.full_name || (currentUser?.full_name || ""),
           phone_number: data.phone_number || "",
           location: data.location || "",
           languages_known: data.languages_known || "",
-          is_published: data.is_published || false, // ← ADD HERE
+          is_published: data.is_published || false,
         });
 
         if (data.profile_picture) {
@@ -51,21 +47,14 @@ export default function FreelancerBasicInfo() {
     fetchBasicInfo();
   }, []);
 
-  // ================================
-  // 2️⃣ HANDLE INPUT CHANGE
-  // ================================
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Handle publish toggle
   const togglePublish = () => {
     setForm({ ...form, is_published: !form.is_published });
   };
 
-  // ================================
-  // 3️⃣ FILE PREVIEW
-  // ================================
   const handleFile = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -74,9 +63,6 @@ export default function FreelancerBasicInfo() {
     }
   };
 
-  // ================================
-  // 4️⃣ PATCH BASIC INFO + PUBLISH FLAG
-  // ================================
   const updateBasicInfo = async () => {
     try {
       await api.patch("/api/profiles/freelancer/basic/", form);
@@ -87,9 +73,6 @@ export default function FreelancerBasicInfo() {
     }
   };
 
-  // ================================
-  // 5️⃣ UPLOAD PROFILE PICTURE
-  // ================================
   const uploadProfilePicture = async () => {
     if (!profilePicFile) return true;
 
@@ -108,9 +91,6 @@ export default function FreelancerBasicInfo() {
     }
   };
 
-  // ================================
-  // 6️⃣ SAVE ALL (PATCH + UPLOAD)
-  // ================================
   const handleSave = async (e) => {
     e.preventDefault();
 
@@ -124,6 +104,17 @@ export default function FreelancerBasicInfo() {
     }
   };
 
+  const handleReset = () => {
+    setForm({
+      phone_number: "",
+      location: "",
+      languages_known: "",
+      is_published: false,
+    });
+    setPreview(null);
+    setProfilePicFile(null);
+  };
+
   if (loading) return <p>Loading...</p>;
 
   return (
@@ -131,26 +122,24 @@ export default function FreelancerBasicInfo() {
       <form className="fr-card fr-form" onSubmit={handleSave}>
         <h2 className="fr-title">Basic Information</h2>
 
-        {/* Email (from auth) */}
+        {/* Email */}
         <div className="fr-row">
           <label className="fr-label">Email</label>
           <input
-          value={user?.email || ""}
-          className="fr-input"
-          readOnly
+            value={user?.email || ""}
+            className="fr-input"
+            readOnly
           />
-
         </div>
 
         {/* Full name */}
         <div className="fr-row">
           <label className="fr-label">Full name</label>
           <input
-          value={user?.full_name || ""}
-          className="fr-input"
-          readOnly
+            value={user?.full_name || ""}
+            className="fr-input"
+            readOnly
           />
-
         </div>
 
         {/* Phone + Location */}
@@ -222,23 +211,13 @@ export default function FreelancerBasicInfo() {
           <button
             type="button"
             className="fr-btn"
-            onClick={() => {
-              setForm({
-  phone_number: data.phone_number || "",
-  location: data.location || "",
-  languages_known: data.languages_known || "",
-  is_published: data.is_published || false,
-});
-
-              setPreview(null);
-              setProfilePicFile(null);
-            }}
+            onClick={handleReset}
           >
             Reset
           </button>
         </div>
 
-        {/* Prev / Next navigation */}
+        {/* Navigation */}
         <div className="fr-actions" style={{ marginTop: 12 }}>
           <button type="button" className="fr-btn" onClick={() => navigate('/candidate-dashboard/overview')}>Back</button>
           <button type="button" className="fr-btn fr-btn-primary" onClick={() => navigate('/candidate-dashboard/freelancer/professional-details')}>Next: Professional Details</button>
