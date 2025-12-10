@@ -6,6 +6,7 @@ export default function InternshipApplications() {
   const [internships, setInternships] = useState([]);
   const [selectedInternship, setSelectedInternship] = useState("");
   const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchInternships();
@@ -26,6 +27,7 @@ export default function InternshipApplications() {
       return;
     }
 
+    setLoading(true);
     try {
       const res = await api.get(
         `/api/applications/internship/${internshipId}/applicants/`
@@ -33,6 +35,8 @@ export default function InternshipApplications() {
       setApplications(res.data);
     } catch (error) {
       console.error("Failed to fetch internship applications", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,7 +74,9 @@ export default function InternshipApplications() {
 
       {/* Applications List */}
       <div className="rd-applications-list">
-        {applications.length === 0 ? (
+        {loading ? (
+          <p className="rd-empty-text">Loading applications...</p>
+        ) : applications.length === 0 ? (
           <p className="rd-empty-text">No applications found.</p>
         ) : (
           applications.map((app) => (
@@ -82,7 +88,7 @@ export default function InternshipApplications() {
 
               <div className="rd-applicant-info">
                 <p className="rd-email-phone">📧 {app.email}</p>
-                <p className="rd-email-phone">📞 {app.phone}</p>
+                <p className="rd-email-phone">📞 {app.phone_number}</p>
                 <p className="rd-location">📍 {app.location}</p>
               </div>
 

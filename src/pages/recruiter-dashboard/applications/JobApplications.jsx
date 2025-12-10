@@ -6,7 +6,7 @@ export default function JobApplications() {
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState("");
   const [applications, setApplications] = useState([]);
-  
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchJobs();
@@ -27,17 +27,19 @@ export default function JobApplications() {
       return;
     }
 
+    setLoading(true);
     try {
       const res = await api.get(`/api/applications/job/${jobId}/applicants/`);
       setApplications(res.data);
     } catch (error) {
       console.error("Failed to fetch job applications", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="rd-applications-page">
-
       {/* Page Header */}
       <div className="rd-section-header">
         <h2 className="rd-section-title">Job Applications</h2>
@@ -69,7 +71,9 @@ export default function JobApplications() {
 
       {/* Applications */}
       <div className="rd-applications-list">
-        {applications.length === 0 ? (
+        {loading ? (
+          <p className="rd-empty-text">Loading applications...</p>
+        ) : applications.length === 0 ? (
           <p className="rd-empty-text">No applications found.</p>
         ) : (
           applications.map((app) => (
@@ -81,7 +85,7 @@ export default function JobApplications() {
 
               <div className="rd-applicant-info">
                 <p className="rd-email-phone">📧 {app.email}</p>
-                <p className="rd-email-phone">📞 {app.phone}</p>
+                <p className="rd-email-phone">📞 {app.phone_number}</p>
                 <p className="rd-location">📍 {app.location}</p>
               </div>
 
