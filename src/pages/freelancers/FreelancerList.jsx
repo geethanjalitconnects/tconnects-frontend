@@ -1,101 +1,91 @@
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
-import "./FreelancerList.css";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import "./FreelancerList.css";
 
 export default function FreelancerList() {
   const [freelancers, setFreelancers] = useState([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchFreelancers = async () => {
+    const loadFreelancers = async () => {
       try {
         const res = await api.get("/api/profiles/freelancers/");
-
-        const fixed = (res.data || []).map((f) => {
-          const basic = f.basic || {};
-          const professional = f.professional || {};
-
-          // Fix languages
-          const langs = basic.languages_known || [];
-          let langsArr = [];
-
-          if (Array.isArray(langs)) langsArr = langs;
-          else if (typeof langs === "string")
-            langsArr = langs.split(",").map((l) => l.trim()).filter(Boolean);
-
-          return {
-            id: f.id || basic.user || basic.id,
-            full_name: basic.full_name || "Unnamed Freelancer",
-            profile_picture: basic.profile_picture || null,
-            location: basic.location || "Location Not Provided",
-            languages_known: langsArr,
-            expertise: professional.expertise || "Freelancer",
-          };
-        });
-
-        setFreelancers(fixed);
+        setFreelancers(res.data || []);
       } catch (error) {
-        console.error("Error loading freelancers:", error);
-      } finally {
-        setLoading(false);
+        console.error(error);
+        toast.error("Unable to load freelancers.");
       }
     };
-
-    fetchFreelancers();
+    loadFreelancers();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-
   return (
-    <div className="fl-container">
-      <h2 className="fl-title">Freelancers</h2>
+    <div className="fl-page">
+      <div className="fl-hero">
+        <h1>Find Top Freelancers</h1>
+        <p>Browse skilled professionals ready to work with you.</p>
+      </div>
 
       <div className="fl-grid">
-        {freelancers.map((f) => (
-          <div key={f.id} className="fl-card">
-            {/* Profile image */}
-            <div className="fl-avatar">
-              {f.profile_picture ? (
-                <img src={f.profile_picture} alt={f.full_name} />
-              ) : (
-                <div className="fl-avatar-placeholder">
-                  {f.full_name.charAt(0)}
-                </div>
-              )}
+        {freelancers.map((f, index) => {
+          const basic = f.basic_info || {};
+          const prof = f.professional || {};
+
+          const profilePic = basic.profile_picture;
+          const name = basic.full_name || "Unnamed Freelancer";
+          const expertise = prof.expertise || "Not Provided";
+          const location = basic.location || "Location Not Provided";
+          const languages = basic.languages_known
+            ? basic.languages_known.split(",")
+            : [];
+
+          return (
+            <div key={index} className="fl-card">
+              {/* IMAGE */}
+              <div className="fl-img-container">
+                {profilePic ? (
+                  <img src={profilePic} alt={name} />
+                ) : (
+                  <div className="fl-placeholder">
+                    {name.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+
+              {/* NAME */}
+              <h3 className="fl-name">{name}</h3>
+
+              {/* EXPERTISE */}
+              <p className="fl-expertise">{expertise}</p>
+
+              {/* LOCATION */}
+              <p className="fl-location">{location}</p>
+
+              {/* LANGUAGES */}
+              <div className="fl-skills">
+                {languages.length > 0 ? (
+                  languages.map((lang, i) => (
+                    <span key={i} className="fl-skill">
+                      {lang.trim()}
+                    </span>
+                  ))
+                ) : (
+                  <span className="fl-skill">Languages Not Provided</span>
+                )}
+              </div>
+
+              {/* BUTTON */}
+              <button
+                className="fl-view-btn"
+                onClick={() => navigate(`/freelancers/${f.id}`)}
+              >
+                View Profile
+              </button>
             </div>
-
-            {/* Name */}
-            <h3 className="fl-name">{f.full_name}</h3>
-
-            {/* Expertise */}
-            <p className="fl-expertise">{f.expertise}</p>
-
-            {/* Location */}
-            <p className="fl-location">{f.location}</p>
-
-            {/* Languages */}
-            <div className="fl-languages">
-              {f.languages_known.length > 0 ? (
-                f.languages_known.slice(0, 3).map((lang, i) => (
-                  <span key={i} className="fl-skill">
-                    {lang}
-                  </span>
-                ))
-              ) : (
-                <span className="fl-skill">Languages Not Provided</span>
-              )}
-            </div>
-
-            <button
-              className="fl-btn"
-              onClick={() => navigate(`/freelancers/${f.id}`)}
-            >
-              View Profile
-            </button>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
