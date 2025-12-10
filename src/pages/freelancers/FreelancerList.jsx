@@ -17,7 +17,7 @@ export default function FreelancerList() {
           const basic = f.basic || {};
           const professional = f.professional || {};
 
-          // Fix languages
+          // Normalize languages
           const langs = basic.languages_known || [];
           let langsArr = [];
 
@@ -25,8 +25,11 @@ export default function FreelancerList() {
           else if (typeof langs === "string")
             langsArr = langs.split(",").map((l) => l.trim()).filter(Boolean);
 
+          // FIXED: Correct user ID for profile routing
+          const id = basic.user;  // The actual freelancer's user ID
+
           return {
-            id: f.id || basic.user || basic.id,
+            id,
             full_name: basic.full_name || "Unnamed Freelancer",
             profile_picture: basic.profile_picture || null,
             location: basic.location || "Location Not Provided",
@@ -55,7 +58,8 @@ export default function FreelancerList() {
       <div className="fl-grid">
         {freelancers.map((f) => (
           <div key={f.id} className="fl-card">
-            {/* Profile image */}
+            
+            {/* Avatar */}
             <div className="fl-avatar">
               {f.profile_picture ? (
                 <img src={f.profile_picture} alt={f.full_name} />
@@ -88,12 +92,14 @@ export default function FreelancerList() {
               )}
             </div>
 
+            {/* Button */}
             <button
               className="fl-btn"
               onClick={() => navigate(`/freelancers/${f.id}`)}
             >
               View Profile
             </button>
+
           </div>
         ))}
       </div>
