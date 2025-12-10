@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
-import api from "../config/api";
+import api from "../../config/api";
 import { AuthContext } from "../context/AuthContext";
 
 export default function ApplyInternshipPage() {
