@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import api from "../../../config/api";
+import api from "../../config/api";
 import toast from "react-hot-toast";
 import "./FreelancerList.css"; // Using your modern UI
 
