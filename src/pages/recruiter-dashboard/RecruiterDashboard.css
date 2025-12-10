@@ -1000,7 +1000,7 @@ textarea.rd-input {
     margin-left: 0 !important;
     width: 100% !important;
     padding: 20px;
-    padding-top: 90px;
+    padding-top: 100px;
   }
 
   .rd-layout.sidebar-open .rd-hamburger {
@@ -1076,7 +1076,7 @@ textarea.rd-input {
   }
 
   .rd-main {
-    padding: 90px 16px 16px 16px;
+    padding: 100px 16px 16px 16px;
   }
 
   .cd-welcome-card {
@@ -1194,7 +1194,7 @@ textarea.rd-input {
   }
 
   .rd-main {
-    padding: 85px 12px 12px 12px;
+    padding: 95px 12px 12px 12px;
   }
 
   .cd-welcome-title {
