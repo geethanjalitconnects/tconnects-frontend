@@ -8,14 +8,17 @@ export default function FreelancerAvailability() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const [state, setState] = useState({
+  // Unified clean state shape
+  const defaultState = {
     is_available: true,
     is_occupied: false,
     available_from: "",
     available_to: "",
     time_zone: "Asia/Kolkata",
     available_days: [],
-  });
+  };
+
+  const [state, setState] = useState(defaultState);
 
   const daysList = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -26,7 +29,19 @@ export default function FreelancerAvailability() {
     const loadAvailability = async () => {
       try {
         const res = await api.get("/api/profiles/freelancer/availability/");
-        setState(res.data);
+        const data = res.data;
+
+        // FIX: Map all fields explicitly (prevents missing timezone)
+        setState({
+          is_available: data.is_available ?? true,
+          is_occupied: data.is_occupied ?? false,
+          available_from: data.available_from || "",
+          available_to: data.available_to || "",
+          time_zone: data.time_zone || "Asia/Kolkata",
+          available_days: Array.isArray(data.available_days)
+            ? data.available_days
+            : [],
+        });
       } catch (error) {
         console.error(error);
         toast.error("Unable to load availability.");
@@ -34,18 +49,19 @@ export default function FreelancerAvailability() {
         setLoading(false);
       }
     };
+
     loadAvailability();
   }, []);
 
   // ======================================================
-  // 2️⃣ TOGGLE DAY LOGIC
+  // 2️⃣ TOGGLE WORKDAY LOGIC
   // ======================================================
   const toggleDay = (day) => {
-    setState((s) => ({
-      ...s,
-      available_days: s.available_days.includes(day)
-        ? s.available_days.filter((d) => d !== day)
-        : [...s.available_days, day],
+    setState((prev) => ({
+      ...prev,
+      available_days: prev.available_days.includes(day)
+        ? prev.available_days.filter((d) => d !== day)
+        : [...prev.available_days, day],
     }));
   };
 
@@ -103,14 +119,14 @@ export default function FreelancerAvailability() {
           </div>
         </div>
 
-        {/* AVAILABLE FROM / TO */}
+        {/* AVAILABLE HOURS */}
         <div className="fr-row fr-two-col">
           <div>
             <label className="fr-label">Available from</label>
             <input
               type="time"
               className="fr-input"
-              value={state.available_from || ""}
+              value={state.available_from}
               onChange={(e) =>
                 setState({ ...state, available_from: e.target.value })
               }
@@ -122,7 +138,7 @@ export default function FreelancerAvailability() {
             <input
               type="time"
               className="fr-input"
-              value={state.available_to || ""}
+              value={state.available_to}
               onChange={(e) =>
                 setState({ ...state, available_to: e.target.value })
               }
@@ -148,7 +164,7 @@ export default function FreelancerAvailability() {
           </select>
         </div>
 
-        {/* AVAILABLE DAYS */}
+        {/* WORKING DAYS */}
         <div className="fr-row">
           <label className="fr-label">Available days</label>
           <div className="fr-days-grid">
@@ -166,7 +182,7 @@ export default function FreelancerAvailability() {
           </div>
         </div>
 
-        {/* BUTTONS */}
+        {/* ACTION BUTTONS */}
         <div className="fr-actions">
           <button type="submit" className="fr-btn fr-btn-primary">
             Save Availability
@@ -175,24 +191,32 @@ export default function FreelancerAvailability() {
           <button
             type="button"
             className="fr-btn"
-            onClick={() =>
-              setState({
-                is_available: true,
-                is_occupied: false,
-                available_from: "",
-                available_to: "",
-                time_zone: "Asia/Kolkata",
-                available_days: [],
-              })
-            }
+            onClick={() => setState(defaultState)}
           >
             Reset
           </button>
         </div>
 
         <div className="fr-actions" style={{ marginTop: 12 }}>
-          <button type="button" className="fr-btn" onClick={() => navigate('/candidate-dashboard/freelancer/education')}>Previous: Education</button>
-          <button type="button" className="fr-btn fr-btn-primary" onClick={() => navigate('/candidate-dashboard/freelancer/payment-method')}>Next: Payment Method</button>
+          <button
+            type="button"
+            className="fr-btn"
+            onClick={() =>
+              navigate("/candidate-dashboard/freelancer/education")
+            }
+          >
+            Previous: Education
+          </button>
+
+          <button
+            type="button"
+            className="fr-btn fr-btn-primary"
+            onClick={() =>
+              navigate("/candidate-dashboard/freelancer/payment-method")
+            }
+          >
+            Next: Payment Method
+          </button>
         </div>
       </form>
     </div>
