@@ -171,6 +171,30 @@
   color: #a0aec0;
 }
 
+/* Password toggle wrapper */
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input-wrapper .password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  color: #4a5568;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-input-wrapper .password-toggle-btn:hover {
+  color: #00695c;
+}
+
 .input-field.error {
   border-color: #e53e3e;
   background-color: #fff5f5;

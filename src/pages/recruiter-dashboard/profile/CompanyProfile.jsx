@@ -1,6 +1,7 @@
 // CompanyProfile.jsx — Recruiter Dashboard Integration (Fixed)
 import React, { useEffect, useState } from "react";
 import api from "../../../config/api";
+import { toast } from "react-hot-toast";
 import "../RecruiterDashboard.css";
 
 export default function CompanyProfile() {
@@ -58,10 +59,10 @@ export default function CompanyProfile() {
         about_company: form.about,
       });
 
-      alert("Company profile updated successfully!");
+      toast.success("Company profile updated successfully!");
     } catch (err) {
       console.error("Failed to update company profile:", err);
-      alert("Something went wrong.");
+      toast.error("Something went wrong.");
     } finally {
       setSaving(false);
     }

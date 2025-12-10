@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-hot-toast";
 import api from "../../../config/api";
 import "../RecruiterDashboard.css";
 
@@ -61,12 +62,12 @@ export default function PostJob() {
 
       await api.post("/api/jobs/create/", payload);
 
-      alert("Job posted successfully!");
+      toast.success("Job posted successfully!");
       window.location.href = "/recruiter-dashboard/jobs/manage-jobs";
 
     } catch (err) {
       console.error("Job posting failed:", err);
-      alert("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setSaving(false);
     }

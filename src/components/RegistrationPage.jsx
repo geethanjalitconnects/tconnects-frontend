@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api, { API_BASE_URL } from '../config/api';
 import './RegistrationPage.css';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
   const [userType, setUserType] = useState('candidate');
@@ -14,6 +15,8 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -245,15 +248,25 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
 
           <div className="form-group">
             <label className="input-label">Password *</label>
-            <input 
-              type="password" 
-              name="password"
-              className={`input-field ${errors.password ? 'error' : ''}`} 
-              placeholder="Create a strong password" 
-              value={formData.password}
-              onChange={handleInputChange}
-              disabled={isSubmitting}
-            />
+            <div className="password-input-wrapper">
+              <input 
+                type={showPassword ? 'text' : 'password'} 
+                name="password"
+                className={`input-field ${errors.password ? 'error' : ''}`} 
+                placeholder="Create a strong password" 
+                value={formData.password}
+                onChange={handleInputChange}
+                disabled={isSubmitting}
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowPassword((s) => !s)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
+              </button>
+            </div>
             {errors.password && <div className="error-text">{errors.password}</div>}
             {formData.password && (formData.password.length < 8 || !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) && (
               <div className="info-text" style={{ fontSize: '0.85rem' }}>
@@ -264,15 +277,25 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
 
           <div className="form-group">
             <label className="input-label">Confirm Password *</label>
-            <input 
-              type="password" 
-              name="confirmPassword"
-              className={`input-field ${errors.confirmPassword ? 'error' : ''}`} 
-              placeholder="Confirm your password" 
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              disabled={isSubmitting}
-            />
+            <div className="password-input-wrapper">
+              <input 
+                type={showConfirmPassword ? 'text' : 'password'} 
+                name="confirmPassword"
+                className={`input-field ${errors.confirmPassword ? 'error' : ''}`} 
+                placeholder="Confirm your password" 
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                disabled={isSubmitting}
+              />
+              <button
+                type="button"
+                className="password-toggle-btn"
+                onClick={() => setShowConfirmPassword((s) => !s)}
+                aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+              >
+                {showConfirmPassword ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
+              </button>
+            </div>
             {errors.confirmPassword && <div className="error-text">{errors.confirmPassword}</div>}
           </div>
 

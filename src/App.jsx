@@ -215,7 +215,16 @@ function App() {
       <SavedJobsProvider>
         <SavedInternshipsProvider>
           <div>
-            <Toaster position="top-right" />
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                // Default style for all toasts (teal)
+                style: {
+                  background: '#14b8a6',
+                  color: '#ffffff',
+                },
+              }}
+            />
 
             {!hideHeader && (
               <Header 

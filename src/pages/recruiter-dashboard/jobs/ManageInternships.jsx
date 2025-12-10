@@ -1,6 +1,7 @@
 // ManageInternships.jsx — SAME DESIGN AS ManageJobs (No Status)
 import React, { useEffect, useState } from "react";
 import api from "../../../config/api";
+import { toast } from "react-hot-toast";
 import "../RecruiterDashboard.css";
 
 export default function ManageInternships() {
@@ -29,11 +30,11 @@ export default function ManageInternships() {
 
     try {
       await api.delete(`/api/internships/${id}/delete/`);
-      alert("Internship deleted successfully!");
+      toast.success("Internship deleted successfully!");
       loadInternships();
     } catch (err) {
       console.error("Delete failed:", err);
-      alert("Failed to delete internship.");
+      toast.error("Failed to delete internship.");
     }
   };
 

@@ -1,6 +1,7 @@
 // ManageJobs.jsx — SAME UI AS ManageInternships (NO STATUS)
 import React, { useEffect, useState } from "react";
 import api from "../../../config/api";
+import { toast } from "react-hot-toast";
 import "../RecruiterDashboard.css";
 
 export default function ManageJobs() {
@@ -29,11 +30,11 @@ export default function ManageJobs() {
 
     try {
       await api.delete(`/api/jobs/${jobId}/delete/`);
-      alert("Job deleted successfully!");
+      toast.success("Job deleted successfully!");
       loadJobs();
     } catch (err) {
       console.error("Delete failed:", err);
-      alert("Failed to delete job.");
+      toast.error("Failed to delete job.");
     }
   };
 

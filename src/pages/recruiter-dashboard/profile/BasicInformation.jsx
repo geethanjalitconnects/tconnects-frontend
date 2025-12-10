@@ -1,6 +1,7 @@
 // BasicInformation.jsx — Recruiter Dashboard (Fixed)
 import React, { useEffect, useState } from "react";
 import api from "../../../config/api";
+import { toast } from "react-hot-toast";
 import "../RecruiterDashboard.css";
 
 export default function BasicInformation() {
@@ -69,10 +70,10 @@ export default function BasicInformation() {
         linkedin_profile: formData.linkedin_url,
       });
 
-      alert("Profile updated successfully!");
+      toast.success("Profile updated successfully!");
     } catch (err) {
       console.error("Failed to update recruiter profile:", err);
-      alert("Something went wrong.");
+      toast.error("Something went wrong.");
     } finally {
       setSaving(false);
     }

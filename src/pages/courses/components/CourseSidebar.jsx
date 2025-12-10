@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../config/api";
+import { toast } from "react-hot-toast";
 import "../styles/CourseDetails.css";
 import { FaClock, FaFileAlt, FaMobileAlt } from "react-icons/fa";
 
@@ -13,9 +14,9 @@ const CourseSidebar = ({ price, includes = {}, courseId, slug }) => {
       navigate(`/course/learn/${slug}/${courseId}`);
     } catch (error) {
       if (error.response?.status === 401) {
-        alert("Please login to enroll in this course.");
+        toast.error("Please login to enroll in this course.");
       } else {
-        alert("Enrollment failed. Try again.");
+        toast.error("Enrollment failed. Try again.");
       }
     }
   };

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../config/api';
 import './LoginPage.css';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 const LoginPage = ({ onLoginSuccess }) => {
   const [userType, setUserType] = useState('candidate');
@@ -14,6 +15,7 @@ const LoginPage = ({ onLoginSuccess }) => {
   const [otpValues, setOtpValues] = useState(['', '', '', '', '', '']);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -333,7 +335,7 @@ const LoginPage = ({ onLoginSuccess }) => {
             </div>
 
             <div className="register-link-container">
-              <span className="register-text">New to TConnect? </span>
+              <span className="register-text">New to TConnects? </span>
               <button onClick={() => navigate('/register')} className="register-link">
                 Register
               </button>
@@ -382,16 +384,26 @@ const LoginPage = ({ onLoginSuccess }) => {
               {loginMethod === 'password' && (
                 <div className="form-group">
                   <label className="input-label">Password</label>
-                  <input 
-                    type="password" 
-                    name="password"
-                    className="input-field" 
-                    placeholder="Enter your password" 
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required 
-                    autoComplete="current-password"
-                  />
+                  <div className="password-input-wrapper">
+                    <input 
+                      type={showPassword ? 'text' : 'password'} 
+                      name="password"
+                      className="input-field" 
+                      placeholder="Enter your password" 
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      required 
+                      autoComplete="current-password"
+                    />
+                    <button
+                      type="button"
+                      className="password-toggle-btn"
+                      onClick={() => setShowPassword((s) => !s)}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showPassword ? <AiOutlineEyeInvisible size={18} /> : <AiOutlineEye size={18} />}
+                    </button>
+                  </div>
                 </div>
               )}
 
@@ -424,7 +436,7 @@ const LoginPage = ({ onLoginSuccess }) => {
             </div>
 
             <div className="register-link-container">
-              <span className="register-text">New to TConnect? </span>
+              <span className="register-text">New to TConnects? </span>
               <button onClick={() => navigate('/register')} className="register-link">
                 Register
               </button>

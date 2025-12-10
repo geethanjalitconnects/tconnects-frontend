@@ -1,5 +1,6 @@
 // EditInternship.jsx — FINAL FIXED VERSION (UI UNCHANGED)
 import React, { useState, useEffect } from "react";
+import { toast } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import api from "../../../config/api";
 import "../../recruiter-dashboard/RecruiterDashboard.css";
@@ -103,11 +104,11 @@ export default function EditInternship() {
 
       await api.patch(`/api/internships/${id}/update/`, payload); // FIXED URL
 
-      alert("Internship updated successfully!");
+      toast.success("Internship updated successfully!");
       window.location.href = "/recruiter-dashboard/jobs/manage-internships";
     } catch (err) {
       console.error("Failed to update internship:", err);
-      alert("Error updating internship.");
+      toast.error("Error updating internship.");
     } finally {
       setSaving(false);
     }
