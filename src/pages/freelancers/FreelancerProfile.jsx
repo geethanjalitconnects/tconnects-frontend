@@ -15,7 +15,16 @@ export default function FreelancerProfile() {
       try {
         console.log("Loading profile ID:", id);
         const res = await api.get(`/api/profiles/freelancers/${id}/`);
-        console.log("Profile loaded:", res.data);
+        console.log("=== PROFILE DATA DEBUG ===");
+        console.log("Full response:", JSON.stringify(res.data, null, 2));
+        console.log("Response keys:", Object.keys(res.data));
+        console.log("Basic object:", res.data.basic);
+        if (res.data.basic) {
+          console.log("Basic keys:", Object.keys(res.data.basic));
+          console.log("full_name:", res.data.basic.full_name);
+          console.log("name:", res.data.basic.name);
+          console.log("user:", res.data.basic.user);
+        }
         setData(res.data);
       } catch (err) {
         console.error("Error:", err);
@@ -26,6 +35,37 @@ export default function FreelancerProfile() {
     };
     loadProfile();
   }, [id]);
+
+  // Helper function to extract name from various possible locations
+  const getName = (profileData) => {
+    if (!profileData) return "Unnamed Freelancer";
+    
+    const basic = profileData.basic || {};
+    const professional = profileData.professional || {};
+    const user = profileData.user || {};
+    
+    // Try all possible locations for the name
+    const possibleNames = [
+      basic.full_name,
+      basic.name,
+      basic.user?.full_name,
+      basic.user?.name,
+      user.full_name,
+      user.name,
+      profileData.full_name,
+      profileData.name,
+      professional.full_name,
+      professional.name,
+      basic.first_name && basic.last_name ? `${basic.first_name} ${basic.last_name}` : null
+    ];
+    
+    const foundName = possibleNames.find(name => name && name.trim() !== "");
+    
+    console.log("getName checked locations:", possibleNames);
+    console.log("getName result:", foundName || "NOT FOUND");
+    
+    return foundName || "Unnamed Freelancer";
+  };
 
   // Helper function to parse languages
   const parseLanguages = (languages) => {
@@ -106,12 +146,12 @@ export default function FreelancerProfile() {
 
   const { basic, professional, availability, education, social, payment_types } = data;
 
-  // Safe data extraction
-  const fullName = basic?.full_name || basic?.name || "Unnamed Freelancer";
-  const expertise = professional?.expertise || professional?.category || "Freelancer";
+  // Safe data extraction with comprehensive name search
+  const fullName = getName(data);
+  const expertise = professional?.expertise || professional?.category || professional?.categories || "Freelancer";
   const bio = professional?.bio || "No bio provided.";
   const location = basic?.location || "Location Not Provided";
-  const phoneNumber = basic?.phone_number || "Not Provided";
+  const phoneNumber = basic?.phone_number || basic?.phone || "Not Provided";
   
   // Parse languages properly
   const languages = parseLanguages(basic?.languages_known);

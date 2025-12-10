@@ -15,13 +15,20 @@ export default function FreelancerList() {
         const res = await api.get("/api/profiles/freelancers/");
         console.log("=== FREELANCERS DATA DEBUG ===");
         console.log("Total freelancers:", res.data.length);
-        console.log("Full response:", res.data);
+        console.log("Full response:", JSON.stringify(res.data, null, 2));
         
-        // Debug first freelancer
+        // Debug first freelancer in detail
         if (res.data.length > 0) {
-          console.log("First freelancer:", res.data[0]);
-          console.log("Basic data:", res.data[0].basic);
-          console.log("Languages:", res.data[0].basic?.languages_known);
+          const first = res.data[0];
+          console.log("First freelancer structure:", Object.keys(first));
+          console.log("First freelancer full:", first);
+          console.log("Basic object:", first.basic);
+          console.log("All keys in basic:", first.basic ? Object.keys(first.basic) : 'NO BASIC');
+          console.log("full_name value:", first.basic?.full_name);
+          console.log("name value:", first.basic?.name);
+          console.log("user value:", first.basic?.user);
+          console.log("user.full_name value:", first.basic?.user?.full_name);
+          console.log("Professional:", first.professional);
         }
         
         setFreelancers(res.data);
@@ -38,6 +45,32 @@ export default function FreelancerList() {
   const handleViewProfile = (id) => {
     console.log("Navigating to profile:", id);
     navigate(`/freelancers/${id}`);
+  };
+
+  // Helper function to extract name from various possible locations
+  const getName = (item) => {
+    const basic = item.basic || {};
+    const professional = item.professional || {};
+    const user = item.user || {};
+    
+    // Try all possible locations for the name
+    const possibleNames = [
+      basic.full_name,
+      basic.name,
+      basic.user?.full_name,
+      basic.user?.name,
+      user.full_name,
+      user.name,
+      item.full_name,
+      item.name,
+      professional.full_name,
+      professional.name
+    ];
+    
+    const foundName = possibleNames.find(name => name && name.trim() !== "");
+    
+    console.log("getName result:", foundName || "NOT FOUND");
+    return foundName || "Unnamed Freelancer";
   };
 
   // Helper function to parse languages
@@ -108,20 +141,19 @@ export default function FreelancerList() {
           const professional = item.professional || {};
           const availability = item.availability || {};
 
-          // Get full name with fallback
-          const fullName = basic.full_name || basic.name || "Unnamed Freelancer";
-          const expertise = professional.expertise || professional.category || "Not Provided";
+          // Get full name with comprehensive search
+          const fullName = getName(item);
+          const expertise = professional.expertise || professional.category || professional.categories || "Not Provided";
           const location = basic.location || "Not Provided";
           
           // Parse languages properly
           const languages = parseLanguages(basic.languages_known);
           
-          console.log(`Freelancer ${item.id}:`, {
+          console.log(`Card for ID ${item.id}:`, {
             fullName,
             expertise,
             location,
-            languages,
-            rawLanguages: basic.languages_known
+            languages
           });
 
           // Avatar
