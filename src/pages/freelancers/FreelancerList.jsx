@@ -5,23 +5,70 @@ import "./FreelancerList.css";
 
 export default function FreelancerList() {
   const [freelancers, setFreelancers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const loadFreelancers = async () => {
       try {
         const res = await api.get("/api/profiles/freelancers/");
+        console.log("Freelancers data:", res.data); // Debug log
         setFreelancers(res.data);
       } catch (error) {
         console.error("Error loading freelancers:", error);
+        setError("Failed to load freelancers");
+      } finally {
+        setLoading(false);
       }
     };
     loadFreelancers();
   }, []);
 
-  const handleViewProfile = (id) => {
-    navigate(`/freelancers/${id}`);
+  const handleViewProfile = (freelancer) => {
+    // Try different possible ID fields
+    const profileId = freelancer.id || freelancer.user_id || freelancer.profile_id;
+    
+    console.log("Navigating with ID:", profileId); // Debug log
+    console.log("Full freelancer object:", freelancer); // Debug log
+    
+    if (profileId) {
+      navigate(`/freelancers/${profileId}`);
+    } else {
+      console.error("No valid ID found for freelancer:", freelancer);
+      alert("Unable to view profile - missing ID");
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="fl-page">
+        <div className="fl-hero">
+          <h1>Loading freelancers...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="fl-page">
+        <div className="fl-hero">
+          <h1>Error: {error}</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (freelancers.length === 0) {
+    return (
+      <div className="fl-page">
+        <div className="fl-hero">
+          <h1>No freelancers available</h1>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fl-page">
@@ -36,7 +83,7 @@ export default function FreelancerList() {
           const availability = item.availability || {};
 
           const fullName = basic.full_name || "Unnamed Freelancer";
-          const expertise = professional.job_role || "Not Provided";
+          const expertise = professional.job_role || professional.expertise || "Not Provided";
           const location = basic.location || "Not Provided";
           const languages = basic.languages_known || "";
 
@@ -60,7 +107,7 @@ export default function FreelancerList() {
           }
 
           return (
-            <div key={index} className="fl-card">
+            <div key={item.id || item.user_id || index} className="fl-card">
               {avatar}
 
               <h3 className="fl-name">{fullName}</h3>
@@ -82,14 +129,12 @@ export default function FreelancerList() {
                   : <span className="fl-skill">Languages Not Provided</span>}
               </div>
 
-          <button
-  className="fl-view-btn"
-  onClick={() => handleViewProfile(item.user_id)}
->
-  View Profile
-</button>
-
-
+              <button
+                className="fl-view-btn"
+                onClick={() => handleViewProfile(item)}
+              >
+                View Profile
+              </button>
             </div>
           );
         })}
