@@ -5,98 +5,97 @@ import { useNavigate } from "react-router-dom";
 
 export default function FreelancerList() {
   const [freelancers, setFreelancers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loadFreelancers = async () => {
+    const fetchFreelancers = async () => {
       try {
         const res = await api.get("/api/profiles/freelancers/");
-        // Normalize languages_known to always be an array for UI
+
         const fixed = (res.data || []).map((f) => {
-          const langs = f.languages_known;
+          const basic = f.basic || {};
+          const professional = f.professional || {};
+
+          // Fix languages
+          const langs = basic.languages_known || [];
           let langsArr = [];
 
           if (Array.isArray(langs)) langsArr = langs;
-          else if (typeof langs === "string") langsArr = langs.split(",").map(s => s.trim()).filter(Boolean);
+          else if (typeof langs === "string")
+            langsArr = langs.split(",").map((l) => l.trim()).filter(Boolean);
 
-          return { ...f, languages_known: langsArr };
+          return {
+            id: f.id || basic.user || basic.id,
+            full_name: basic.full_name || "Unnamed Freelancer",
+            profile_picture: basic.profile_picture || null,
+            location: basic.location || "Location Not Provided",
+            languages_known: langsArr,
+            expertise: professional.expertise || "Freelancer",
+          };
         });
 
         setFreelancers(fixed);
-      } catch (err) {
-        console.error("Error loading freelancers:", err);
+      } catch (error) {
+        console.error("Error loading freelancers:", error);
+      } finally {
+        setLoading(false);
       }
     };
-    loadFreelancers();
+
+    fetchFreelancers();
   }, []);
 
+  if (loading) return <p>Loading...</p>;
+
   return (
-    <div className="fl-page">
+    <div className="fl-container">
+      <h2 className="fl-title">Freelancers</h2>
 
-      {/* ================= HERO SECTION ================= */}
-      <section className="fl-hero">
-        <h1>Find Top Freelancers</h1>
-        <p>
-          Browse skilled professionals ready to work on your next project.
-        </p>
-      </section>
-
-      {/* ================= LIST SECTION ================= */}
       <div className="fl-grid">
-        {freelancers.length === 0 ? (
-          <p>No freelancers available.</p>
-        ) : (
-          freelancers.map((f) => (
-            <div key={f.id} className="fl-card">
-
-              {/* PROFILE IMAGE */}
-              <div className="fl-img-container">
-                {f.profile_picture ? (
-                  <img src={f.profile_picture} alt="Freelancer" />
-                ) : (
-                  <div className="fl-placeholder">
-                    {f.full_name?.charAt(0).toUpperCase() || "U"}
-                  </div>
-                )}
-              </div>
-
-              {/* NAME */}
-              <h3 className="fl-name">{f.full_name || "Unnamed Freelancer"}</h3>
-
-              {/* EXPERTISE */}
-              <p className="fl-expertise">
-                {f.professional?.expertise || f.basic?.professional?.expertise || "Freelancer"}
-              </p>
-
-              {/* LOCATION */}
-              <p className="fl-location">
-                {f.location || "Location Not Provided"}
-              </p>
-
-              {/* LANGUAGES */}
-              <div className="fl-skills">
-                {Array.isArray(f.languages_known) &&
-                f.languages_known.length > 0 ? (
-                  f.languages_known.slice(0, 3).map((lang, i) => (
-                    <span key={i} className="fl-skill">{lang}</span>
-                  ))
-                ) : (
-                  <span className="fl-skill">Languages Not Provided</span>
-                )}
-              </div>
-
-              {/* VIEW PROFILE BUTTON */}
-              <button
-                className="fl-view-btn"
-               onClick={() => navigate(`/freelancers/${f.id || f.basic?.user?.id || f.basic?.id}`)}
-
-
-              >
-                View Profile
-              </button>
+        {freelancers.map((f) => (
+          <div key={f.id} className="fl-card">
+            {/* Profile image */}
+            <div className="fl-avatar">
+              {f.profile_picture ? (
+                <img src={f.profile_picture} alt={f.full_name} />
+              ) : (
+                <div className="fl-avatar-placeholder">
+                  {f.full_name.charAt(0)}
+                </div>
+              )}
             </div>
-          ))
-        )}
+
+            {/* Name */}
+            <h3 className="fl-name">{f.full_name}</h3>
+
+            {/* Expertise */}
+            <p className="fl-expertise">{f.expertise}</p>
+
+            {/* Location */}
+            <p className="fl-location">{f.location}</p>
+
+            {/* Languages */}
+            <div className="fl-languages">
+              {f.languages_known.length > 0 ? (
+                f.languages_known.slice(0, 3).map((lang, i) => (
+                  <span key={i} className="fl-skill">
+                    {lang}
+                  </span>
+                ))
+              ) : (
+                <span className="fl-skill">Languages Not Provided</span>
+              )}
+            </div>
+
+            <button
+              className="fl-btn"
+              onClick={() => navigate(`/freelancers/${f.id}`)}
+            >
+              View Profile
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );
