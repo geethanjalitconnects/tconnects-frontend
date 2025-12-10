@@ -224,12 +224,12 @@ export default function FreelancerBasicInfo() {
             className="fr-btn"
             onClick={() => {
               setForm({
-                full_name: "",
-                phone_number: "",
-                location: "",
-                languages_known: "",
-                is_published: false,
-              });
+  phone_number: data.phone_number || "",
+  location: data.location || "",
+  languages_known: data.languages_known || "",
+  is_published: data.is_published || false,
+});
+
               setPreview(null);
               setProfilePicFile(null);
             }}
