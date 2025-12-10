@@ -83,11 +83,12 @@ export default function FreelancerList() {
               </div>
 
               <button
-                className="fl-view-btn"
-                onClick={() => handleViewProfile(basic.id)}
-              >
-                View Profile
-              </button>
+  className="fl-view-btn"
+  onClick={() => handleViewProfile(fl.user_id)}
+>
+  View Profile
+</button>
+
             </div>
           );
         })}
