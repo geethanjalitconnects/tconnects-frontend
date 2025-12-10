@@ -80,9 +80,13 @@ export default function FreelancerList() {
           const availability = item.availability || {};
 
           const fullName = basic.full_name || "Unnamed Freelancer";
-          const expertise = professional.job_role || professional.expertise || "Not Provided";
+          const expertise = professional?.expertise || professional?.job_role || "Not Provided";
           const location = basic.location || "Not Provided";
-          const languages = basic.languages_known || "";
+          
+          // Handle languages - backend returns JSON array
+          const languages = Array.isArray(basic.languages_known) 
+            ? basic.languages_known 
+            : [];
 
           // Avatar logic
           const avatar = basic.profile_picture ? (
@@ -97,14 +101,14 @@ export default function FreelancerList() {
 
           // Availability Badge
           let badge = null;
-          if (availability.is_available) {
+          if (availability?.is_available) {
             badge = <p className="badge-available">Available for Work</p>;
-          } else if (availability.is_occupied) {
+          } else if (availability?.is_occupied) {
             badge = <p className="badge-occupied">Currently Occupied</p>;
           }
 
           return (
-            <div key={item.id || item.user_id || index} className="fl-card">
+            <div key={item.id || index} className="fl-card">
               {avatar}
 
               <h3 className="fl-name">{fullName}</h3>
@@ -117,13 +121,15 @@ export default function FreelancerList() {
 
               {/* Languages */}
               <div className="fl-skills">
-                {languages
-                  ? languages.split(",").map((lang, i) => (
-                      <span key={i} className="fl-skill">
-                        {lang.trim()}
-                      </span>
-                    ))
-                  : <span className="fl-skill">Languages Not Provided</span>}
+                {languages.length > 0 ? (
+                  languages.map((lang, i) => (
+                    <span key={i} className="fl-skill">
+                      {lang}
+                    </span>
+                  ))
+                ) : (
+                  <span className="fl-skill">Languages Not Provided</span>
+                )}
               </div>
 
               <button

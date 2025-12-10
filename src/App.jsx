@@ -117,17 +117,15 @@ const useAuthCheck = (onAuthChange) => {
     window.addEventListener('auth:logout', handleLogout);
 
     return () => window.removeEventListener('auth:logout', handleLogout);
-  }, []); // <-- ONLY RUN ONCE
+  }, []);
 
   return { user, isChecking };
 };
 
 /* ================= HOME PAGE ================= */
-function HomePage({ onCategoryClick, navigate, currentUser }) {
+function HomePage({ onCategoryClick, navigate }) {
   return (
     <>
-      <WelcomeModal currentUser={currentUser} />
-      
       <HeroSection 
         onCategoryClick={onCategoryClick} 
         navigateToJobsList={() => navigate("/jobs")}
@@ -150,10 +148,11 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const hideHeader = location.pathname.startsWith("/course/")||
-  location.pathname.startsWith("/candidate-dashboard")||
-  location.pathname.startsWith("/recruiter-dashboard");
-  
+  // Determine which pages should hide the header
+  const hideHeader = 
+    location.pathname.startsWith("/course/") ||
+    location.pathname.startsWith("/candidate-dashboard") ||
+    location.pathname.startsWith("/recruiter-dashboard");
 
   // Auto-check authentication on mount (fixes Safari issue)
   const { user: authUser, isChecking } = useAuthCheck((userData) => {
@@ -226,6 +225,7 @@ function App() {
               }}
             />
 
+            {/* Conditionally render Header */}
             {!hideHeader && (
               <Header 
                 currentUser={currentUser} 
@@ -238,10 +238,13 @@ function App() {
               <Route 
                 path="/" 
                 element={
-                  <HomePage 
-                    onCategoryClick={setModalCategory}
-                    navigate={navigate}  
-                  />
+                  <>
+                    <WelcomeModal currentUser={currentUser} />
+                    <HomePage 
+                      onCategoryClick={setModalCategory}
+                      navigate={navigate}  
+                    />
+                  </>
                 } 
               />
               <Route path="/about-us" element={<AboutUs />} />
