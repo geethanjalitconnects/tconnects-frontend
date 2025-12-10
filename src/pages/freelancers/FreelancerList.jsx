@@ -82,12 +82,13 @@ export default function FreelancerList() {
                   : <span className="fl-skill">Languages Not Provided</span>}
               </div>
 
-              <button
+          <button
   className="fl-view-btn"
-  onClick={() => handleViewProfile(fl.user_id)}
+  onClick={() => handleViewProfile(item.user_id)}
 >
   View Profile
 </button>
+
 
             </div>
           );
