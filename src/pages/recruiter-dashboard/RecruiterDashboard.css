@@ -1179,6 +1179,11 @@ textarea.rd-input {
     font-size: 14px;
   }
 }
+@media (max-width: 600px) {
+  .rd-main .cd-welcome-card {
+    margin-top: 40px !important;
+  }
+}
 
 /* ============================================================
    📱 SMALL PHONES (400px ↓)
