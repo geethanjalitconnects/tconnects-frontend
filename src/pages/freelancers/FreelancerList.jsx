@@ -1,194 +1,140 @@
-// src/pages/freelancers/FreelancerProfile.jsx
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import api from "../../config/api";
+import { useNavigate } from "react-router-dom";
 import "./FreelancerList.css";
 
-export default function FreelancerProfile() {
-  const { id } = useParams();
-  const [data, setData] = useState(null);
+export default function FreelancerList() {
+  const [freelancers, setFreelancers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const loadProfile = async () => {
+    const loadFreelancers = async () => {
       try {
-        console.log("=== FREELANCER PROFILE DEBUG ===");
-        console.log("Loading profile with ID:", id);
-        console.log("Full API URL:", `/api/profiles/freelancers/${id}/`);
-        
-        const res = await api.get(`/api/profiles/freelancers/${id}/`);
-        
-        console.log("✅ Profile loaded successfully!");
-        console.log("Profile data received:", res.data);
-        setData(res.data);
-      } catch (err) {
-        console.error("❌ Error loading profile:", err);
-        console.error("Error response:", err.response);
-        console.error("Error data:", err.response?.data);
-        console.error("Status code:", err.response?.status);
-        
-        let errorMessage = "Failed to load profile";
-        
-        if (err.response?.status === 404) {
-          errorMessage = "Profile not found. This profile may not be published yet.";
-        } else if (err.response?.data?.error) {
-          errorMessage = err.response.data.error;
-        }
-        
-        setError(errorMessage);
+        const res = await api.get("/api/profiles/freelancers/");
+        console.log("Freelancers loaded:", res.data);
+        setFreelancers(res.data);
+      } catch (error) {
+        console.error("Error loading freelancers:", error);
+        setError("Failed to load freelancers");
       } finally {
         setLoading(false);
       }
     };
-    loadProfile();
-  }, [id]);
+    loadFreelancers();
+  }, []);
+
+  const handleViewProfile = (id) => {
+    console.log("Navigating to profile:", id);
+    navigate(`/freelancers/${id}`);
+  };
 
   if (loading) {
     return (
-      <div className="fl-profile-page">
-        <p className="loading">Loading profile...</p>
+      <div className="fl-page">
+        <div className="fl-hero">
+          <h1>Loading freelancers...</h1>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="fl-profile-page">
-        <div className="fl-card">
-          <h2>Error</h2>
-          <p>{error}</p>
+      <div className="fl-page">
+        <div className="fl-hero">
+          <h1>Error: {error}</h1>
         </div>
       </div>
     );
   }
 
-  if (!data) {
+  if (freelancers.length === 0) {
     return (
-      <div className="fl-profile-page">
-        <div className="fl-card">
-          <p>Profile not found</p>
+      <div className="fl-page">
+        <div className="fl-hero">
+          <h1>No freelancers available yet</h1>
+          <p>Check back soon for talented professionals!</p>
         </div>
       </div>
     );
   }
-
-  const { basic, professional, availability, education, social } = data;
-
-  // Safe data extraction with fallbacks
-  const fullName = basic?.full_name || "Unnamed Freelancer";
-  const expertise = professional?.expertise || "Freelancer";
-  const bio = professional?.bio || "No bio provided.";
-  const location = basic?.location || "Location Not Provided";
-  
-  // Handle languages - it's a JSON array from backend
-  const languages = Array.isArray(basic?.languages_known) 
-    ? basic.languages_known 
-    : [];
-
-  // Badge logic
-  const isAvailable = availability?.is_available;
-  const statusBadge = isAvailable
-    ? { text: "Available for Work", class: "fl-available" }
-    : { text: "Currently Occupied", class: "fl-occupied" };
 
   return (
-    <div className="fl-profile-page">
-      {/* ================= PROFILE HEADER ================= */}
-      <div className="fl-card fl-profile-header">
-        {/* Avatar */}
-        <div className="fl-profile-photo">
-          {basic?.profile_picture ? (
-            <img src={basic.profile_picture} alt={fullName} />
+    <div className="fl-page">
+      <div className="fl-hero">
+        <h1>Browse skilled professionals available for work.</h1>
+      </div>
+
+      <div className="fl-grid">
+        {freelancers.map((item) => {
+          const basic = item.basic || {};
+          const professional = item.professional || {};
+          const availability = item.availability || {};
+
+          const fullName = basic.full_name || "Unnamed Freelancer";
+          const expertise = professional.expertise || "Not Provided";
+          const location = basic.location || "Not Provided";
+          
+          // Handle languages - it's a JSON array
+          const languages = Array.isArray(basic.languages_known) 
+            ? basic.languages_known 
+            : [];
+
+          // Avatar
+          const avatar = basic.profile_picture ? (
+            <div className="fl-img-container">
+              <img src={basic.profile_picture} alt={fullName} />
+            </div>
           ) : (
-            <div className="fl-avatar-placeholder">
+            <div className="fl-placeholder">
               {fullName.charAt(0).toUpperCase()}
             </div>
-          )}
-        </div>
+          );
 
-        <div className="fl-profile-info">
-          <h2 className="fl-name">{fullName}</h2>
-          <p className="fl-expertise">{expertise}</p>
-          
-          <span className={`fl-badge ${statusBadge.class}`}>
-            {statusBadge.text}
-          </span>
+          // Availability Badge
+          let badge = null;
+          if (availability?.is_available) {
+            badge = <p className="badge-available">Available for Work</p>;
+          } else if (availability?.is_occupied) {
+            badge = <p className="badge-occupied">Currently Occupied</p>;
+          }
 
-          <p className="fl-location">{location}</p>
+          return (
+            <div key={item.id} className="fl-card">
+              {avatar}
 
-          {/* Languages */}
-          {languages.length > 0 && (
-            <div className="fl-lang-row">
-              {languages.map((lang, idx) => (
-                <span key={idx} className="fl-lang-pill">
-                  {lang}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+              <h3 className="fl-name">{fullName}</h3>
+              <p className="fl-expertise">{expertise}</p>
 
-      {/* ================= ABOUT ================= */}
-      <div className="fl-card fl-section">
-        <h3>About</h3>
-        <p>{bio}</p>
-      </div>
+              {badge}
 
-      {/* ================= EDUCATION ================= */}
-      <div className="fl-card fl-section">
-        <h3>Education</h3>
-        {!education || education.length === 0 ? (
-          <p>No education details.</p>
-        ) : (
-          education.map((edu) => (
-            <div key={edu.id} className="fl-edu-item">
-              <strong>{edu.degree}</strong> — {edu.institution}
-              <div className="fl-edu-year">
-                {edu.start_year} - {edu.end_year || "Present"}
+              <p className="fl-location">{location}</p>
+
+              {/* Languages */}
+              <div className="fl-skills">
+                {languages.length > 0 ? (
+                  languages.map((lang, i) => (
+                    <span key={i} className="fl-skill">
+                      {lang}
+                    </span>
+                  ))
+                ) : (
+                  <span className="fl-skill">No languages listed</span>
+                )}
               </div>
-              {edu.description && <p>{edu.description}</p>}
+
+              <button
+                className="fl-view-btn"
+                onClick={() => handleViewProfile(item.id)}
+              >
+                View Profile
+              </button>
             </div>
-          ))
-        )}
+          );
+        })}
       </div>
-
-      {/* ================= AVAILABILITY ================= */}
-      <div className="fl-card fl-section">
-        <h3>Availability</h3>
-        <p><strong>Status:</strong> {statusBadge.text}</p>
-        {availability?.time_zone && (
-          <p><strong>Timezone:</strong> {availability.time_zone}</p>
-        )}
-        {availability?.available_days && availability.available_days.length > 0 && (
-          <p><strong>Working Days:</strong> {availability.available_days.join(", ")}</p>
-        )}
-      </div>
-
-      {/* ================= SOCIAL LINKS ================= */}
-      {social && (social.linkedin_url || social.github_url || social.portfolio_url) && (
-        <div className="fl-card fl-section">
-          <h3>Social Links</h3>
-          <div className="fl-social">
-            {social.linkedin_url && (
-              <a href={social.linkedin_url} target="_blank" rel="noopener noreferrer">
-                LinkedIn
-              </a>
-            )}
-            {social.github_url && (
-              <a href={social.github_url} target="_blank" rel="noopener noreferrer">
-                GitHub
-              </a>
-            )}
-            {social.portfolio_url && (
-              <a href={social.portfolio_url} target="_blank" rel="noopener noreferrer">
-                Portfolio
-              </a>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

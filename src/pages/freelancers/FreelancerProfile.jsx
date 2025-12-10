@@ -1,11 +1,11 @@
-// src/pages/freelancers/FreelancerProfile.jsx
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../../config/api";
 import "./FreelancerList.css";
 
 export default function FreelancerProfile() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,30 +13,13 @@ export default function FreelancerProfile() {
   useEffect(() => {
     const loadProfile = async () => {
       try {
-        console.log("=== FREELANCER PROFILE DEBUG ===");
-        console.log("Loading profile with ID:", id);
-        console.log("Full API URL:", `/api/profiles/freelancers/${id}/`);
-        
+        console.log("Loading profile ID:", id);
         const res = await api.get(`/api/profiles/freelancers/${id}/`);
-        
-        console.log("✅ Profile loaded successfully!");
-        console.log("Profile data received:", res.data);
+        console.log("Profile loaded:", res.data);
         setData(res.data);
       } catch (err) {
-        console.error("❌ Error loading profile:", err);
-        console.error("Error response:", err.response);
-        console.error("Error data:", err.response?.data);
-        console.error("Status code:", err.response?.status);
-        
-        let errorMessage = "Failed to load profile";
-        
-        if (err.response?.status === 404) {
-          errorMessage = "Profile not found. This profile may not be published yet.";
-        } else if (err.response?.data?.error) {
-          errorMessage = err.response.data.error;
-        }
-        
-        setError(errorMessage);
+        console.error("Error:", err);
+        setError(err.response?.data?.error || "Failed to load profile");
       } finally {
         setLoading(false);
       }
@@ -63,11 +46,8 @@ export default function FreelancerProfile() {
         }}>
           <h2 style={{ color: '#856404', marginBottom: '1rem' }}>⚠️ Profile Not Found</h2>
           <p style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>{error}</p>
-          <p style={{ color: '#666' }}>
-            This profile may not be published yet or the ID is incorrect.
-          </p>
           <button 
-            onClick={() => window.location.href = '/freelancers'}
+            onClick={() => navigate('/freelancers')}
             style={{
               marginTop: '1.5rem',
               padding: '0.75rem 2rem',
@@ -79,7 +59,7 @@ export default function FreelancerProfile() {
               fontSize: '1rem'
             }}
           >
-            ← Back to Freelancers List
+            ← Back to Freelancers
           </button>
         </div>
       </div>
@@ -89,27 +69,25 @@ export default function FreelancerProfile() {
   if (!data) {
     return (
       <div className="fl-profile-page">
-        <div className="fl-card">
-          <p>Profile not found</p>
-        </div>
+        <p>No data available</p>
       </div>
     );
   }
 
-  const { basic, professional, availability, education, social } = data;
+  const { basic, professional, availability, education, social, payment_types } = data;
 
-  // Safe data extraction with fallbacks
+  // Safe data extraction
   const fullName = basic?.full_name || "Unnamed Freelancer";
   const expertise = professional?.expertise || "Freelancer";
   const bio = professional?.bio || "No bio provided.";
   const location = basic?.location || "Location Not Provided";
   
-  // Handle languages - it's a JSON array from backend
+  // Handle languages - JSON array
   const languages = Array.isArray(basic?.languages_known) 
     ? basic.languages_known 
     : [];
 
-  // Badge logic
+  // Availability badge
   const isAvailable = availability?.is_available;
   const statusBadge = isAvailable
     ? { text: "Available for Work", class: "fl-available" }
@@ -117,9 +95,8 @@ export default function FreelancerProfile() {
 
   return (
     <div className="fl-profile-page">
-      {/* ================= PROFILE HEADER ================= */}
+      {/* PROFILE HEADER */}
       <div className="fl-card fl-profile-header">
-        {/* Avatar */}
         <div className="fl-profile-photo">
           {basic?.profile_picture ? (
             <img src={basic.profile_picture} alt={fullName} />
@@ -144,28 +121,24 @@ export default function FreelancerProfile() {
           {languages.length > 0 && (
             <div className="fl-lang-row">
               {languages.map((lang, idx) => (
-                <span key={idx} className="fl-lang-pill">
-                  {lang}
-                </span>
+                <span key={idx} className="fl-lang-pill">{lang}</span>
               ))}
             </div>
           )}
         </div>
       </div>
 
-      {/* ================= ABOUT ================= */}
+      {/* ABOUT */}
       <div className="fl-card fl-section">
         <h3>About</h3>
         <p>{bio}</p>
       </div>
 
-      {/* ================= EDUCATION ================= */}
-      <div className="fl-card fl-section">
-        <h3>Education</h3>
-        {!education || education.length === 0 ? (
-          <p>No education details.</p>
-        ) : (
-          education.map((edu) => (
+      {/* EDUCATION */}
+      {education && education.length > 0 && (
+        <div className="fl-card fl-section">
+          <h3>Education</h3>
+          {education.map((edu) => (
             <div key={edu.id} className="fl-edu-item">
               <strong>{edu.degree}</strong> — {edu.institution}
               <div className="fl-edu-year">
@@ -173,23 +146,25 @@ export default function FreelancerProfile() {
               </div>
               {edu.description && <p>{edu.description}</p>}
             </div>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {/* ================= AVAILABILITY ================= */}
-      <div className="fl-card fl-section">
-        <h3>Availability</h3>
-        <p><strong>Status:</strong> {statusBadge.text}</p>
-        {availability?.time_zone && (
-          <p><strong>Timezone:</strong> {availability.time_zone}</p>
-        )}
-        {availability?.available_days && availability.available_days.length > 0 && (
-          <p><strong>Working Days:</strong> {availability.available_days.join(", ")}</p>
-        )}
-      </div>
+      {/* AVAILABILITY */}
+      {availability && (
+        <div className="fl-card fl-section">
+          <h3>Availability</h3>
+          <p><strong>Status:</strong> {statusBadge.text}</p>
+          {availability.time_zone && (
+            <p><strong>Timezone:</strong> {availability.time_zone}</p>
+          )}
+          {availability.available_days && availability.available_days.length > 0 && (
+            <p><strong>Working Days:</strong> {availability.available_days.join(", ")}</p>
+          )}
+        </div>
+      )}
 
-      {/* ================= SOCIAL LINKS ================= */}
+      {/* SOCIAL LINKS */}
       {social && (social.linkedin_url || social.github_url || social.portfolio_url) && (
         <div className="fl-card fl-section">
           <h3>Social Links</h3>
@@ -209,6 +184,20 @@ export default function FreelancerProfile() {
                 Portfolio
               </a>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* PAYMENT METHODS */}
+      {payment_types && payment_types.length > 0 && (
+        <div className="fl-card fl-section">
+          <h3>Accepted Payment Methods</h3>
+          <div className="fl-skills">
+            {payment_types.map((type, idx) => (
+              <span key={idx} className="fl-skill">
+                {type === 'upi' ? 'UPI' : type === 'bank_transfer' ? 'Bank Transfer' : type}
+              </span>
+            ))}
           </div>
         </div>
       )}
