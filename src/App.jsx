@@ -211,7 +211,7 @@ function App() {
   }
 
   return (
-    <AuthProvider value={{ currentUser, setCurrentUser }}>
+    <AuthProvider value={{ user: currentUser, setUser: setCurrentUser }}>
       <SavedJobsProvider>
         <SavedInternshipsProvider>
           <div>
