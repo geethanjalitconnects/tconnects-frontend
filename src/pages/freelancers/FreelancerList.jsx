@@ -1,4 +1,3 @@
-// src/pages/freelancers/FreelancerList.jsx
 import React, { useEffect, useState } from "react";
 import api from "../../config/api";
 import "./FreelancerList.css";
@@ -10,84 +9,89 @@ export default function FreelancerList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchFreelancers = async () => {
       try {
         const res = await api.get("/api/profiles/freelancers/");
-        const arr = Array.isArray(res.data) ? res.data : [];
 
-        const normalized = arr.map((f) => {
+        const fixed = (res.data || []).map((f) => {
           const basic = f.basic || {};
           const professional = f.professional || {};
 
-          // Normalise languages into array
-          const langsRaw = basic.languages_known || "";
-          let langs = [];
-          if (Array.isArray(langsRaw)) langs = langsRaw;
-          else if (typeof langsRaw === "string")
-            langs = langsRaw.split(",").map((s) => s.trim()).filter(Boolean);
-
-          // Correct ID to route to profile — use user id from basic.user
-          const id = basic.user || basic.id || f.id;
+          // Fix languages
+          let langsArr = [];
+          if (Array.isArray(basic.languages_known)) {
+            langsArr = basic.languages_known;
+          } else if (typeof basic.languages_known === "string") {
+            langsArr = basic.languages_known
+              .split(",")
+              .map((l) => l.trim())
+              .filter(Boolean);
+          }
 
           return {
-            id,
+            id: basic.user || f.id,                      // FIXED ID
             full_name: basic.full_name || "Unnamed Freelancer",
-            location: basic.location || "Location Not Provided",
             profile_picture: basic.profile_picture || null,
-            languages: langs,
-            expertise: professional.expertise || professional.categories || "Freelancer",
+            location: basic.location || "Location Not Provided",
+            languages_known: langsArr,
+            expertise: professional.expertise || "Freelancer",
           };
         });
 
-        setFreelancers(normalized);
-      } catch (err) {
-        console.error("FreelancerList load error:", err);
+        setFreelancers(fixed);
+      } catch (error) {
+        console.error("Error loading freelancers:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetch();
+    fetchFreelancers();
   }, []);
 
-  if (loading) return <div className="fl-loading">Loading freelancers...</div>;
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="fl-container">
-      <h2 className="fl-heading">Freelancers</h2>
+      <h2 className="fl-title">Freelancers</h2>
 
       <div className="fl-grid">
         {freelancers.map((f) => (
-          <article key={f.id || Math.random()} className="fl-card">
+          <div key={f.id} className="fl-card">
+
             <div className="fl-avatar">
               {f.profile_picture ? (
                 <img src={f.profile_picture} alt={f.full_name} />
               ) : (
-                <div className="fl-placeholder">{(f.full_name || "U").charAt(0)}</div>
+                <div className="fl-avatar-placeholder">
+                  {f.full_name.charAt(0).toUpperCase()}
+                </div>
               )}
             </div>
 
-            <div className="fl-body">
-              <h3 className="fl-name">{f.full_name}</h3>
-              <div className="fl-expertise">{f.expertise}</div>
-              <div className="fl-location">{f.location}</div>
-              <div className="fl-lang-list">
-                {f.languages.length > 0 ? (
-                  f.languages.slice(0, 4).map((l, i) => (
-                    <span className="fl-tag" key={i}>{l}</span>
-                  ))
-                ) : (
-                  <span className="fl-tag">Languages Not Provided</span>
-                )}
-              </div>
+            <h3 className="fl-name">{f.full_name}</h3>
+
+            <p className="fl-expertise">{f.expertise}</p>
+
+            <p className="fl-location">{f.location}</p>
+
+            <div className="fl-languages">
+              {f.languages_known.length > 0 ? (
+                f.languages_known.slice(0, 3).map((lang, i) => (
+                  <span key={i} className="fl-skill">{lang}</span>
+                ))
+              ) : (
+                <span className="fl-skill">Languages Not Provided</span>
+              )}
             </div>
 
-            <div className="fl-actions">
-              <button className="fl-view-btn" onClick={() => navigate(`/freelancers/${f.id}`)}>
-                View Profile
-              </button>
-            </div>
-          </article>
+            <button
+              className="fl-btn"
+              onClick={() => navigate(`/freelancers/${f.id}`)}
+            >
+              View Profile
+            </button>
+          </div>
         ))}
       </div>
     </div>
