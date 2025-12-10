@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import api from "../../../config/api";
 import toast from "react-hot-toast";
 import "./Freelancer.css";
+import { useNavigate } from "react-router-dom";
 
 export default function FreelancerPayment() {
   const [methods, setMethods] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Empty new entry template (only UI, no API yet)
   const emptyMethod = {
@@ -257,6 +259,10 @@ export default function FreelancerPayment() {
           <button type="submit" className="fr-btn fr-btn-primary">
             Save All
           </button>
+        </div>
+        <div className="fr-actions" style={{ marginTop: 12 }}>
+          <button type="button" className="fr-btn" onClick={() => navigate('/candidate-dashboard/freelancer/availability')}>Previous: Availability</button>
+          <button type="button" className="fr-btn fr-btn-primary" onClick={() => navigate('/candidate-dashboard/freelancer/social-links')}>Next: Social Links</button>
         </div>
       </form>
     </div>

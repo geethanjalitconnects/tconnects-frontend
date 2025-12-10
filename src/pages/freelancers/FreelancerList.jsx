@@ -11,7 +11,18 @@ export default function FreelancerList() {
     const loadFreelancers = async () => {
       try {
         const res = await api.get("/api/profiles/freelancers/");
-        setFreelancers(res.data);
+        // Normalize languages_known to always be an array for UI
+        const fixed = (res.data || []).map((f) => {
+          const langs = f.languages_known;
+          let langsArr = [];
+
+          if (Array.isArray(langs)) langsArr = langs;
+          else if (typeof langs === "string") langsArr = langs.split(",").map(s => s.trim()).filter(Boolean);
+
+          return { ...f, languages_known: langsArr };
+        });
+
+        setFreelancers(fixed);
       } catch (err) {
         console.error("Error loading freelancers:", err);
       }

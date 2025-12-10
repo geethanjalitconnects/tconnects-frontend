@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from "../../../config/api";
 import toast from "react-hot-toast";
 import "./Freelancer.css";
+import { useNavigate } from "react-router-dom";
 
 export default function FreelancerEducation() {
   const [list, setList] = useState([]);
@@ -13,6 +14,7 @@ export default function FreelancerEducation() {
   });
 
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // =====================================
   // 1️⃣ Load saved education
@@ -128,6 +130,11 @@ export default function FreelancerEducation() {
 
           <div className="fr-actions">
             <button className="fr-btn fr-btn-primary">Add +</button>
+          </div>
+
+          <div className="fr-actions" style={{ marginTop: 12 }}>
+            <button type="button" className="fr-btn" onClick={() => navigate('/candidate-dashboard/freelancer/professional-details')}>Previous: Professional Details</button>
+            <button type="button" className="fr-btn fr-btn-primary" onClick={() => navigate('/candidate-dashboard/freelancer/availability')}>Next: Availability</button>
           </div>
         </form>
 

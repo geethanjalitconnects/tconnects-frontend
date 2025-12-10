@@ -22,7 +22,7 @@ export default function RecruiterOverview() {
 
   const fetchOverview = async () => {
     try {
-      const res = await api.get("/api/recruiter/overview/");
+      const res = await api.get("/api/applications/recruiter/overview/");
       setStats(res.data);
     } catch (error) {
       console.log("Error loading recruiter overview:", error);

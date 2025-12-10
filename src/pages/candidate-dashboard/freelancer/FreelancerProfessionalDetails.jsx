@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from "../../../config/api";
 import toast from "react-hot-toast";
 import "./Freelancer.css";
+import { useNavigate } from "react-router-dom";
 
 export default function FreelancerProfessionalDetails() {
   const [data, setData] = useState({
@@ -13,6 +14,7 @@ export default function FreelancerProfessionalDetails() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   // ================================
   // Dynamic Placeholders for Risk Management
@@ -171,6 +173,11 @@ export default function FreelancerProfessionalDetails() {
 
         <div className="fr-actions">
           <button className="fr-btn fr-btn-primary">Save</button>
+        </div>
+
+        <div className="fr-actions" style={{ marginTop: 12 }}>
+          <button type="button" className="fr-btn" onClick={() => navigate('/candidate-dashboard/freelancer/basic-information')}>Previous: Basic Info</button>
+          <button type="button" className="fr-btn fr-btn-primary" onClick={() => navigate('/candidate-dashboard/freelancer/education')}>Next: Education</button>
         </div>
       </form>
     </div>

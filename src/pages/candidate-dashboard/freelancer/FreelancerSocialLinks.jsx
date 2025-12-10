@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import api from "../../../config/api";
 import toast from "react-hot-toast";
 import "./Freelancer.css";
+import { useNavigate } from "react-router-dom";
 
 export default function FreelancerSocialLinks() {
   const [data, setData] = useState({
@@ -13,6 +14,7 @@ export default function FreelancerSocialLinks() {
   });
 
   const [reviewerEmail, setReviewerEmail] = useState("");
+  const navigate = useNavigate();
 
   // ======================================================
   // 1️⃣ LOAD SOCIAL LINKS (with safe defaults)
@@ -170,6 +172,13 @@ export default function FreelancerSocialLinks() {
             ))}
           </div>
         )}
+        
+        <div style={{ marginTop: 12 }}>
+          <div className="fr-actions">
+            <button type="button" className="fr-btn" onClick={() => navigate('/candidate-dashboard/freelancer/payment-method')}>Previous: Payment Method</button>
+            <button type="button" className="fr-btn fr-btn-primary" onClick={() => navigate('/candidate-dashboard/freelancer/profile-preview')}>Next: Profile Preview</button>
+          </div>
+        </div>
       </div>
     </div>
   );

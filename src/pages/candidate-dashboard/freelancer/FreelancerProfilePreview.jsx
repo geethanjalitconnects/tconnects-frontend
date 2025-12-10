@@ -88,9 +88,20 @@ export default function FreelancerProfilePreview() {
 
   const initials = (basic.full_name || "User Name")
     .split(" ")
-    .map(w => w[0] || "")
+    .map((w) => w[0] || "")
     .join("")
     .toUpperCase();
+
+  // Normalize languages display (API may return string or array)
+  const languagesArray = Array.isArray(basic.languages_known)
+    ? basic.languages_known
+    : typeof basic.languages_known === "string"
+    ? basic.languages_known.split(",").map((s) => s.trim()).filter(Boolean)
+    : [];
+
+  const languagesDisplay = languagesArray.length > 0 ? languagesArray.join(", ") : "N/A";
+
+  const timezoneDisplay = availability.time_zone || "N/A";
 
   return (
     <div className="fr-page">
@@ -107,7 +118,7 @@ export default function FreelancerProfilePreview() {
             )}
           </div>
 
-          <div className="fr-preview-basic">
+            <div className="fr-preview-basic">
             <h3>{basic.full_name || "Unnamed Freelancer"}</h3>
             <p>{professional?.categories || "No category added"}</p>
             <p className="fr-small">{basic.location || "Not specified"}</p>
@@ -119,7 +130,7 @@ export default function FreelancerProfilePreview() {
           <h4 className="fr-section-title">Basic Info</h4>
           <div className="fr-info-row"><span>Phone:</span> {basic.phone_number || "N/A"}</div>
           <div className="fr-info-row"><span>Location:</span> {basic.location || "N/A"}</div>
-          <div className="fr-info-row"><span>Languages:</span> {Array.isArray(basic.languages_known) ? basic.languages_known.join(", ") : "N/A"}</div>
+          <div className="fr-info-row"><span>Languages:</span> {languagesDisplay}</div>
         </div>
 
         {/* PROFESSIONAL */}
@@ -153,7 +164,7 @@ export default function FreelancerProfilePreview() {
             <div className="fr-info-row"><span>Status:</span> {availability.is_available ? "Available" : "Occupied"}</div>
             <div className="fr-info-row"><span>From:</span> {availability.available_from || "N/A"}</div>
             <div className="fr-info-row"><span>To:</span> {availability.available_to || "N/A"}</div>
-            <div className="fr-info-row"><span>Timezone:</span> {availability.time_zone || "N/A"}</div>
+            <div className="fr-info-row"><span>Timezone:</span> {timezoneDisplay}</div>
             <div className="fr-info-row"><span>Days:</span> {Array.isArray(availability.available_days) ? availability.available_days.join(", ") : "No days selected"}</div>
           </>
         </div>
@@ -191,6 +202,9 @@ export default function FreelancerProfilePreview() {
           <button className="fr-btn fr-btn-danger" onClick={deleteProfile}>
             Delete Profile
           </button>
+        </div>
+        <div className="fr-actions" style={{ marginTop: 12 }}>
+          <button type="button" className="fr-btn" onClick={() => window.location.href = '/candidate-dashboard/freelancer/social-links'}>Previous: Social Links</button>
         </div>
 
       </div>

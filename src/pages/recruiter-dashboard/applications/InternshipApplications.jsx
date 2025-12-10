@@ -13,7 +13,7 @@ export default function InternshipApplications() {
 
   const fetchInternships = async () => {
     try {
-      const res = await api.get("/api/recruiter/internships/");
+      const res = await api.get("/api/internships/my-internships/");
       setInternships(res.data);
     } catch (error) {
       console.error("Failed to fetch internships", error);
@@ -28,7 +28,7 @@ export default function InternshipApplications() {
 
     try {
       const res = await api.get(
-        `/api/recruiter/applications/internships/${internshipId}/`
+        `/api/applications/internship/${internshipId}/applicants/`
       );
       setApplications(res.data);
     } catch (error) {

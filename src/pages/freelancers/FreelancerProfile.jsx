@@ -94,7 +94,7 @@ export default function FreelancerProfile() {
               {availability.is_available ? "Available" : "Not Available"}
             </p>
             <p>
-              <strong>Timezone:</strong> {availability.time_zone}
+              <strong>Timezone:</strong> {availability.time_zone || "Not specified"}
             </p>
             <p>
               <strong>Days:</strong>{" "}

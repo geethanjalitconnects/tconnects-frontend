@@ -14,7 +14,7 @@ export default function JobApplications() {
 
   const fetchJobs = async () => {
     try {
-      const res = await api.get("/api/recruiter/jobs/");
+      const res = await api.get("/api/jobs/my-jobs/");
       setJobs(res.data);
     } catch (error) {
       console.error("Failed to fetch jobs", error);
@@ -28,7 +28,7 @@ export default function JobApplications() {
     }
 
     try {
-      const res = await api.get(`/api/recruiter/applications/jobs/${jobId}/`);
+      const res = await api.get(`/api/applications/job/${jobId}/applicants/`);
       setApplications(res.data);
     } catch (error) {
       console.error("Failed to fetch job applications", error);

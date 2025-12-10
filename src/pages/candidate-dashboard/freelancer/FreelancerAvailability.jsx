@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import api from "../../../config/api";
 import toast from "react-hot-toast";
 import "./Freelancer.css";
+import { useNavigate } from "react-router-dom";
 
 export default function FreelancerAvailability() {
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const [state, setState] = useState({
     is_available: true,
@@ -186,6 +188,11 @@ export default function FreelancerAvailability() {
           >
             Reset
           </button>
+        </div>
+
+        <div className="fr-actions" style={{ marginTop: 12 }}>
+          <button type="button" className="fr-btn" onClick={() => navigate('/candidate-dashboard/freelancer/education')}>Previous: Education</button>
+          <button type="button" className="fr-btn fr-btn-primary" onClick={() => navigate('/candidate-dashboard/freelancer/payment-method')}>Next: Payment Method</button>
         </div>
       </form>
     </div>

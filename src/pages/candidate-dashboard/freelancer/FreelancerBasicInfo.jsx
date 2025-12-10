@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import api from "../../../config/api";
 import toast from "react-hot-toast";
 import "./Freelancer.css";
+import { AuthContext } from "../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function FreelancerBasicInfo() {
   const [form, setForm] = useState({
@@ -15,6 +17,8 @@ export default function FreelancerBasicInfo() {
   const [preview, setPreview] = useState(null);
   const [profilePicFile, setProfilePicFile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { user: currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   // ================================
   // 1️⃣ LOAD EXISTING FREELANCER DATA
@@ -26,7 +30,7 @@ export default function FreelancerBasicInfo() {
         const data = res.data;
 
         setForm({
-          full_name: data.full_name || "",
+          full_name: data.full_name || (currentUser?.full_name || ""),
           phone_number: data.phone_number || "",
           location: data.location || "",
           languages_known: data.languages_known || "",
@@ -127,6 +131,17 @@ export default function FreelancerBasicInfo() {
       <form className="fr-card fr-form" onSubmit={handleSave}>
         <h2 className="fr-title">Basic Information</h2>
 
+        {/* Email (from auth) */}
+        <div className="fr-row">
+          <label className="fr-label">Email</label>
+          <input
+            name="email"
+            value={currentUser?.email || ""}
+            className="fr-input"
+            readOnly
+          />
+        </div>
+
         {/* Full name */}
         <div className="fr-row">
           <label className="fr-label">Full name</label>
@@ -223,6 +238,12 @@ export default function FreelancerBasicInfo() {
           >
             Reset
           </button>
+        </div>
+
+        {/* Prev / Next navigation */}
+        <div className="fr-actions" style={{ marginTop: 12 }}>
+          <button type="button" className="fr-btn" onClick={() => navigate('/candidate-dashboard/overview')}>Back</button>
+          <button type="button" className="fr-btn fr-btn-primary" onClick={() => navigate('/candidate-dashboard/freelancer/professional-details')}>Next: Professional Details</button>
         </div>
       </form>
     </div>
