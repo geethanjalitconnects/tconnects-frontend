@@ -1,13 +1,14 @@
 // JobDetailsPage.jsx — GLOBAL-SYNC VERSION (Uses SavedJobsContext)
-// ✔ Saved job stays in sync with JobsListPage
-// ✔ Saved state persists on refresh
-// ✔ "Saved" shows instantly everywhere
-// ✔ UI unchanged
+// ✓ Saved job stays in sync with JobsListPage
+// ✓ Saved state persists on refresh
+// ✓ "Saved" shows instantly everywhere
+// ✓ UI unchanged
+// ✓ Fixed Apply Job navigation
 
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../config/api";
-import { useSavedJobs } from "../../context/SavedJobsContext";   // ⭐ ADDED
+import { useSavedJobs } from "../../context/SavedJobsContext";
 import "./JobDetailsPage.css";
 
 const JobDetailsPage = () => {
@@ -74,17 +75,18 @@ const JobDetailsPage = () => {
   }, [id]);
 
   // =============================
-  // 3) APPLY NOW
+  // 3) APPLY NOW - FIXED
   // =============================
   const handleApplyNow = () => {
-    navigate(`/apply?id=${id}`);
+    // ✅ Changed from ?id= to ?jobId= to match ApplyJobPage
+    navigate(`/apply?jobId=${id}`);
   };
 
   // =============================
   // 4) SAVE / UNSAVE (GLOBAL)
   // =============================
   const handleToggleSave = async () => {
-    await toggleSave(Number(id)); // ⭐ Global action
+    await toggleSave(Number(id));
   };
 
   if (loading) return <div className="jd-loading">Loading job…</div>;

@@ -1,7 +1,7 @@
 // InternshipDetailsPage.jsx — GLOBAL SYNC VERSION
-// ✔ Uses SavedInternshipsContext for saved state
-// ✔ Instantly updates across all pages
-// ✔ UI unchanged
+// ✓ Uses SavedInternshipsContext for saved state
+// ✓ Instantly updates across all pages
+// ✓ Fixed Apply navigation to match ApplyInternshipPage
 
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,6 +17,7 @@ const InternshipDetailsPage = () => {
 
   const [internship, setInternship] = useState(null);
   const [company, setCompany] = useState(null);
+  const [applied, setApplied] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // ⭐ GLOBAL CONTEXT
@@ -52,12 +53,32 @@ const InternshipDetailsPage = () => {
   }, [id]);
 
   // =============================
-  // 2) APPLY NOW
+  // 2) LOAD APPLIED STATUS
   // =============================
-  const handleApplyNow = () => navigate(`/apply-internship?id=${id}`);
+  useEffect(() => {
+    const loadApplied = async () => {
+      try {
+        const res = await api.get("/api/applications/internship/applied/");
+        const appliedIds = res.data.map((a) => a.internship_id);
+        setApplied(appliedIds.includes(Number(id)));
+      } catch (err) {
+        console.error("Failed to load applied status:", err);
+      }
+    };
+
+    loadApplied();
+  }, [id]);
 
   // =============================
-  // 3) SAVE / UNSAVE (GLOBAL)
+  // 3) APPLY NOW - FIXED
+  // =============================
+  const handleApplyNow = () => {
+    // ✅ Changed from ?id= to ?internshipId= to match ApplyInternshipPage
+    navigate(`/apply-internship?internshipId=${id}`);
+  };
+
+  // =============================
+  // 4) SAVE / UNSAVE (GLOBAL)
   // =============================
   const handleToggleSave = () => {
     toggleSave(Number(id)); // ⭐ Instant global update
@@ -93,8 +114,13 @@ const InternshipDetailsPage = () => {
           </div>
 
           <div className="jd-header-right">
-            <button className="jd-apply-btn" onClick={handleApplyNow}>
-              Apply Now
+            {/* ⭐ APPLY BUTTON WITH STATUS */}
+            <button
+              className="jd-apply-btn"
+              disabled={applied}
+              onClick={!applied ? handleApplyNow : null}
+            >
+              {applied ? "Applied ✓" : "Apply Now"}
             </button>
 
             {/* ⭐ GLOBAL SAVE BUTTON */}
@@ -122,6 +148,18 @@ const InternshipDetailsPage = () => {
           </div>
         )}
 
+        {/* REQUIREMENTS */}
+        {internship.requirements?.length > 0 && (
+          <div className="jd-section">
+            <h2 className="jd-section-title">Requirements</h2>
+            <ul className="jd-list">
+              {internship.requirements.map((req, i) => (
+                <li key={i}>{req}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {/* SKILLS */}
         <div className="jd-section">
           <h2 className="jd-section-title">Skills Required</h2>
@@ -132,25 +170,42 @@ const InternshipDetailsPage = () => {
           </div>
         </div>
 
+        {/* PERKS & BENEFITS */}
+        {internship.perks?.length > 0 && (
+          <div className="jd-section">
+            <h2 className="jd-section-title">Perks & Benefits</h2>
+            <ul className="jd-list">
+              {internship.perks.map((perk, i) => (
+                <li key={i}>{perk}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {/* DEADLINE */}
         {internship.application_deadline && (
           <div className="jd-section">
             <h2 className="jd-section-title">Application Deadline</h2>
             <p className="jd-description">
-              {new Date(internship.application_deadline).toLocaleDateString("en-IN")}
+              {new Date(internship.application_deadline).toLocaleDateString("en-IN", {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
             </p>
           </div>
         )}
 
         {/* COMPANY DETAILS */}
         {company && (
-          <div className="jd-section">
+          <div className="jd-section-card">
             <h2 className="jd-section-title">Company Details</h2>
-            <div className="jd-company-box">
+            <div className="jd-company-grid">
               <p><strong>Company Name:</strong> {company.company_name}</p>
-              <p><strong>Industry:</strong> {company.industry_category || "Not provided"}</p>
-              <p><strong>Company Size:</strong> {company.company_size || "Not provided"}</p>
-              <p><strong>Location:</strong> {company.company_location || "Not provided"}</p>
+              <p><strong>Industry:</strong> {company.industry_category || "Not specified"}</p>
+              <p><strong>Company Size:</strong> {company.company_size || "Not specified"}</p>
+              <p><strong>Location:</strong> {company.company_location || "Not specified"}</p>
 
               {company.company_website && (
                 <p>
@@ -160,11 +215,13 @@ const InternshipDetailsPage = () => {
                   </a>
                 </p>
               )}
-
-              {company.about_company && (
-                <p><strong>About Company:</strong> {company.about_company}</p>
-              )}
             </div>
+
+            {company.about_company && (
+              <p className="jd-company-about">
+                <strong>About Company:</strong> {company.about_company}
+              </p>
+            )}
           </div>
         )}
 
