@@ -13,7 +13,17 @@ export default function FreelancerList() {
     const loadFreelancers = async () => {
       try {
         const res = await api.get("/api/profiles/freelancers/");
-        console.log("Freelancers loaded:", res.data);
+        console.log("=== FREELANCERS DATA DEBUG ===");
+        console.log("Total freelancers:", res.data.length);
+        console.log("Full response:", res.data);
+        
+        // Debug first freelancer
+        if (res.data.length > 0) {
+          console.log("First freelancer basic data:", res.data[0].basic);
+          console.log("Languages known:", res.data[0].basic?.languages_known);
+          console.log("Full name:", res.data[0].basic?.full_name);
+        }
+        
         setFreelancers(res.data);
       } catch (error) {
         console.error("Error loading freelancers:", error);
