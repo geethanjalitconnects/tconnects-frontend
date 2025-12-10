@@ -13,14 +13,15 @@ export default function ApplyInternshipPage() {
   const [submitting, setSubmitting] = useState(false);
   const [popup, setPopup] = useState(false);
   const [internshipDetails, setInternshipDetails] = useState(null);
+  const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Get internshipId from URL query parameter
   const internshipId = new URLSearchParams(location.search).get("internshipId");
 
-  // Load internship details
+  // Load internship details and profile
   useEffect(() => {
-    const loadInternshipDetails = async () => {
+    const loadData = async () => {
       if (!internshipId) {
         toast.error("No internship ID provided");
         setLoading(false);
@@ -28,39 +29,44 @@ export default function ApplyInternshipPage() {
       }
 
       try {
-        const res = await api.get(`/api/internships/${internshipId}/`);
-        setInternshipDetails(res.data);
+        // Load internship details
+        const internshipRes = await api.get(`/api/internships/${internshipId}/`);
+        setInternshipDetails(internshipRes.data);
+
+        // Load candidate profile
+        const profileRes = await api.get("/api/profiles/candidate/me/");
+        setProfileData(profileRes.data);
       } catch (err) {
-        console.error("Failed to load internship:", err);
-        toast.error("Failed to load internship details");
+        console.error("Failed to load data:", err);
+        toast.error("Failed to load details");
       } finally {
         setLoading(false);
       }
     };
 
-    loadInternshipDetails();
+    loadData();
   }, [internshipId]);
 
-  // ⭐ Validate profile completeness
+  // ⭐ Validate profile completeness based on your Profile.jsx structure
   const isProfileComplete = () => {
-    const p = currentUser?.profile;
+    if (!profileData) return false;
 
     const complete = (
-      currentUser?.full_name &&
-      p?.phone_number &&
-      p?.location &&
-      p?.skills?.length > 0 &&
-      p?.bio &&
-      p?.resume
+      profileData.user?.full_name &&
+      profileData.phone_number &&
+      profileData.location &&
+      profileData.skills?.length > 0 &&
+      profileData.bio &&
+      profileData.resume
     );
 
     console.log("Profile completeness check:", {
-      full_name: !!currentUser?.full_name,
-      phone_number: !!p?.phone_number,
-      location: !!p?.location,
-      skills: p?.skills?.length > 0,
-      bio: !!p?.bio,
-      resume: !!p?.resume,
+      full_name: !!profileData.user?.full_name,
+      phone_number: !!profileData.phone_number,
+      location: !!profileData.location,
+      skills: profileData.skills?.length > 0,
+      bio: !!profileData.bio,
+      resume: !!profileData.resume,
       complete
     });
 
@@ -163,27 +169,27 @@ export default function ApplyInternshipPage() {
           <div className="apply-checklist">
             <CheckItem 
               label="Full Name" 
-              completed={!!currentUser?.full_name} 
+              completed={!!profileData?.user?.full_name} 
             />
             <CheckItem 
               label="Phone Number" 
-              completed={!!currentUser?.profile?.phone_number} 
+              completed={!!profileData?.phone_number} 
             />
             <CheckItem 
               label="Location" 
-              completed={!!currentUser?.profile?.location} 
+              completed={!!profileData?.location} 
             />
             <CheckItem 
               label="Skills" 
-              completed={currentUser?.profile?.skills?.length > 0} 
+              completed={profileData?.skills?.length > 0} 
             />
             <CheckItem 
               label="Bio" 
-              completed={!!currentUser?.profile?.bio} 
+              completed={!!profileData?.bio} 
             />
             <CheckItem 
               label="Resume" 
-              completed={!!currentUser?.profile?.resume} 
+              completed={!!profileData?.resume} 
             />
           </div>
         </div>
