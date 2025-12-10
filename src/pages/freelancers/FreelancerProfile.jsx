@@ -27,37 +27,65 @@ export default function FreelancerProfile() {
     loadProfile();
   }, [id]);
 
+  // Helper function to parse languages
+  const parseLanguages = (languages) => {
+    if (!languages) return [];
+    
+    if (Array.isArray(languages)) {
+      return languages;
+    }
+    
+    if (typeof languages === 'string') {
+      try {
+        const parsed = JSON.parse(languages);
+        if (Array.isArray(parsed)) return parsed;
+      } catch (e) {
+        return languages.split(',').map(lang => lang.trim()).filter(Boolean);
+      }
+    }
+    
+    return [];
+  };
+
+  // Helper function to parse JSON arrays
+  const parseArray = (data) => {
+    if (!data) return [];
+    if (Array.isArray(data)) return data;
+    
+    if (typeof data === 'string') {
+      try {
+        const parsed = JSON.parse(data);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    
+    return [];
+  };
+
   if (loading) {
     return (
-      <div className="fl-profile-page">
-        <p className="loading">Loading profile...</p>
+      <div className="fl-page">
+        <div className="fl-hero">
+          <h1>Loading profile...</h1>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="fl-profile-page">
-        <div className="fl-card" style={{ 
-          textAlign: 'center', 
-          padding: '3rem',
-          background: '#fff3cd',
-          border: '2px solid #ffc107'
-        }}>
-          <h2 style={{ color: '#856404', marginBottom: '1rem' }}>⚠️ Profile Not Found</h2>
-          <p style={{ fontSize: '1.1rem', marginBottom: '1rem' }}>{error}</p>
+      <div className="fl-page">
+        <div className="fl-hero" style={{ background: '#dc3545' }}>
+          <h1>⚠️ Profile Not Found</h1>
+          <p>{error}</p>
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
           <button 
             onClick={() => navigate('/freelancers')}
-            style={{
-              marginTop: '1.5rem',
-              padding: '0.75rem 2rem',
-              background: '#14b8a6',
-              color: 'white',
-              border: 'none',
-              borderRadius: '0.5rem',
-              cursor: 'pointer',
-              fontSize: '1rem'
-            }}
+            className="fl-hire-btn"
+            style={{ maxWidth: '300px', margin: '0 auto' }}
           >
             ← Back to Freelancers
           </button>
@@ -68,8 +96,10 @@ export default function FreelancerProfile() {
 
   if (!data) {
     return (
-      <div className="fl-profile-page">
-        <p>No data available</p>
+      <div className="fl-page">
+        <div className="fl-hero">
+          <h1>No data available</h1>
+        </div>
       </div>
     );
   }
@@ -77,15 +107,20 @@ export default function FreelancerProfile() {
   const { basic, professional, availability, education, social, payment_types } = data;
 
   // Safe data extraction
-  const fullName = basic?.full_name || "Unnamed Freelancer";
-  const expertise = professional?.expertise || "Freelancer";
+  const fullName = basic?.full_name || basic?.name || "Unnamed Freelancer";
+  const expertise = professional?.expertise || professional?.category || "Freelancer";
   const bio = professional?.bio || "No bio provided.";
   const location = basic?.location || "Location Not Provided";
+  const phoneNumber = basic?.phone_number || "Not Provided";
   
-  // Handle languages - JSON array
-  const languages = Array.isArray(basic?.languages_known) 
-    ? basic.languages_known 
-    : [];
+  // Parse languages properly
+  const languages = parseLanguages(basic?.languages_known);
+
+  // Parse available days
+  const availableDays = parseArray(availability?.available_days);
+
+  // Parse payment types
+  const paymentMethods = parseArray(payment_types);
 
   // Availability badge
   const isAvailable = availability?.is_available;
@@ -94,57 +129,79 @@ export default function FreelancerProfile() {
     : { text: "Currently Occupied", class: "fl-occupied" };
 
   return (
-    <div className="fl-profile-page">
+    <div className="fl-page">
+      {/* HERO */}
+      <div className="fl-hero">
+        <h1>{fullName}</h1>
+        <p>{expertise}</p>
+      </div>
+
       {/* PROFILE HEADER */}
-      <div className="fl-card fl-profile-header">
-        <div className="fl-profile-photo">
+      <div className="fl-profile-header">
+        <div className="fl-profile-img">
           {basic?.profile_picture ? (
             <img src={basic.profile_picture} alt={fullName} />
           ) : (
-            <div className="fl-avatar-placeholder">
+            <div className="fl-placeholder-lg">
               {fullName.charAt(0).toUpperCase()}
             </div>
           )}
         </div>
 
-        <div className="fl-profile-info">
-          <h2 className="fl-name">{fullName}</h2>
-          <p className="fl-expertise">{expertise}</p>
+        <div className="fl-profile-main">
+          <h2 className="fl-profile-name">{fullName}</h2>
+          <p className="fl-profile-expertise">{expertise}</p>
           
           <span className={`fl-badge ${statusBadge.class}`}>
             {statusBadge.text}
           </span>
 
-          <p className="fl-location">{location}</p>
+          <p className="fl-profile-location">📍 {location}</p>
 
           {/* Languages */}
           {languages.length > 0 && (
-            <div className="fl-lang-row">
+            <div className="fl-skills" style={{ marginTop: '12px' }}>
               {languages.map((lang, idx) => (
-                <span key={idx} className="fl-lang-pill">{lang}</span>
+                <span key={idx} className="fl-skill">{lang}</span>
               ))}
             </div>
           )}
+
+          <button className="fl-hire-btn" onClick={() => alert('Contact functionality coming soon!')}>
+            💼 Hire Me
+          </button>
         </div>
       </div>
 
       {/* ABOUT */}
-      <div className="fl-card fl-section">
-        <h3>About</h3>
-        <p>{bio}</p>
+      <div className="fl-section">
+        <h3 className="fl-section-title">About</h3>
+        <p className="fl-paragraph">{bio}</p>
+      </div>
+
+      {/* CONTACT INFO */}
+      <div className="fl-section">
+        <h3 className="fl-section-title">Contact Information</h3>
+        <div className="fl-paragraph">
+          <p><strong>Location:</strong> {location}</p>
+          <p><strong>Phone:</strong> {phoneNumber}</p>
+          {languages.length > 0 && (
+            <p><strong>Languages:</strong> {languages.join(", ")}</p>
+          )}
+        </div>
       </div>
 
       {/* EDUCATION */}
       {education && education.length > 0 && (
-        <div className="fl-card fl-section">
-          <h3>Education</h3>
+        <div className="fl-section">
+          <h3 className="fl-section-title">Education</h3>
           {education.map((edu) => (
             <div key={edu.id} className="fl-edu-item">
               <strong>{edu.degree}</strong> — {edu.institution}
               <div className="fl-edu-year">
                 {edu.start_year} - {edu.end_year || "Present"}
               </div>
-              {edu.description && <p>{edu.description}</p>}
+              {edu.description && <p className="fl-paragraph">{edu.description}</p>}
             </div>
           ))}
         </div>
@@ -152,36 +209,44 @@ export default function FreelancerProfile() {
 
       {/* AVAILABILITY */}
       {availability && (
-        <div className="fl-card fl-section">
-          <h3>Availability</h3>
-          <p><strong>Status:</strong> {statusBadge.text}</p>
-          {availability.time_zone && (
-            <p><strong>Timezone:</strong> {availability.time_zone}</p>
-          )}
-          {availability.available_days && availability.available_days.length > 0 && (
-            <p><strong>Working Days:</strong> {availability.available_days.join(", ")}</p>
-          )}
+        <div className="fl-section">
+          <h3 className="fl-section-title">Availability</h3>
+          <div className="fl-paragraph">
+            <p><strong>Status:</strong> {statusBadge.text}</p>
+            {availability.time_zone && (
+              <p><strong>Timezone:</strong> {availability.time_zone}</p>
+            )}
+            {availability.available_from && (
+              <p><strong>Available From:</strong> {availability.available_from}</p>
+            )}
+            {availability.available_to && (
+              <p><strong>Available To:</strong> {availability.available_to}</p>
+            )}
+            {availableDays.length > 0 && (
+              <p><strong>Working Days:</strong> {availableDays.join(", ")}</p>
+            )}
+          </div>
         </div>
       )}
 
       {/* SOCIAL LINKS */}
       {social && (social.linkedin_url || social.github_url || social.portfolio_url) && (
-        <div className="fl-card fl-section">
-          <h3>Social Links</h3>
-          <div className="fl-social">
+        <div className="fl-section">
+          <h3 className="fl-section-title">Social Links</h3>
+          <div className="fl-social-links">
             {social.linkedin_url && (
               <a href={social.linkedin_url} target="_blank" rel="noopener noreferrer">
-                LinkedIn
+                🔗 LinkedIn
               </a>
             )}
             {social.github_url && (
               <a href={social.github_url} target="_blank" rel="noopener noreferrer">
-                GitHub
+                💻 GitHub
               </a>
             )}
             {social.portfolio_url && (
               <a href={social.portfolio_url} target="_blank" rel="noopener noreferrer">
-                Portfolio
+                🌐 Portfolio
               </a>
             )}
           </div>
@@ -189,18 +254,31 @@ export default function FreelancerProfile() {
       )}
 
       {/* PAYMENT METHODS */}
-      {payment_types && payment_types.length > 0 && (
-        <div className="fl-card fl-section">
-          <h3>Accepted Payment Methods</h3>
+      {paymentMethods.length > 0 && (
+        <div className="fl-section">
+          <h3 className="fl-section-title">Accepted Payment Methods</h3>
           <div className="fl-skills">
-            {payment_types.map((type, idx) => (
+            {paymentMethods.map((type, idx) => (
               <span key={idx} className="fl-skill">
-                {type === 'upi' ? 'UPI' : type === 'bank_transfer' ? 'Bank Transfer' : type}
+                {type === 'upi' ? '💳 UPI' : 
+                 type === 'bank_transfer' ? '🏦 Bank Transfer' : 
+                 type}
               </span>
             ))}
           </div>
         </div>
       )}
+
+      {/* BACK BUTTON */}
+      <div style={{ textAlign: 'center', margin: '2rem 0' }}>
+        <button 
+          onClick={() => navigate('/freelancers')}
+          className="fl-view-btn"
+          style={{ maxWidth: '300px', margin: '0 auto' }}
+        >
+          ← Back to All Freelancers
+        </button>
+      </div>
     </div>
   );
 }
