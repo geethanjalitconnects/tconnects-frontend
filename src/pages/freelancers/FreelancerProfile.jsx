@@ -14,7 +14,6 @@ export default function FreelancerProfile() {
         setData(res.data);
       } catch (error) {
         console.error("Error loading freelancer profile:", error);
-        alert("Unable to load freelancer profile.");
       }
     };
     loadProfile();
@@ -22,20 +21,22 @@ export default function FreelancerProfile() {
 
   if (!data) return <p className="loading">Loading profile...</p>;
 
-  const basic = data.basic || {};
-  const professional = data.professional || {};
-  const availability = data.availability || {};
-  const education = data.education || [];
-  const social = data.social || {};
+  const basic = data.basic;
+  const professional = data.professional;
+  const availability = data.availability;
+  const education = data.education;
+  const social = data.social;
 
   return (
     <div className="fl-page">
 
+      {/* ================= HERO SECTION ================= */}
       <section className="fl-hero">
         <h1>Freelancer Profile</h1>
         <p>A verified professional available for work.</p>
       </section>
 
+      {/* ================= PROFILE HEADER ================= */}
       <div className="fl-profile-header">
         <div className="fl-profile-img">
           {basic.profile_picture ? (
@@ -50,7 +51,7 @@ export default function FreelancerProfile() {
         <div className="fl-profile-main">
           <h2 className="fl-profile-name">{basic.full_name}</h2>
           <p className="fl-profile-expertise">
-            {professional.expertise || "Freelancer"}
+            {professional?.expertise || "Freelancer"}
           </p>
           <p className="fl-profile-location">{basic.location}</p>
 
@@ -58,15 +59,15 @@ export default function FreelancerProfile() {
         </div>
       </div>
 
-      {/* ABOUT */}
+      {/* ================= ABOUT ================= */}
       <div className="fl-section">
         <h3 className="fl-section-title">About</h3>
         <p className="fl-paragraph">
-          {professional.bio || "This freelancer has not added a bio yet."}
+          {professional?.bio || "This freelancer has not added a bio yet."}
         </p>
       </div>
 
-      {/* EDUCATION */}
+      {/* ================= EDUCATION ================= */}
       <div className="fl-section">
         <h3 className="fl-section-title">Education</h3>
         {education.length === 0 ? (
@@ -83,26 +84,39 @@ export default function FreelancerProfile() {
         )}
       </div>
 
-      {/* AVAILABILITY */}
+      {/* ================= AVAILABILITY ================= */}
       <div className="fl-section">
         <h3 className="fl-section-title">Availability</h3>
-        <>
-          <p><strong>Status:</strong> {availability.is_available ? "Available" : "Not Available"}</p>
-          <p><strong>Timezone:</strong> {availability.time_zone || "Not specified"}</p>
-          <p><strong>Days:</strong> {availability.available_days?.join(", ") || "Not specified"}</p>
-        </>
+        {availability ? (
+          <>
+            <p>
+              <strong>Status:</strong>{" "}
+              {availability.is_available ? "Available" : "Not Available"}
+            </p>
+            <p>
+              <strong>Timezone:</strong> {availability.time_zone || "Not specified"}
+            </p>
+            <p>
+              <strong>Days:</strong>{" "}
+              {availability.available_days?.join(", ") || "Not specified"}
+            </p>
+          </>
+        ) : (
+          <p>Availability not provided.</p>
+        )}
       </div>
 
-      {/* SOCIAL LINKS */}
+      {/* ================= SOCIAL LINKS ================= */}
       <div className="fl-section">
         <h3 className="fl-section-title">Social Profiles</h3>
         <div className="fl-social-links">
-          {social.linkedin_url && <a href={social.linkedin_url}>LinkedIn</a>}
-          {social.github_url && <a href={social.github_url}>GitHub</a>}
-          {social.portfolio_url && <a href={social.portfolio_url}>Portfolio</a>}
+          {social?.linkedin_url && <a href={social.linkedin_url}>LinkedIn</a>}
+          {social?.github_url && <a href={social.github_url}>GitHub</a>}
+          {social?.portfolio_url && <a href={social.portfolio_url}>Portfolio</a>}
         </div>
       </div>
 
+      {/* ================= RATINGS ================= */}
       <div className="fl-section">
         <h3 className="fl-section-title">Ratings & Badges</h3>
         <p>No ratings or badges yet.</p>

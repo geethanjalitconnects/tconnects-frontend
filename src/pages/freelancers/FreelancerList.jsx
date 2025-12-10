@@ -18,18 +18,15 @@ export default function FreelancerList() {
           const professional = f.professional || {};
 
           // Fix languages
+          const langs = basic.languages_known || [];
           let langsArr = [];
-          if (Array.isArray(basic.languages_known)) {
-            langsArr = basic.languages_known;
-          } else if (typeof basic.languages_known === "string") {
-            langsArr = basic.languages_known
-              .split(",")
-              .map((l) => l.trim())
-              .filter(Boolean);
-          }
+
+          if (Array.isArray(langs)) langsArr = langs;
+          else if (typeof langs === "string")
+            langsArr = langs.split(",").map((l) => l.trim()).filter(Boolean);
 
           return {
-            id: basic.user || f.id,                      // FIXED ID
+            id: f.id || basic.user || basic.id,
             full_name: basic.full_name || "Unnamed Freelancer",
             profile_picture: basic.profile_picture || null,
             location: basic.location || "Location Not Provided",
@@ -58,27 +55,33 @@ export default function FreelancerList() {
       <div className="fl-grid">
         {freelancers.map((f) => (
           <div key={f.id} className="fl-card">
-
+            {/* Profile image */}
             <div className="fl-avatar">
               {f.profile_picture ? (
                 <img src={f.profile_picture} alt={f.full_name} />
               ) : (
                 <div className="fl-avatar-placeholder">
-                  {f.full_name.charAt(0).toUpperCase()}
+                  {f.full_name.charAt(0)}
                 </div>
               )}
             </div>
 
+            {/* Name */}
             <h3 className="fl-name">{f.full_name}</h3>
 
+            {/* Expertise */}
             <p className="fl-expertise">{f.expertise}</p>
 
+            {/* Location */}
             <p className="fl-location">{f.location}</p>
 
+            {/* Languages */}
             <div className="fl-languages">
               {f.languages_known.length > 0 ? (
                 f.languages_known.slice(0, 3).map((lang, i) => (
-                  <span key={i} className="fl-skill">{lang}</span>
+                  <span key={i} className="fl-skill">
+                    {lang}
+                  </span>
                 ))
               ) : (
                 <span className="fl-skill">Languages Not Provided</span>
