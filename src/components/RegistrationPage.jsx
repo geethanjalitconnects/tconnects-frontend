@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api, { API_BASE_URL } from '../config/api';
+import api, { checkAuth } from '../config/api';
 import './RegistrationPage.css';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
-const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
+const RegistrationPage = ({ onRegisterSuccess }) => {
   const [userType, setUserType] = useState('candidate');
   const [formData, setFormData] = useState({
     fullName: '',
@@ -105,12 +105,42 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
     setIsSubmitting(true);
 
     try {
+      console.log('📝 Registering user:', formData.email);
+      
       const response = await api.post('/api/auth/register/', {
         full_name: formData.fullName.trim(),
         email: formData.email.trim(),
         password: formData.password,
         role: userType
       });
+
+      console.log('✅ Registration response:', response.data);
+
+      // SAFARI FIX: Wait for cookies to be fully set
+      await new Promise(resolve => setTimeout(resolve, 150));
+      
+      // Verify authentication status (important for Safari)
+      try {
+        const authStatus = await checkAuth();
+        console.log('🔐 Auth status after registration:', authStatus);
+        
+        if (!authStatus.authenticated) {
+          console.warn('⚠️ User not authenticated after registration - possible Safari cookie issue');
+          setErrors({ 
+            general: 'Registration successful but session not established. Please login.' 
+          });
+          
+          // Redirect to login after 3 seconds
+          setTimeout(() => {
+            navigate('/login');
+          }, 3000);
+          
+          setIsSubmitting(false);
+          return;
+        }
+      } catch (error) {
+        console.error('❌ Auth check failed:', error);
+      }
 
       const userData = {
         id: response.data.user?.id,
@@ -139,7 +169,7 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
       }, 2000);
 
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('❌ Registration error:', error);
 
       if (error.response?.data) {
         const responseData = error.response.data;
@@ -171,7 +201,7 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
           setErrors({ general: errorMsg });
         }
       } else if (error.request) {
-        setErrors({ general: 'Cannot connect to server. Please try again.' });
+        setErrors({ general: 'Cannot connect to server. Please check your connection and try again.' });
       } else {
         setErrors({ general: 'An unexpected error occurred. Please try again.' });
       }
@@ -221,6 +251,7 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
               value={formData.fullName}
               onChange={handleInputChange}
               disabled={isSubmitting}
+              autoComplete="name"
             />
             {errors.fullName && <div className="error-text">{errors.fullName}</div>}
           </div>
@@ -237,6 +268,7 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
               value={formData.email}
               onChange={handleInputChange}
               disabled={isSubmitting}
+              autoComplete="email"
             />
             {errors.email && <div className="error-text">{errors.email}</div>}
             {!errors.email && !formData.email && userType === 'recruiter' && (
@@ -257,6 +289,7 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
                 value={formData.password}
                 onChange={handleInputChange}
                 disabled={isSubmitting}
+                autoComplete="new-password"
               />
               <button
                 type="button"
@@ -286,6 +319,7 @@ const RegistrationPage = ({ onRegisterSuccess, onNavigateLogin }) => {
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 disabled={isSubmitting}
+                autoComplete="new-password"
               />
               <button
                 type="button"

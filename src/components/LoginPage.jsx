@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../config/api';
+import api, { checkAuth } from '../config/api';
 import './LoginPage.css';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
@@ -55,12 +55,29 @@ const LoginPage = ({ onLoginSuccess }) => {
     }, 2000);
   };
 
-  // Common login success handler
-  const handleLoginSuccess = (userData) => {
+  // Common login success handler - Safari optimized
+  const handleLoginSuccess = async (userData) => {
     console.log('✅ Login successful, user data:', userData);
     showSuccessPopup('Login successful!');
     
-    // Notify parent component immediately
+    // SAFARI FIX: Wait for cookies to be fully set
+    await new Promise(resolve => setTimeout(resolve, 150));
+    
+    // Verify authentication status (important for Safari)
+    try {
+      const authStatus = await checkAuth();
+      console.log('🔐 Auth status after login:', authStatus);
+      
+      if (!authStatus.authenticated) {
+        console.warn('⚠️ User not authenticated after login - possible Safari cookie issue');
+        setError('Login successful but session not established. Please try again.');
+        return;
+      }
+    } catch (error) {
+      console.error('❌ Auth check failed:', error);
+    }
+    
+    // Notify parent component
     if (onLoginSuccess) {
       onLoginSuccess(userData);
     }
@@ -75,7 +92,7 @@ const LoginPage = ({ onLoginSuccess }) => {
     }, 1200);
   };
 
-  // Submit handler (OTP or password)
+  // Submit handler (OTP or password) - Safari optimized
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -118,16 +135,25 @@ const LoginPage = ({ onLoginSuccess }) => {
         
         const userData = response.data.user;
         if (userData) {
-          handleLoginSuccess(userData);
+          await handleLoginSuccess(userData);
         } else {
           setError('Login failed. Please try again.');
         }
       }
     } catch (error) {
       console.error('❌ Login error:', error);
-      const errorMsg = error.response?.data?.detail ||
-                       error.response?.data?.message ||
-                       'Login failed. Please try again.';
+      
+      let errorMsg = 'Login failed. Please try again.';
+      
+      if (error.response?.data) {
+        errorMsg = error.response.data.detail ||
+                   error.response.data.message ||
+                   error.response.data.error ||
+                   errorMsg;
+      } else if (error.request) {
+        errorMsg = 'Cannot connect to server. Please check your connection.';
+      }
+      
       setError(errorMsg);
     } finally {
       setIsSubmitting(false);
@@ -187,7 +213,10 @@ const LoginPage = ({ onLoginSuccess }) => {
       setTimeout(() => document.querySelector('input[data-index="0"]')?.focus(), 100);
       showSuccessPopup('New OTP sent successfully!');
     } catch (error) {
-      setError(error.response?.data?.detail || 'Failed to resend OTP.');
+      const errorMsg = error.response?.data?.detail || 
+                      error.response?.data?.message ||
+                      'Failed to resend OTP.';
+      setError(errorMsg);
     } finally {
       setIsSubmitting(false);
     }
@@ -218,13 +247,19 @@ const LoginPage = ({ onLoginSuccess }) => {
       
       const userData = response.data.user;
       if (userData) {
-        handleLoginSuccess(userData);
+        await handleLoginSuccess(userData);
       } else {
         setError('OTP verification failed. Please try again.');
       }
     } catch (error) {
       console.error('❌ OTP verification error:', error);
-      setError(error.response?.data?.detail || 'Invalid or expired OTP.');
+      
+      const errorMsg = error.response?.data?.detail || 
+                      error.response?.data?.message ||
+                      'Invalid or expired OTP.';
+      setError(errorMsg);
+      
+      // Clear OTP inputs on error
       setOtpValues(['', '', '', '', '', '']);
       setTimeout(() => document.querySelector('input[data-index="0"]')?.focus(), 100);
     } finally {
