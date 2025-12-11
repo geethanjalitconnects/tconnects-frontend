@@ -20,7 +20,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Safari requires explicit origin header
-    config.headers['Origin'] = window.location.origin;
+
     
     // For Safari, ensure credentials are always included
     config.withCredentials = true;
