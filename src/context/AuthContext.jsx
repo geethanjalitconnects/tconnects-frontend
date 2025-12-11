@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import api from '../config/api';
+import api, { checkAuth } from '../config/api';
 
 export const AuthContext = createContext();
 
@@ -10,27 +10,34 @@ export const AuthProvider = ({ children, value }) => {
   // If value is provided from App.jsx, use it (for controlled mode)
   const contextValue = value || { user, setUser };
 
-  // Auto-check authentication on mount (only if not in controlled mode)
+  // ✅ FIXED: Use /api/auth/check/ instead of /api/auth/me/
+  // This endpoint allows unauthenticated requests
   useEffect(() => {
     if (!value) {
-      const checkAuth = async () => {
+      const checkAuthentication = async () => {
         try {
           console.log('🔍 AuthContext: Checking authentication...');
-          const response = await api.get('/api/auth/me/');
           
-          if (response.data) {
-            console.log('✅ AuthContext: User authenticated:', response.data);
-            setUser(response.data);
+          // Use checkAuth helper which calls /api/auth/check/
+          const authData = await checkAuth();
+          
+          if (authData.authenticated && authData.user) {
+            console.log('✅ AuthContext: User authenticated:', authData.user);
+            setUser(authData.user);
+          } else {
+            console.log('ℹ️ AuthContext: Not authenticated (expected for logged-out users)');
+            setUser(null);
           }
         } catch (error) {
-          console.log('❌ AuthContext: Not authenticated');
+          // This should rarely happen now since checkAuth handles errors
+          console.log('⚠️ AuthContext: Auth check error (treating as not authenticated)');
           setUser(null);
         } finally {
           setLoading(false);
         }
       };
 
-      checkAuth();
+      checkAuthentication();
     } else {
       // If controlled from App, skip loading
       setLoading(false);

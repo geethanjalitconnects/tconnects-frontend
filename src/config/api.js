@@ -20,7 +20,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     // Safari requires explicit origin header
-
+    config.headers['Origin'] = window.location.origin;
     
     // For Safari, ensure credentials are always included
     config.withCredentials = true;
@@ -65,8 +65,14 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    // ✅ FIXED: Don't try to refresh for auth check endpoints
+    // These are expected to fail when user is not logged in
+    const isAuthCheckEndpoint = 
+      originalRequest.url?.includes('/api/auth/check/') ||
+      originalRequest.url?.includes('/api/auth/me/');
+
     // If 401 and haven't retried, try to refresh token
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthCheckEndpoint) {
       
       if (isRefreshing) {
         // If already refreshing, queue this request
@@ -118,8 +124,14 @@ api.interceptors.response.use(
       }
     }
 
-    // Log errors in development
-    if (import.meta.env.DEV) {
+    // ✅ FIXED: For auth check endpoints, just reject without logging errors
+    // This is expected behavior when not logged in
+    if (isAuthCheckEndpoint && error.response?.status === 401) {
+      return Promise.reject(error);
+    }
+
+    // Log other errors in development
+    if (import.meta.env.DEV && error.response?.status !== 401) {
       console.error('❌ API Error:', error.response?.status, error.config?.url);
     }
 
@@ -127,24 +139,28 @@ api.interceptors.response.use(
   }
 );
 
-// Helper function to check authentication status
+// ✅ FIXED: Better authentication check using /api/auth/check/
 export const checkAuth = async () => {
   try {
     const response = await api.get('/api/auth/check/');
-    return response.data;
+    return response.data; // Returns { authenticated: true/false, user?: {...} }
   } catch (error) {
-    console.error('Auth check failed:', error);
+    // Don't log error - this is expected when not authenticated
     return { authenticated: false };
   }
 };
 
-// Helper function to get current user
+// ✅ FIXED: Get current user (requires authentication)
 export const getCurrentUser = async () => {
   try {
     const response = await api.get('/api/auth/me/');
+    // Response is now the user object directly (not wrapped)
     return response.data;
   } catch (error) {
-    console.error('Get user failed:', error);
+    // Don't log 401 errors - user is not logged in
+    if (error.response?.status !== 401) {
+      console.error('Get user failed:', error);
+    }
     return null;
   }
 };
@@ -155,12 +171,20 @@ export const logout = async () => {
     await api.post('/api/auth/logout/');
     localStorage.clear();
     sessionStorage.clear();
+    
+    // Dispatch logout event for AuthContext
+    window.dispatchEvent(new Event('auth:logout'));
+    
     return true;
   } catch (error) {
     console.error('Logout failed:', error);
     // Clear local data even if API fails
     localStorage.clear();
     sessionStorage.clear();
+    
+    // Dispatch logout event even if API fails
+    window.dispatchEvent(new Event('auth:logout'));
+    
     return false;
   }
 };
