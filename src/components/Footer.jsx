@@ -17,7 +17,7 @@ const Footer = () => {
             {/* Social Media Icons */}
             <div className="footer-social-links mt-3">
               <a 
-                href="https://www.linkedin.com/company/your-company" 
+                href="https://www.linkedin.com/company/getjobsandskills/"
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="footer-social-icon"
@@ -26,7 +26,7 @@ const Footer = () => {
                 <BsLinkedin />
               </a>
               <a 
-                href="https://www.instagram.com/your-company" 
+                href="https://www.instagram.com/tconnects_getjobsandskills?igsh=dTNtcnBkMHU0YWpq&utm_source=qr"
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="footer-social-icon"
