@@ -104,7 +104,7 @@
   padding: 8px 14px;
   border-radius: 10px;
   background: #e8f7f7;
-  color: #0f7072;
+  color: hsl(181, 77%, 25%);
   font-size: 13px;
   font-weight: 600;
 }

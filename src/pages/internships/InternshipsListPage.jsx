@@ -1,23 +1,16 @@
-// InternshipsListPage.jsx — GLOBAL SYNC VERSION (Using SavedInternshipsContext)
-// ✔ Saves synced across all pages
-// ✔ UI unchanged
-// ✔ Uses global savedIds + toggleSave
-
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../../config/api";
 import "./InternshipsListPage.css";
-
-// ⭐ IMPORT GLOBAL CONTEXT
 import { useSavedInternships } from "../../context/SavedInternshipsContext";
 
 export default function InternshipsListPage() {
   const [internships, setInternships] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // ✅
 
-  // ⭐ GLOBAL SAVED INTERNSHIPS CONTEXT
   const { savedIds, toggleSave } = useSavedInternships();
 
-  // Load internships
   useEffect(() => {
     const loadInternships = async () => {
       try {
@@ -34,8 +27,9 @@ export default function InternshipsListPage() {
 
   const isSaved = (id) => savedIds.includes(id);
 
+  // ✅ FIXED: same tab, direct id navigation
   const openDetails = (id) => {
-    window.open(`/internships/${id}`, "_blank");
+    navigate(`/internships/${id}`);
   };
 
   if (loading) return <div className="jobs-loading">Loading internships…</div>;
@@ -43,7 +37,6 @@ export default function InternshipsListPage() {
   return (
     <div className="jobs-page">
 
-      {/* HEADER */}
       <div className="jobs-header">
         <h1 className="jobs-title">Risk Management Internships</h1>
         <p className="jobs-subtitle">
@@ -52,25 +45,19 @@ export default function InternshipsListPage() {
         </p>
       </div>
 
-      {/* EMPTY STATE */}
       {internships.length === 0 && (
         <p className="jobs-empty">No internships posted yet.</p>
       )}
 
-      {/* LIST */}
       {internships.map((intern) => (
-        <div
-          className="job-card"
-          key={intern.id}
-          onClick={() => openDetails(intern.id)}
-        >
+        <div className="job-card" key={intern.id}>
           <h2 className="job-title">{intern.title}</h2>
           <p className="company-name">{intern.company_name}</p>
 
           <div className="job-info">
             <span>{intern.location}</span> •
             <span>{intern.duration}</span> •
-            <span>{intern.stipend}</span> 
+            <span>{intern.stipend}</span>
             <span>{intern.work_mode}</span>
           </div>
 
@@ -84,16 +71,12 @@ export default function InternshipsListPage() {
             ))}
           </div>
 
-          <div className="job-actions" onClick={(e) => e.stopPropagation()}>
+          <div className="job-actions">
             <button className="view-btn" onClick={() => openDetails(intern.id)}>
               View Details
             </button>
 
-            {/* ⭐ GLOBAL SAVE BUTTON */}
-            <button
-              className="save-btn"
-              onClick={() => toggleSave(intern.id)}
-            >
+            <button className="save-btn" onClick={() => toggleSave(intern.id)}>
               {isSaved(intern.id) ? "Saved" : "Save Internship"}
             </button>
           </div>

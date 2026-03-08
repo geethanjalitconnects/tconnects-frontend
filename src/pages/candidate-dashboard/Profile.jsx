@@ -209,14 +209,18 @@ const Profile = () => {
           </div>
 
           <div className="cd-form-group cd-full-width">
-            <label className="cd-form-label">About You</label>
-            <textarea
-              className="cd-textarea"
-              name="bio"
-              value={userData.bio}
-              onChange={handleChange}
-            />
-          </div>
+  <label className="cd-form-label">
+    About You <span className="cd-required">*</span>
+  </label>
+  <textarea
+    className="cd-textarea"
+    name="bio"
+    value={userData.bio}
+    onChange={handleChange}
+    placeholder="Tell us about yourself"
+    required
+  />
+</div>
 
           <div className="cd-form-group cd-full-width cd-upload-card">
             <label className="cd-form-label">

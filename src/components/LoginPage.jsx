@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api, { checkAuth } from '../config/api';
 import './LoginPage.css';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import toast from 'react-hot-toast';
 
 const LoginPage = ({ onLoginSuccess }) => {
   const [userType, setUserType] = useState('candidate');
@@ -37,62 +38,34 @@ const LoginPage = ({ onLoginSuccess }) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-  const showSuccessPopup = (message) => {
-    const popup = document.createElement('div');
-    popup.className = 'success-popup';
-    popup.innerHTML = `
-      <div class="success-popup-content">
-        <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M20 6L9 17l-5-5"/>
-        </svg>
-        <span class="success-message">${message}</span>
-      </div>
-    `;
-    document.body.appendChild(popup);
-    setTimeout(() => {
-      popup.classList.add('fade-out');
-      setTimeout(() => document.body.removeChild(popup), 400);
-    }, 2000);
-  };
 
-  // Common login success handler - Safari optimized
+
+  // ✅ FIXED: always navigate to home page after login
   const handleLoginSuccess = async (userData) => {
-    console.log('✅ Login successful, user data:', userData);
-    showSuccessPopup('Login successful!');
-    
-    // SAFARI FIX: Wait for cookies to be fully set
+    toast.success(`Welcome back, ${userData.full_name?.split(' ')[0] || 'there'}! 👋`);
+
     await new Promise(resolve => setTimeout(resolve, 150));
-    
-    // Verify authentication status (important for Safari)
+
     try {
       const authStatus = await checkAuth();
-      console.log('🔐 Auth status after login:', authStatus);
-      
       if (!authStatus.authenticated) {
-        console.warn('⚠️ User not authenticated after login - possible Safari cookie issue');
         setError('Login successful but session not established. Please try again.');
         return;
       }
     } catch (error) {
       console.error('❌ Auth check failed:', error);
     }
-    
-    // Notify parent component
+
     if (onLoginSuccess) {
       onLoginSuccess(userData);
     }
-    
-    // Navigate after showing success
+
+    // ✅ Navigate to home for all roles
     setTimeout(() => {
-      if (userData.role === 'candidate') {
-        navigate('/candidate-dashboard');
-      } else if (userData.role === 'recruiter') {
-        navigate('/recruiter-dashboard');
-      }
+      navigate('/');
     }, 1200);
   };
 
-  // Submit handler (OTP or password) - Safari optimized
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -108,31 +81,22 @@ const LoginPage = ({ onLoginSuccess }) => {
 
     try {
       if (loginMethod === 'otp') {
-        console.log('📧 Sending OTP to:', formData.email);
-        
         const response = await api.post('/api/auth/send-otp/', {
           email: formData.email,
           role: userType
         });
 
-        console.log('✅ OTP response:', response.data);
-        
         if (response.data) {
           setShowOTPForm(true);
-          showSuccessPopup('OTP sent successfully! Check your email.');
+          toast.success('OTP sent! Check your email 📧');
         }
       } else {
-        // Password login
-        console.log('🔐 Password login for:', formData.email);
-        
         const response = await api.post('/api/auth/login/', {
           email: formData.email,
           password: formData.password,
           role: userType
         });
 
-        console.log('✅ Login response:', response.data);
-        
         const userData = response.data.user;
         if (userData) {
           await handleLoginSuccess(userData);
@@ -141,10 +105,7 @@ const LoginPage = ({ onLoginSuccess }) => {
         }
       }
     } catch (error) {
-      console.error('❌ Login error:', error);
-      
       let errorMsg = 'Login failed. Please try again.';
-      
       if (error.response?.data) {
         errorMsg = error.response.data.detail ||
                    error.response.data.message ||
@@ -153,21 +114,17 @@ const LoginPage = ({ onLoginSuccess }) => {
       } else if (error.request) {
         errorMsg = 'Cannot connect to server. Please check your connection.';
       }
-      
       setError(errorMsg);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // OTP helpers
   const handleOtpChange = (index, value) => {
     if (!/^\d*$/.test(value)) return;
-
     const newOtpValues = [...otpValues];
     newOtpValues[index] = value.slice(-1);
     setOtpValues(newOtpValues);
-
     if (value && index < 5) {
       document.querySelector(`input[data-index="${index + 1}"]`)?.focus();
     }
@@ -189,11 +146,9 @@ const LoginPage = ({ onLoginSuccess }) => {
     e.preventDefault();
     const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
     const newOtpValues = [...otpValues];
-
     for (let i = 0; i < 6; i++) {
       newOtpValues[i] = pastedData[i] || '';
     }
-
     setOtpValues(newOtpValues);
     document.querySelector(`input[data-index="${Math.min(pastedData.length, 5)}"]`)?.focus();
   };
@@ -202,18 +157,16 @@ const LoginPage = ({ onLoginSuccess }) => {
     if (isSubmitting) return;
     setIsSubmitting(true);
     setError('');
-
     try {
       await api.post('/api/auth/send-otp/', {
         email: formData.email,
         role: userType
       });
-
       setOtpValues(['', '', '', '', '', '']);
       setTimeout(() => document.querySelector('input[data-index="0"]')?.focus(), 100);
-      showSuccessPopup('New OTP sent successfully!');
+      toast.success('New OTP sent! Check your email 📧');
     } catch (error) {
-      const errorMsg = error.response?.data?.detail || 
+      const errorMsg = error.response?.data?.detail ||
                       error.response?.data?.message ||
                       'Failed to resend OTP.';
       setError(errorMsg);
@@ -224,27 +177,19 @@ const LoginPage = ({ onLoginSuccess }) => {
 
   const handleOtpVerification = async () => {
     const otpValue = otpValues.join('');
-
     if (otpValue.length !== 6) {
       setError('Please enter complete 6-digit OTP');
       return;
     }
-
     if (isSubmitting) return;
     setIsSubmitting(true);
     setError('');
-
     try {
-      console.log('🔐 Verifying OTP:', otpValue);
-      
       const response = await api.post('/api/auth/verify-otp/', {
         email: formData.email,
         code: otpValue,
         role: userType
       });
-
-      console.log('✅ OTP verification response:', response.data);
-      
       const userData = response.data.user;
       if (userData) {
         await handleLoginSuccess(userData);
@@ -252,14 +197,10 @@ const LoginPage = ({ onLoginSuccess }) => {
         setError('OTP verification failed. Please try again.');
       }
     } catch (error) {
-      console.error('❌ OTP verification error:', error);
-      
-      const errorMsg = error.response?.data?.detail || 
+      const errorMsg = error.response?.data?.detail ||
                       error.response?.data?.message ||
                       'Invalid or expired OTP.';
       setError(errorMsg);
-      
-      // Clear OTP inputs on error
       setOtpValues(['', '', '', '', '', '']);
       setTimeout(() => document.querySelector('input[data-index="0"]')?.focus(), 100);
     } finally {
@@ -281,7 +222,7 @@ const LoginPage = ({ onLoginSuccess }) => {
         {showOTPForm ? (
           <div className="otp-verification-form">
             <div className="user-type-selector">
-              <button 
+              <button
                 type="button"
                 className={`user-type-btn ${userType === 'candidate' ? 'active' : ''}`}
                 onClick={() => handleUserTypeChange('candidate')}
@@ -289,7 +230,7 @@ const LoginPage = ({ onLoginSuccess }) => {
                 <span className="user-type-icon">👤</span>
                 Candidate
               </button>
-              <button 
+              <button
                 type="button"
                 className={`user-type-btn ${userType === 'recruiter' ? 'active' : ''}`}
                 onClick={() => handleUserTypeChange('recruiter')}
@@ -300,14 +241,14 @@ const LoginPage = ({ onLoginSuccess }) => {
             </div>
 
             <h1 className="title">Login</h1>
-            
+
             <div className="otp-info">
               <p className="otp-sent-text">We have sent a 6-digit OTP to your email</p>
               <div className="email-display">
                 <span className="email-text">{formData.email}</span>
-                <button 
-                  type="button" 
-                  className="change-email-btn" 
+                <button
+                  type="button"
+                  className="change-email-btn"
                   onClick={() => {
                     setShowOTPForm(false);
                     setOtpValues(['', '', '', '', '', '']);
@@ -340,9 +281,9 @@ const LoginPage = ({ onLoginSuccess }) => {
                   />
                 ))}
               </div>
-              <button 
-                type="button" 
-                className="resend-otp-btn" 
+              <button
+                type="button"
+                className="resend-otp-btn"
                 onClick={handleResendOtp}
                 disabled={isSubmitting}
               >
@@ -350,9 +291,9 @@ const LoginPage = ({ onLoginSuccess }) => {
               </button>
             </div>
 
-            <button 
-              type="button" 
-              className="submit-btn" 
+            <button
+              type="button"
+              className="submit-btn"
               onClick={handleOtpVerification}
               disabled={isSubmitting}
             >
@@ -360,9 +301,9 @@ const LoginPage = ({ onLoginSuccess }) => {
             </button>
 
             <div className="login-method-toggle">
-              <button 
-                type="button" 
-                className="toggle-method-btn" 
+              <button
+                type="button"
+                className="toggle-method-btn"
                 onClick={toggleLoginMethod}
               >
                 Login via Password
@@ -379,7 +320,7 @@ const LoginPage = ({ onLoginSuccess }) => {
         ) : (
           <>
             <div className="user-type-selector">
-              <button 
+              <button
                 type="button"
                 className={`user-type-btn ${userType === 'candidate' ? 'active' : ''}`}
                 onClick={() => handleUserTypeChange('candidate')}
@@ -387,7 +328,7 @@ const LoginPage = ({ onLoginSuccess }) => {
                 <span className="user-type-icon">👤</span>
                 Candidate
               </button>
-              <button 
+              <button
                 type="button"
                 className={`user-type-btn ${userType === 'recruiter' ? 'active' : ''}`}
                 onClick={() => handleUserTypeChange('recruiter')}
@@ -404,14 +345,14 @@ const LoginPage = ({ onLoginSuccess }) => {
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label className="input-label">Email Address</label>
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   name="email"
-                  className="input-field" 
+                  className="input-field"
                   placeholder="Enter your email address"
                   value={formData.email}
                   onChange={handleInputChange}
-                  required 
+                  required
                   autoComplete="email"
                 />
               </div>
@@ -420,14 +361,14 @@ const LoginPage = ({ onLoginSuccess }) => {
                 <div className="form-group">
                   <label className="input-label">Password</label>
                   <div className="password-input-wrapper">
-                    <input 
-                      type={showPassword ? 'text' : 'password'} 
+                    <input
+                      type={showPassword ? 'text' : 'password'}
                       name="password"
-                      className="input-field" 
-                      placeholder="Enter your password" 
+                      className="input-field"
+                      placeholder="Enter your password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      required 
+                      required
                       autoComplete="current-password"
                     />
                     <button
@@ -442,13 +383,13 @@ const LoginPage = ({ onLoginSuccess }) => {
                 </div>
               )}
 
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="submit-btn"
                 disabled={isSubmitting}
               >
-                {isSubmitting 
-                  ? (loginMethod === 'otp' ? 'Sending OTP...' : 'Logging in...') 
+                {isSubmitting
+                  ? (loginMethod === 'otp' ? 'Sending OTP...' : 'Logging in...')
                   : (loginMethod === 'otp' ? 'Send OTP' : 'Login')
                 }
               </button>
@@ -461,9 +402,9 @@ const LoginPage = ({ onLoginSuccess }) => {
             )}
 
             <div className="login-method-toggle">
-              <button 
-                type="button" 
-                className="toggle-method-btn" 
+              <button
+                type="button"
+                className="toggle-method-btn"
                 onClick={toggleLoginMethod}
               >
                 {loginMethod === 'otp' ? 'Login via Password' : 'Login via OTP'}

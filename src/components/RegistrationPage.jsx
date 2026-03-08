@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import api, { checkAuth } from '../config/api';
 import './RegistrationPage.css';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import toast from 'react-hot-toast';
 
 const RegistrationPage = ({ onRegisterSuccess }) => {
-  const [userType, setUserType] = useState('candidate');
+  // ✅ FIX: Read ?role= from URL to pre-select candidate or recruiter
+  const [searchParams] = useSearchParams();
+  const roleFromUrl = searchParams.get('role');
+
+  const [userType, setUserType] = useState(
+    roleFromUrl === 'recruiter' ? 'recruiter' : 'candidate'
+  );
+
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -14,7 +22,6 @@ const RegistrationPage = ({ onRegisterSuccess }) => {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -116,25 +123,17 @@ const RegistrationPage = ({ onRegisterSuccess }) => {
 
       console.log('✅ Registration response:', response.data);
 
-      // SAFARI FIX: Wait for cookies to be fully set
       await new Promise(resolve => setTimeout(resolve, 150));
       
-      // Verify authentication status (important for Safari)
       try {
         const authStatus = await checkAuth();
         console.log('🔐 Auth status after registration:', authStatus);
         
         if (!authStatus.authenticated) {
-          console.warn('⚠️ User not authenticated after registration - possible Safari cookie issue');
           setErrors({ 
             general: 'Registration successful but session not established. Please login.' 
           });
-          
-          // Redirect to login after 3 seconds
-          setTimeout(() => {
-            navigate('/login');
-          }, 3000);
-          
+          setTimeout(() => navigate('/login'), 3000);
           setIsSubmitting(false);
           return;
         }
@@ -149,24 +148,15 @@ const RegistrationPage = ({ onRegisterSuccess }) => {
         role: response.data.user?.role
       };
 
-      // Show success popup
-      setShowSuccessModal(true);
+      // ✅ Show friendly welcome toast for new users
+      toast.success(`Welcome to TConnects, ${response.data.user?.full_name?.split(' ')[0] || 'there'}! 🎉`);
 
       setTimeout(() => {
-        setShowSuccessModal(false);
-
-        // Redirect based on role
-        if (userType === 'candidate') {
-          navigate('/candidate-dashboard');
-        } else {
-          navigate('/recruiter-dashboard');
-        }
-
-        // Notify parent component
+        navigate('/');
         if (typeof onRegisterSuccess === 'function') {
           onRegisterSuccess(userData);
         }
-      }, 2000);
+      }, 1200);
 
     } catch (error) {
       console.error('❌ Registration error:', error);
@@ -350,15 +340,6 @@ const RegistrationPage = ({ onRegisterSuccess }) => {
         </div>
       </div>
 
-      {showSuccessModal && (
-        <div className="popup-overlay">
-          <div className="popup-card">
-            <div className="popup-icon">✓</div>
-            <h2 className="popup-title">Registration Successful!</h2>
-            <p className="popup-message">Your account has been created successfully.</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

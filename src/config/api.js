@@ -1,44 +1,32 @@
-// config/api.js - Safari-optimized API configuration
+// config/api.js - Production ready
 
 import axios from 'axios';
 
-// API Base URL - use environment variable or fallback
+// ✅ PRODUCTION: fallback to production backend if env var not set
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://backend.tconnects.in';
 
-// Create axios instance with Safari-compatible settings
 const api = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: true, // CRITICAL for Safari cookies
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
-  timeout: 30000, // 30 second timeout
+  timeout: 30000,
 });
 
-// Request interceptor - Safari compatibility
+// Request interceptor
 api.interceptors.request.use(
   (config) => {
-    // Safari requires explicit origin header
-    config.headers['Origin'] = window.location.origin;
-    
-    // For Safari, ensure credentials are always included
     config.withCredentials = true;
-    
-    // Log requests in development
-    if (import.meta.env.DEV) {
-      console.log('🌐 API Request:', config.method.toUpperCase(), config.url);
-    }
-    
     return config;
   },
   (error) => {
-    console.error('❌ Request error:', error);
     return Promise.reject(error);
   }
 );
 
-// Response interceptor - Handle token refresh for Safari
+// Response interceptor - token refresh
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -50,143 +38,85 @@ const processQueue = (error, token = null) => {
       prom.resolve(token);
     }
   });
-  
   failedQueue = [];
 };
 
 api.interceptors.response.use(
-  (response) => {
-    // Log responses in development
-    if (import.meta.env.DEV) {
-      console.log('✅ API Response:', response.config.url, response.status);
-    }
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // ✅ FIXED: Don't try to refresh for auth check endpoints
-    // These are expected to fail when user is not logged in
-    const isAuthCheckEndpoint = 
+    const isAuthCheckEndpoint =
       originalRequest.url?.includes('/api/auth/check/') ||
       originalRequest.url?.includes('/api/auth/me/');
 
-    // If 401 and haven't retried, try to refresh token
     if (error.response?.status === 401 && !originalRequest._retry && !isAuthCheckEndpoint) {
-      
+
       if (isRefreshing) {
-        // If already refreshing, queue this request
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
-        .then(() => {
-          return api(originalRequest);
-        })
-        .catch(err => {
-          return Promise.reject(err);
-        });
+        .then(() => api(originalRequest))
+        .catch(err => Promise.reject(err));
       }
 
       originalRequest._retry = true;
       isRefreshing = true;
 
       try {
-        console.log('🔄 Attempting token refresh...');
-        
-        // Attempt token refresh
         await api.post('/api/auth/refresh/');
-        
-        console.log('✅ Token refresh successful');
-        
         isRefreshing = false;
         processQueue(null);
-        
-        // Retry original request
         return api(originalRequest);
       } catch (refreshError) {
-        console.error('❌ Token refresh failed:', refreshError);
-        
         isRefreshing = false;
         processQueue(refreshError, null);
-        
-        // Clear any stored data
         localStorage.clear();
         sessionStorage.clear();
-        
-        // Redirect to login only if not already on login/register page
+        window.dispatchEvent(new Event('auth:logout'));
+
         const currentPath = window.location.pathname;
         if (!['/login', '/register', '/'].includes(currentPath)) {
-          console.log('🔄 Redirecting to login...');
           window.location.href = '/login';
         }
-        
+
         return Promise.reject(refreshError);
       }
-    }
-
-    // ✅ FIXED: For auth check endpoints, just reject without logging errors
-    // This is expected behavior when not logged in
-    if (isAuthCheckEndpoint && error.response?.status === 401) {
-      return Promise.reject(error);
-    }
-
-    // Log other errors in development
-    if (import.meta.env.DEV && error.response?.status !== 401) {
-      console.error('❌ API Error:', error.response?.status, error.config?.url);
     }
 
     return Promise.reject(error);
   }
 );
 
-// ✅ FIXED: Better authentication check using /api/auth/check/
 export const checkAuth = async () => {
   try {
     const response = await api.get('/api/auth/check/');
-    return response.data; // Returns { authenticated: true/false, user?: {...} }
-  } catch (error) {
-    // Don't log error - this is expected when not authenticated
+    return response.data;
+  } catch {
     return { authenticated: false };
   }
 };
 
-// ✅ FIXED: Get current user (requires authentication)
 export const getCurrentUser = async () => {
   try {
     const response = await api.get('/api/auth/me/');
-    // Response is now the user object directly (not wrapped)
     return response.data;
-  } catch (error) {
-    // Don't log 401 errors - user is not logged in
-    if (error.response?.status !== 401) {
-      console.error('Get user failed:', error);
-    }
+  } catch {
     return null;
   }
 };
 
-// Helper function for logout
 export const logout = async () => {
   try {
     await api.post('/api/auth/logout/');
+  } catch {
+    // continue even if API fails
+  } finally {
     localStorage.clear();
     sessionStorage.clear();
-    
-    // Dispatch logout event for AuthContext
     window.dispatchEvent(new Event('auth:logout'));
-    
-    return true;
-  } catch (error) {
-    console.error('Logout failed:', error);
-    // Clear local data even if API fails
-    localStorage.clear();
-    sessionStorage.clear();
-    
-    // Dispatch logout event even if API fails
-    window.dispatchEvent(new Event('auth:logout'));
-    
-    return false;
   }
+  return true;
 };
 
 export default api;

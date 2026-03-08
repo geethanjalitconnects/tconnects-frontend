@@ -3,13 +3,12 @@ import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { FaChevronDown } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import newLogo from "../assets/TconnectsNewLogo.png";
-import api from "../config/api";
 import "./Header.css";
 import { AuthContext } from "../context/AuthContext";
 
 const Header = ({ currentUser, onLogout }) => {
   const [scrolled, setScrolled] = useState(false);
-  const { user: contextUser, setUser } = useContext(AuthContext);
+  const { user: contextUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -17,13 +16,6 @@ const Header = ({ currentUser, onLogout }) => {
 
   // Use currentUser prop if available, fallback to context
   const user = currentUser || contextUser;
-
-  // Sync context with prop changes
-  useEffect(() => {
-    if (currentUser && setUser) {
-      setUser(currentUser);
-    }
-  }, [currentUser, setUser]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -41,7 +33,6 @@ const Header = ({ currentUser, onLogout }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Close mobile menu helper
   const closeMobileMenu = () => {
     const nav = document.querySelector(".navbar-collapse");
     if (nav?.classList.contains("show")) {
@@ -49,60 +40,31 @@ const Header = ({ currentUser, onLogout }) => {
     }
   };
 
-  // Logout handler - use prop if available, fallback to local logic
+  // ✅ FIXED: Header no longer calls the logout API itself.
+  // It just delegates fully to onLogout() from App.jsx.
+  // This prevents the double API call that was causing the bug.
   const logoutUser = async () => {
     setDropdownOpen(false);
-    
-    try {
-      // Call logout endpoint
-      await api.post("/api/auth/logout/");
-      console.log("✅ Logout successful");
-      
-      // Clear context user
-      if (setUser) {
-        setUser(null);
-      }
-      
-      // Use prop callback if available
-      if (onLogout) {
-        onLogout();
-      }
-      
-      // Navigate to home
-      navigate("/");
-      closeMobileMenu();
-      
-    } catch (error) {
-      console.error("❌ Logout error:", error);
-      
-      // Still clear state on error
-      if (setUser) {
-        setUser(null);
-      }
-      
-      if (onLogout) {
-        onLogout();
-      }
-      
-      navigate("/");
-      closeMobileMenu();
+    closeMobileMenu();
+    if (onLogout) {
+      await onLogout();
     }
   };
 
-  // Debug logging to track user state
-  useEffect(() => {
-    console.log("🎨 Header rendering with user:", user);
-  }, [user]);
-
   return (
-    <Navbar expand="lg" className={`custom-navbar fixed-top ${scrolled ? "scrolled" : ""}`}>
+    <Navbar
+      expand="lg"
+      className={`custom-navbar fixed-top ${scrolled ? "scrolled" : ""}`}
+    >
       <Container fluid className="px-3 px-md-4">
-
         <Navbar.Brand as={Link} to="/" onClick={closeMobileMenu}>
           <img src={newLogo} className="main-logo" alt="TConnects Logo" />
         </Navbar.Brand>
 
-        <Navbar.Toggle aria-controls="basic-navbar-nav" className="custom-toggler">
+        <Navbar.Toggle
+          aria-controls="basic-navbar-nav"
+          className="custom-toggler"
+        >
           <span className="toggler-icon"></span>
           <span className="toggler-icon"></span>
           <span className="toggler-icon"></span>
@@ -110,38 +72,75 @@ const Header = ({ currentUser, onLogout }) => {
 
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mx-auto navbar-nav-custom">
-
-            <Nav.Link as={Link} to="/" className="nav-link-custom" onClick={closeMobileMenu}>
+            <Nav.Link
+              as={Link}
+              to="/"
+              className="nav-link-custom"
+              onClick={closeMobileMenu}
+            >
               <span className="nav-text">Home</span>
             </Nav.Link>
 
             {/* FIND WORK DROPDOWN */}
             <NavDropdown
-              title={<span className="nav-text dropdown-title">Find Work <FaChevronDown className="dropdown-icon" /></span>}
+              title={
+                <span className="nav-text dropdown-title">
+                  Find Work <FaChevronDown className="dropdown-icon" />
+                </span>
+              }
               className="nav-dropdown-custom"
               align="start"
             >
-              <NavDropdown.Item as={Link} to="/jobs" className="dropdown-item-custom" onClick={closeMobileMenu}>
+              <NavDropdown.Item
+                as={Link}
+                to="/jobs"
+                className="dropdown-item-custom"
+                onClick={closeMobileMenu}
+              >
                 Jobs
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/internships" className="dropdown-item-custom" onClick={closeMobileMenu}>
+              <NavDropdown.Item
+                as={Link}
+                to="/internships"
+                className="dropdown-item-custom"
+                onClick={closeMobileMenu}
+              >
                 Internships
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/freelancers" className="dropdown-item-custom" onClick={closeMobileMenu}>
+              <NavDropdown.Item
+                as={Link}
+                to="/freelancers"
+                className="dropdown-item-custom"
+                onClick={closeMobileMenu}
+              >
                 Freelance
               </NavDropdown.Item>
             </NavDropdown>
 
             {/* LEARNING DROPDOWN */}
             <NavDropdown
-              title={<span className="nav-text dropdown-title">Learning <FaChevronDown className="dropdown-icon" /></span>}
+              title={
+                <span className="nav-text dropdown-title">
+                  Learning <FaChevronDown className="dropdown-icon" />
+                </span>
+              }
               className="nav-dropdown-custom"
               align="start"
             >
-              <NavDropdown.Item as={Link} to="/courses" className="dropdown-item-custom" onClick={closeMobileMenu}>
+              <NavDropdown.Item
+                as={Link}
+                to="/courses"
+                className="dropdown-item-custom"
+                onClick={closeMobileMenu}
+              >
                 Skill Development
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/mock-interview" className="dropdown-item-custom" onClick={closeMobileMenu}>
+              <NavDropdown.Item
+                as={Link}
+                to="/mock-interview"
+                className="dropdown-item-custom"
+                onClick={closeMobileMenu}
+              >
                 Schedule a Mock Interview
               </NavDropdown.Item>
               <NavDropdown.Item
@@ -158,7 +157,6 @@ const Header = ({ currentUser, onLogout }) => {
           </Nav>
 
           <div className="right-section">
-
             {user ? (
               <div
                 className="header-user-menu"
@@ -166,11 +164,16 @@ const Header = ({ currentUser, onLogout }) => {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
                 <div className="user-avatar">
-                  {user.full_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || "U"}
+                  {user.full_name?.charAt(0)?.toUpperCase() ||
+                    user.email?.charAt(0)?.toUpperCase() ||
+                    "U"}
                 </div>
 
                 <div className="user-name">
-                  Hi, {user.full_name?.split(" ")[0] || user.email?.split("@")[0] || "User"}
+                  Hi,{" "}
+                  {user.full_name?.split(" ")[0] ||
+                    user.email?.split("@")[0] ||
+                    "User"}
                 </div>
 
                 <div
@@ -209,16 +212,13 @@ const Header = ({ currentUser, onLogout }) => {
                 <Link to="/register" onClick={closeMobileMenu}>
                   <button className="auth-btn register-btn">Register</button>
                 </Link>
-
                 <Link to="/login" onClick={closeMobileMenu}>
                   <button className="auth-btn login-btn">Login</button>
                 </Link>
               </div>
             )}
-
           </div>
         </Navbar.Collapse>
-
       </Container>
     </Navbar>
   );

@@ -82,56 +82,20 @@ import InternshipApplications from "./pages/recruiter-dashboard/applications/Int
 import EditJob from "./pages/recruiter-dashboard/jobs/EditJob";
 import EditInternship from "./pages/recruiter-dashboard/jobs/EditInternship";
 
-/* ================= AUTH CHECK HOOK ================= */
-import api from "./config/api";
-
-// Custom hook to check authentication on mount (fixes Safari issue)
-const useAuthCheck = (onAuthChange) => {
-  const [isChecking, setIsChecking] = useState(true);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        console.log('🔍 Checking authentication...');
-        const response = await api.get('/api/auth/me/');
-        if (response.data) {
-          setUser(response.data);
-          onAuthChange?.(response.data);
-        }
-      } catch {
-        setUser(null);
-        onAuthChange?.(null);
-      } finally {
-        setIsChecking(false);
-      }
-    };
-
-    checkAuth();
-
-    const handleLogout = () => {
-      setUser(null);
-      onAuthChange?.(null);
-    };
-
-    window.addEventListener('auth:logout', handleLogout);
-
-    return () => window.removeEventListener('auth:logout', handleLogout);
-  }, []);
-
-  return { user, isChecking };
-};
+/* ================= API ================= */
+import { checkAuth, logout as apiLogout } from "./config/api";
 
 /* ================= HOME PAGE ================= */
 function HomePage({ onCategoryClick, navigate }) {
   return (
     <>
-      <HeroSection 
-        onCategoryClick={onCategoryClick} 
+      <HeroSection
+        onCategoryClick={onCategoryClick}
         navigateToJobsList={() => navigate("/jobs")}
-        navigateToResumeMaking={() => window.open("https://tconnects.vercel.app/", "_blank")}
+        navigateToResumeMaking={() =>
+          window.open("https://tconnects.vercel.app/", "_blank")
+        }
       />
-
       <AboutSection navigateToAboutUs={() => navigate("/about-us")} />
       <WhyChoose />
       <HowItWorks />
@@ -140,74 +104,68 @@ function HomePage({ onCategoryClick, navigate }) {
   );
 }
 
-
 /* ================= MAIN APP ================= */
 function App() {
   const [modalCategory, setModalCategory] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  // Start as true so we show loading until auth check completes
+  const [isChecking, setIsChecking] = useState(true);
+
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Determine which pages should hide the header
-  const hideHeader = 
+  const hideHeader =
     location.pathname.startsWith("/course/") ||
     location.pathname.startsWith("/candidate-dashboard") ||
     location.pathname.startsWith("/recruiter-dashboard");
 
-  // Auto-check authentication on mount (fixes Safari issue)
-  const { user: authUser, isChecking } = useAuthCheck((userData) => {
-    console.log('🔄 Auth state changed:', userData);
-    setCurrentUser(userData);
-  });
+  // ✅ SINGLE auth check on mount using /api/auth/check/
+  // This is the only place we check auth — no duplicate in AuthContext
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        const authData = await checkAuth(); // calls /api/auth/check/
+        if (authData.authenticated && authData.user) {
+          setCurrentUser(authData.user);
+        } else {
+          setCurrentUser(null);
+        }
+      } catch {
+        setCurrentUser(null);
+      } finally {
+        setIsChecking(false);
+      }
+    };
 
-  // Handle login success from LoginPage
-  const handleLoginSuccess = (userData) => {
-    console.log('✅ Login success:', userData);
-    setCurrentUser(userData);
-  };
+    initAuth();
+  }, []);
 
-  // Handle registration success from RegistrationPage
-  const handleRegisterSuccess = (userData) => {
-    console.log('✅ Registration success:', userData);
-    setCurrentUser(userData);
-  };
-
-  // Handle logout
-  const handleLogout = async () => {
-    try {
-      await api.post('/api/auth/logout/');
-      console.log('👋 Logged out successfully');
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
+  // Listen for logout events (e.g. triggered by api.js on 401)
+  useEffect(() => {
+    const handleLogout = () => {
       setCurrentUser(null);
-      // Trigger global logout event
-      window.dispatchEvent(new CustomEvent('auth:logout'));
-      navigate('/');
-    }
+    };
+    window.addEventListener("auth:logout", handleLogout);
+    return () => window.removeEventListener("auth:logout", handleLogout);
+  }, []);
+
+  const handleLoginSuccess = (userData) => {
+    setCurrentUser(userData);
   };
 
-  // Show loading while checking auth
-  if (isChecking) {
-    return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        fontSize: '1.2rem',
-        fontFamily: 'system-ui, -apple-system, sans-serif'
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ 
-            marginBottom: '1rem',
-            fontSize: '2rem'
-          }}>⏳</div>
-          <div>Loading...</div>
-        </div>
-      </div>
-    );
-  }
+  const handleRegisterSuccess = (userData) => {
+    setCurrentUser(userData);
+  };
+
+  // ✅ FIXED LOGOUT: single call to apiLogout (which calls the endpoint once),
+  // then clear state and navigate. No double-calling the endpoint.
+  const handleLogout = async () => {
+    await apiLogout(); // clears cookies + dispatches auth:logout event
+    setCurrentUser(null);
+    navigate("/");
+  };
+
+  if (isChecking) return null;
 
   return (
     <AuthProvider value={{ user: currentUser, setUser: setCurrentUser }}>
@@ -217,54 +175,43 @@ function App() {
             <Toaster
               position="top-right"
               toastOptions={{
-                // Default style for all toasts (teal)
                 style: {
-                  background: '#14b8a6',
-                  color: '#ffffff',
+                  background: "#14b8a6",
+                  color: "#ffffff",
                 },
               }}
             />
 
-            {/* Conditionally render Header */}
             {!hideHeader && (
-              <Header 
-                currentUser={currentUser} 
-                onLogout={handleLogout}
-              />
+              <Header currentUser={currentUser} onLogout={handleLogout} />
             )}
 
             <Routes>
               {/* PUBLIC ROUTES */}
-              <Route 
-                path="/" 
+              <Route
+                path="/"
                 element={
                   <>
                     <WelcomeModal currentUser={currentUser} />
-                    <HomePage 
+                    <HomePage
                       onCategoryClick={setModalCategory}
-                      navigate={navigate}  
+                      navigate={navigate}
                     />
                   </>
-                } 
+                }
               />
               <Route path="/about-us" element={<AboutUs />} />
-              
-              {/* AUTH ROUTES - Pass handlers */}
-              <Route 
-                path="/login" 
-                element={
-                  <LoginPage 
-                    onLoginSuccess={handleLoginSuccess}
-                  />
-                } 
+
+              {/* AUTH ROUTES */}
+              <Route
+                path="/login"
+                element={<LoginPage onLoginSuccess={handleLoginSuccess} />}
               />
-              <Route 
-                path="/register" 
+              <Route
+                path="/register"
                 element={
-                  <RegistrationPage 
-                    onRegisterSuccess={handleRegisterSuccess}
-                  />
-                } 
+                  <RegistrationPage onRegisterSuccess={handleRegisterSuccess} />
+                }
               />
 
               {/* FREELANCERS PUBLIC PAGES */}
@@ -275,7 +222,7 @@ function App() {
               <Route path="/course/learn/:slug/:id" element={<LearnCourse />} />
               <Route path="/course/:slug/:id" element={<CourseDetails />} />
               <Route path="/courses" element={<CoursesList />} />
-              
+
               {/* MOCK INTERVIEW */}
               <Route path="/mock-interview" element={<MockInterview />} />
 
@@ -286,51 +233,107 @@ function App() {
 
               {/* INTERNSHIPS */}
               <Route path="/internships" element={<InternshipsListPage />} />
-              <Route path="/internships/:id" element={<InternshipDetailsPage />} />
-              <Route path="/apply-internship" element={<ApplyInternshipPage />} />
+              <Route
+                path="/internships/:id"
+                element={<InternshipDetailsPage />}
+              />
+              <Route
+                path="/apply-internship"
+                element={<ApplyInternshipPage />}
+              />
 
               {/* CANDIDATE DASHBOARD */}
-              <Route path="/candidate-dashboard/*" element={<CandidateDashboardLayout />}>
+              <Route
+                path="/candidate-dashboard/*"
+                element={<CandidateDashboardLayout />}
+              >
                 <Route index element={<Overview />} />
                 <Route path="overview" element={<Overview />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="applied-jobs" element={<AppliedJobs />} />
-                <Route path="applied-internships" element={<AppliedInternships />} />
+                <Route
+                  path="applied-internships"
+                  element={<AppliedInternships />}
+                />
                 <Route path="saved-jobs" element={<SavedJobs />} />
-                <Route path="saved-internships" element={<SavedInternships />} />
+                <Route
+                  path="saved-internships"
+                  element={<SavedInternships />}
+                />
                 <Route path="courses" element={<Courses />} />
-
-                
-                {/* Freelancer Pages */}
-                <Route path="freelancer/basic-information" element={<FreelancerBasicInfo />} />
-                <Route path="freelancer/professional-details" element={<FreelancerProfessionalDetails />} />
-                <Route path="freelancer/education" element={<FreelancerEducation />} />
-                <Route path="freelancer/availability" element={<FreelancerAvailability />} />
-                <Route path="freelancer/payment-method" element={<FreelancerPayment />} />
-                <Route path="freelancer/social-links" element={<FreelancerSocialLinks />} />
-                <Route path="freelancer/profile-preview" element={<FreelancerProfilePreview />} />
+                <Route
+                  path="freelancer/basic-information"
+                  element={<FreelancerBasicInfo />}
+                />
+                <Route
+                  path="freelancer/professional-details"
+                  element={<FreelancerProfessionalDetails />}
+                />
+                <Route
+                  path="freelancer/education"
+                  element={<FreelancerEducation />}
+                />
+                <Route
+                  path="freelancer/availability"
+                  element={<FreelancerAvailability />}
+                />
+                <Route
+                  path="freelancer/payment-method"
+                  element={<FreelancerPayment />}
+                />
+                <Route
+                  path="freelancer/social-links"
+                  element={<FreelancerSocialLinks />}
+                />
+                <Route
+                  path="freelancer/profile-preview"
+                  element={<FreelancerProfilePreview />}
+                />
               </Route>
 
               {/* RECRUITER DASHBOARD */}
-              <Route path="/recruiter-dashboard/*" element={<RecruiterDashboardLayout />}>
+              <Route
+                path="/recruiter-dashboard/*"
+                element={<RecruiterDashboardLayout />}
+              >
                 <Route index element={<RecruiterOverview />} />
                 <Route path="overview" element={<RecruiterOverview />} />
-                <Route path="profile/basic-info" element={<BasicInformation />} />
-                <Route path="profile/company-profile" element={<CompanyProfile />} />
+                <Route
+                  path="profile/basic-info"
+                  element={<BasicInformation />}
+                />
+                <Route
+                  path="profile/company-profile"
+                  element={<CompanyProfile />}
+                />
                 <Route path="jobs/post-job" element={<PostJob />} />
-                <Route path="jobs/post-internship" element={<PostInternship />} />
+                <Route
+                  path="jobs/post-internship"
+                  element={<PostInternship />}
+                />
                 <Route path="jobs/manage-jobs" element={<ManageJobs />} />
-                <Route path="jobs/manage-internships" element={<ManageInternships />} />
+                <Route
+                  path="jobs/manage-internships"
+                  element={<ManageInternships />}
+                />
                 <Route path="jobs/edit-job/:id" element={<EditJob />} />
-                <Route path="jobs/edit-internship/:id" element={<EditInternship />} />
-                <Route path="applications/jobs" element={<JobApplications />} />
-                <Route path="applications/internships" element={<InternshipApplications />} />
+                <Route
+                  path="jobs/edit-internship/:id"
+                  element={<EditInternship />}
+                />
+                <Route
+                  path="applications/jobs"
+                  element={<JobApplications />}
+                />
+                <Route
+                  path="applications/internships"
+                  element={<InternshipApplications />}
+                />
               </Route>
 
               <Route path="*" element={<div>Page Not Found</div>} />
             </Routes>
 
-            {/* MODAL */}
             {modalCategory && (
               <RiskCategoryModal
                 category={modalCategory}

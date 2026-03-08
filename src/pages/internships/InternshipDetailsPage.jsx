@@ -1,32 +1,28 @@
-// InternshipDetailsPage.jsx — GLOBAL SYNC VERSION
-// ✓ Uses SavedInternshipsContext for saved state
-// ✓ Instantly updates across all pages
-// ✓ Fixed Apply navigation to match ApplyInternshipPage
+// InternshipDetailsPage.jsx — with recruiter apply restriction
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../config/api";
 import "./InternshipDetailsPage.css";
-
-// ⭐ GLOBAL SAVED INTERNSHIP CONTEXT
 import { useSavedInternships } from "../../context/SavedInternshipsContext";
+import { AuthContext } from "../../context/AuthContext";
+import toast from "react-hot-toast";
 
 const InternshipDetailsPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { user } = useContext(AuthContext); // ✅ get logged-in user
 
   const [internship, setInternship] = useState(null);
   const [company, setCompany] = useState(null);
   const [applied, setApplied] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // ⭐ GLOBAL CONTEXT
   const { savedIds, toggleSave } = useSavedInternships();
   const saved = savedIds.includes(Number(id));
 
-  // =============================
-  // 1) LOAD INTERNSHIP DETAILS
-  // =============================
+  const isRecruiter = user?.role === "recruiter";
+
   useEffect(() => {
     const load = async () => {
       try {
@@ -52,10 +48,10 @@ const InternshipDetailsPage = () => {
     load();
   }, [id]);
 
-  // =============================
-  // 2) LOAD APPLIED STATUS
-  // =============================
   useEffect(() => {
+    // Only check applied status for candidates
+    if (isRecruiter) return;
+
     const loadApplied = async () => {
       try {
         const res = await api.get("/api/applications/internship/applied/");
@@ -67,21 +63,25 @@ const InternshipDetailsPage = () => {
     };
 
     loadApplied();
-  }, [id]);
+  }, [id, isRecruiter]);
 
-  // =============================
-  // 3) APPLY NOW - FIXED
-  // =============================
   const handleApplyNow = () => {
-    // ✅ Changed from ?id= to ?internshipId= to match ApplyInternshipPage
+    if (!user) {
+      toast.error("Please login to apply for this internship.");
+      navigate("/login");
+      return;
+    }
+
+    if (isRecruiter) {
+      toast.error("Recruiters cannot apply for internships.");
+      return;
+    }
+
     navigate(`/apply-internship?internshipId=${id}`);
   };
 
-  // =============================
-  // 4) SAVE / UNSAVE (GLOBAL)
-  // =============================
   const handleToggleSave = () => {
-    toggleSave(Number(id)); // ⭐ Instant global update
+    toggleSave(Number(id));
   };
 
   if (loading) return <div className="jd-loading">Loading internship…</div>;
@@ -114,21 +114,57 @@ const InternshipDetailsPage = () => {
           </div>
 
           <div className="jd-header-right">
-            {/* ⭐ APPLY BUTTON WITH STATUS */}
+
+            {/* ✅ APPLY BUTTON — disabled for recruiters */}
             <button
               className="jd-apply-btn"
-              disabled={applied}
-              onClick={!applied ? handleApplyNow : null}
+              disabled={applied || isRecruiter}
+              title={isRecruiter ? "Recruiters cannot apply for internships" : ""}
+              onClick={!applied && !isRecruiter ? handleApplyNow : null}
+              style={isRecruiter ? {
+                backgroundColor: "#d1d5db",
+                color: "#9ca3af",
+                border: "1px solid #d1d5db",
+                cursor: "not-allowed",
+                pointerEvents: "none",
+              } : {}}
             >
               {applied ? "Applied ✓" : "Apply Now"}
             </button>
 
-            {/* ⭐ GLOBAL SAVE BUTTON */}
-            <button className="jd-save-btn" onClick={handleToggleSave}>
+            {/* ✅ SAVE BUTTON — disabled for recruiters */}
+            <button
+              className="jd-save-btn"
+              disabled={isRecruiter}
+              onClick={!isRecruiter ? handleToggleSave : null}
+              title={isRecruiter ? "Recruiters cannot save internships" : ""}
+              style={isRecruiter ? {
+                backgroundColor: "#d1d5db",
+                color: "#9ca3af",
+                border: "1px solid #d1d5db",
+                cursor: "not-allowed",
+                pointerEvents: "none",
+              } : {}}
+            >
               {saved ? "Saved" : "Save Internship"}
             </button>
           </div>
         </div>
+
+        {/* ✅ Recruiter notice banner */}
+        {isRecruiter && (
+          <div style={{
+            background: "#fff3cd",
+            border: "1px solid #ffc107",
+            borderRadius: "8px",
+            padding: "12px 16px",
+            marginBottom: "16px",
+            color: "#856404",
+            fontSize: "0.95rem"
+          }}>
+            ⚠️ You are logged in as a <strong>Recruiter</strong>. To apply for internships, please login with a candidate account.
+          </div>
+        )}
 
         {/* DESCRIPTION */}
         <div className="jd-section">
@@ -136,7 +172,6 @@ const InternshipDetailsPage = () => {
           <p className="jd-description">{internship.full_description}</p>
         </div>
 
-        {/* RESPONSIBILITIES */}
         {internship.responsibilities?.length > 0 && (
           <div className="jd-section">
             <h2 className="jd-section-title">Responsibilities</h2>
@@ -148,7 +183,6 @@ const InternshipDetailsPage = () => {
           </div>
         )}
 
-        {/* REQUIREMENTS */}
         {internship.requirements?.length > 0 && (
           <div className="jd-section">
             <h2 className="jd-section-title">Requirements</h2>
@@ -160,7 +194,6 @@ const InternshipDetailsPage = () => {
           </div>
         )}
 
-        {/* SKILLS */}
         <div className="jd-section">
           <h2 className="jd-section-title">Skills Required</h2>
           <div className="jd-skills">
@@ -170,7 +203,6 @@ const InternshipDetailsPage = () => {
           </div>
         </div>
 
-        {/* PERKS & BENEFITS */}
         {internship.perks?.length > 0 && (
           <div className="jd-section">
             <h2 className="jd-section-title">Perks & Benefits</h2>
@@ -182,22 +214,20 @@ const InternshipDetailsPage = () => {
           </div>
         )}
 
-        {/* DEADLINE */}
         {internship.application_deadline && (
           <div className="jd-section">
             <h2 className="jd-section-title">Application Deadline</h2>
             <p className="jd-description">
               {new Date(internship.application_deadline).toLocaleDateString("en-IN", {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
               })}
             </p>
           </div>
         )}
 
-        {/* COMPANY DETAILS */}
         {company && (
           <div className="jd-section-card">
             <h2 className="jd-section-title">Company Details</h2>
@@ -206,7 +236,6 @@ const InternshipDetailsPage = () => {
               <p><strong>Industry:</strong> {company.industry_category || "Not specified"}</p>
               <p><strong>Company Size:</strong> {company.company_size || "Not specified"}</p>
               <p><strong>Location:</strong> {company.company_location || "Not specified"}</p>
-
               {company.company_website && (
                 <p>
                   <strong>Website:</strong>{" "}
@@ -216,7 +245,6 @@ const InternshipDetailsPage = () => {
                 </p>
               )}
             </div>
-
             {company.about_company && (
               <p className="jd-company-about">
                 <strong>About Company:</strong> {company.about_company}

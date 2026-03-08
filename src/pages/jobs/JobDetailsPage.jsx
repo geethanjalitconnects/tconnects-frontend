@@ -1,21 +1,18 @@
-// JobDetailsPage.jsx — GLOBAL-SYNC VERSION (Uses SavedJobsContext)
-// ✓ Saved job stays in sync with JobsListPage
-// ✓ Saved state persists on refresh
-// ✓ "Saved" shows instantly everywhere
-// ✓ UI unchanged
-// ✓ Fixed Apply Job navigation
+// JobDetailsPage.jsx — with recruiter apply restriction
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../config/api";
 import { useSavedJobs } from "../../context/SavedJobsContext";
+import { AuthContext } from "../../context/AuthContext";
+import toast from "react-hot-toast";
 import "./JobDetailsPage.css";
 
 const JobDetailsPage = () => {
   const navigate = useNavigate();
   const { slug } = useParams();
+  const { user } = useContext(AuthContext); // ✅ get logged-in user
 
-  // Extract job ID from slug (e.g. "risk-analyst-5" → 5)
   const id = slug.split("-").pop();
 
   const [job, setJob] = useState(null);
@@ -23,20 +20,17 @@ const JobDetailsPage = () => {
   const [applied, setApplied] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // ⭐ GLOBAL SAVED JOB CONTEXT
   const { savedIds, toggleSave } = useSavedJobs();
   const saved = savedIds.includes(Number(id));
 
-  // =============================
-  // 1) LOAD JOB DETAILS
-  // =============================
+  const isRecruiter = user?.role === "recruiter";
+
   useEffect(() => {
     const loadJob = async () => {
       try {
         const res = await api.get(`/api/jobs/${id}/`);
         setJob(res.data);
 
-        // Load company profile
         if (res.data.recruiter_id) {
           try {
             const companyRes = await api.get(
@@ -57,10 +51,10 @@ const JobDetailsPage = () => {
     loadJob();
   }, [id]);
 
-  // =============================
-  // 2) LOAD APPLIED STATUS
-  // =============================
   useEffect(() => {
+    // Only check applied status for candidates
+    if (isRecruiter) return;
+
     const loadApplied = async () => {
       try {
         const res = await api.get("/api/applications/job/applied/");
@@ -72,19 +66,24 @@ const JobDetailsPage = () => {
     };
 
     loadApplied();
-  }, [id]);
+  }, [id, isRecruiter]);
 
-  // =============================
-  // 3) APPLY NOW - FIXED
-  // =============================
   const handleApplyNow = () => {
-    // ✅ Changed from ?id= to ?jobId= to match ApplyJobPage
+    // ✅ Block recruiters from applying
+    if (!user) {
+      toast.error("Please login to apply for this job.");
+      navigate("/login");
+      return;
+    }
+
+    if (isRecruiter) {
+      toast.error("Recruiters cannot apply for jobs. Please use a candidate account.");
+      return;
+    }
+
     navigate(`/apply?jobId=${id}`);
   };
 
-  // =============================
-  // 4) SAVE / UNSAVE (GLOBAL)
-  // =============================
   const handleToggleSave = async () => {
     await toggleSave(Number(id));
   };
@@ -96,7 +95,7 @@ const JobDetailsPage = () => {
     <div className="jd-desktop-wrapper">
       <div className="jd-container">
 
-        {/* ====================== JOB HEADER ====================== */}
+        {/* JOB HEADER */}
         <div className="jd-header-card">
           <div className="jd-header-left">
             <h1 className="jd-title">{job.title}</h1>
@@ -120,32 +119,63 @@ const JobDetailsPage = () => {
 
           <div className="jd-header-right">
 
-            {/* ⭐ APPLY BUTTON */}
+            {/* APPLY BUTTON */}
             <button
               className="jd-apply-btn"
-              disabled={applied}
-              onClick={!applied ? handleApplyNow : null}
+              disabled={applied || isRecruiter}
+              title={isRecruiter ? "Recruiters cannot apply for jobs" : ""}
+              onClick={!applied && !isRecruiter ? handleApplyNow : null}
+              style={isRecruiter ? {
+                backgroundColor: "#d1d5db",
+                color: "#9ca3af",
+                border: "1px solid #d1d5db",
+                cursor: "not-allowed",
+                pointerEvents: "none",
+              } : {}}
             >
               {applied ? "Applied ✓" : "Apply Now"}
             </button>
 
-            {/* ⭐ GLOBAL SAVE BUTTON */}
+            {/* SAVE BUTTON */}
             <button
               className="jd-save-btn"
-              onClick={handleToggleSave}
+              disabled={isRecruiter}
+              onClick={!isRecruiter ? handleToggleSave : null}
+              title={isRecruiter ? "Recruiters cannot save jobs" : ""}
+              style={isRecruiter ? {
+                backgroundColor: "#d1d5db",
+                color: "#9ca3af",
+                border: "1px solid #d1d5db",
+                cursor: "not-allowed",
+                pointerEvents: "none",
+              } : {}}
             >
               {saved ? "Saved" : "Save Job"}
             </button>
           </div>
         </div>
 
-        {/* ====================== JOB DESCRIPTION ====================== */}
+        {/* ✅ Recruiter notice banner */}
+        {isRecruiter && (
+          <div style={{
+            background: "#fff3cd",
+            border: "1px solid #ffc107",
+            borderRadius: "8px",
+            padding: "12px 16px",
+            marginBottom: "16px",
+            color: "#856404",
+            fontSize: "0.95rem"
+          }}>
+            ⚠️ You are logged in as a <strong>Recruiter</strong>. To apply for jobs, please login with a candidate account.
+          </div>
+        )}
+
+        {/* JOB DESCRIPTION */}
         <div className="jd-section">
           <h2 className="jd-section-title">About the Job</h2>
           <p className="jd-description">{job.full_description}</p>
         </div>
 
-        {/* RESPONSIBILITIES */}
         {job.responsibilities?.length > 0 && (
           <div className="jd-section">
             <h2 className="jd-section-title">Responsibilities</h2>
@@ -157,7 +187,6 @@ const JobDetailsPage = () => {
           </div>
         )}
 
-        {/* REQUIREMENTS */}
         {job.requirements?.length > 0 && (
           <div className="jd-section">
             <h2 className="jd-section-title">Requirements</h2>
@@ -169,7 +198,6 @@ const JobDetailsPage = () => {
           </div>
         )}
 
-        {/* SKILLS */}
         <div className="jd-section">
           <h2 className="jd-section-title">Skills Required</h2>
           <div className="jd-skills">
@@ -179,17 +207,14 @@ const JobDetailsPage = () => {
           </div>
         </div>
 
-        {/* ====================== COMPANY DETAILS ====================== */}
         {company && (
           <div className="jd-section-card">
             <h2 className="jd-section-title">Company Details</h2>
-
             <div className="jd-company-grid">
               <p><strong>Company Name:</strong> {company.company_name}</p>
               <p><strong>Industry:</strong> {company.industry_category || "Not specified"}</p>
               <p><strong>Company Size:</strong> {company.company_size || "Not specified"}</p>
               <p><strong>Location:</strong> {company.company_location || "Not specified"}</p>
-
               {company.company_website && (
                 <p>
                   <strong>Website:</strong>{" "}
@@ -199,7 +224,6 @@ const JobDetailsPage = () => {
                 </p>
               )}
             </div>
-
             {company.about_company && (
               <p className="jd-company-about">
                 <strong>About Company:</strong> {company.about_company}
