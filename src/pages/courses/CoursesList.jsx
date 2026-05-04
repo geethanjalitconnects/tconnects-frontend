@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles/CoursesList.css";
 import CourseCard from "./components/CourseCard";
-import api from "../../config/api";   // ✅ IMPORT GLOBAL API
+import api from "../../config/api";
 
 const CoursesList = () => {
   const [courses, setCourses] = useState([]);
@@ -9,19 +9,15 @@ const CoursesList = () => {
   const [courseType, setCourseType] = useState("all");
   const [loading, setLoading] = useState(true);
 
-  // Slug generator
   const slugify = (text) =>
     text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
-  // ============================
-  // 🔥 Fetch Courses from Backend
-  // GET /api/courses/
-  // ============================
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const res = await api.get("/api/courses/");
-        setCourses(res.data);
+        const data = res.data.results ?? res.data;
+        setCourses(data);
       } catch (error) {
         console.error("Error loading courses:", error);
       } finally {

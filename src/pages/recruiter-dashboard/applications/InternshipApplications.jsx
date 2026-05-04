@@ -17,7 +17,7 @@ export default function InternshipApplications() {
     try {
       const res = await api.get("/api/internships/my-internships/");
       console.log("Internships fetched:", res.data);
-      setInternships(res.data);
+      setInternships(res.data.results ? res.data.results : res.data);
     } catch (error) {
       console.error("Failed to fetch internships", error);
       setError("Failed to load internships");
@@ -44,7 +44,7 @@ export default function InternshipApplications() {
         console.log("First application structure:", res.data[0]);
       }
       
-      setApplications(res.data);
+      setApplications(res.data.results ? res.data.results : res.data);
     } catch (error) {
       console.error("Failed to fetch internship applications", error);
       console.error("Error details:", error.response?.data);
@@ -95,13 +95,6 @@ export default function InternshipApplications() {
         </div>
       )}
 
-      {/* Debug Info */}
-      <div style={{ padding: '10px', backgroundColor: '#f0f0f0', marginBottom: '10px', fontSize: '12px' }}>
-        <strong>Debug Info:</strong>
-        <div>Selected Internship: {selectedInternship || 'None'}</div>
-        <div>Applications Count: {applications.length}</div>
-        <div>Loading: {loading ? 'Yes' : 'No'}</div>
-      </div>
 
       {/* Applications List */}
       <div className="rd-applications-list">

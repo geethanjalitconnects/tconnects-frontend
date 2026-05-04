@@ -1,58 +1,131 @@
 /* ---------------- PAGE WRAPPER ---------------- */
-.jobs-page {
+.internships-page {
   margin-top: 120px;
   padding: 0 90px;
   font-family: Inter, sans-serif;
 }
 
 /* ---------------- HEADER ---------------- */
-.jobs-header {
+.internships-header {
   margin-bottom: 20px;
 }
 
-.jobs-title {
+.internships-title {
   font-size: 38px;
   font-weight: 800;
   color: #064e53;
 }
 
-.jobs-subtitle {
+.internships-subtitle {
   margin-top: 5px;
   font-size: 16px;
   color: #0f6b71;
 }
 
-/* ---------------- FILTER BAR ---------------- */
-.jobs-filter-bar {
+/* ---------------- SEARCH FORM ---------------- */
+.internships-search-form {
   display: flex;
-  gap: 18px;
+  gap: 12px;
   margin-top: 25px;
-  margin-bottom: 25px;
+  margin-bottom: 16px;
 }
 
-.jobs-search {
+.internships-search-input {
   flex: 1;
-  padding: 14px;
+  padding: 14px 18px;
   font-size: 15px;
   border-radius: 10px;
   border: 1px solid #d9e7e8;
   background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
 }
 
-.jobs-filter-select {
-  width: 220px;
-  padding: 14px;
+.internships-search-input:focus {
+  border-color: #0f7173;
+}
+
+.internships-search-btn {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #0f7173, #17a3a2);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
   font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.internships-search-btn:hover {
+  opacity: 0.9;
+}
+
+/* ---------------- FILTERS ---------------- */
+.internships-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.internships-filter-select {
+  padding: 11px 14px;
+  font-size: 14px;
   border-radius: 10px;
   border: 1px solid #d7eaea;
   background: #fff;
+  color: #07565c;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+  min-width: 160px;
+}
+
+.internships-filter-select:focus {
+  border-color: #0f7173;
+}
+
+.internships-clear-btn {
+  padding: 11px 20px;
+  background: #fff;
+  border: 2px solid #e05c5c;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #e05c5c;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.internships-clear-btn:hover {
+  background: #e05c5c;
+  color: #fff;
 }
 
 /* ---------------- COUNT ---------------- */
-.jobs-count {
+.internships-count {
   font-size: 15px;
   margin-bottom: 16px;
   color: #0d6b70;
+}
+
+/* ---------------- LOADING / EMPTY ---------------- */
+.internships-loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #0d6b70;
+}
+
+.internships-empty {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #888;
 }
 
 /* ---------------- CARD ---------------- */
@@ -64,6 +137,8 @@
   box-shadow: 0 4px 18px rgba(0, 90, 90, 0.08);
   cursor: pointer;
   transition: 0.2s ease-out;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .job-card:hover {
@@ -75,6 +150,8 @@
   font-size: 24px;
   font-weight: 700;
   color: #033536;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .company-name {
@@ -91,12 +168,19 @@
 
 .job-info span {
   margin-right: 6px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .job-desc {
   font-size: 15px;
   margin: 10px 0 16px 0;
   color: #07565c;
+  line-height: 1.55;
+  display: block;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 /* ---------------- TAGS ---------------- */
@@ -120,6 +204,7 @@
 .job-actions {
   display: flex;
   gap: 14px;
+  flex-wrap: wrap;
 }
 
 .view-btn {
@@ -130,6 +215,11 @@
   border: none;
   font-weight: 700;
   cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.view-btn:hover {
+  opacity: 0.9;
 }
 
 .save-btn {
@@ -140,63 +230,69 @@
   font-weight: 700;
   color: #0f7273;
   cursor: pointer;
+  transition: background 0.2s, color 0.2s;
 }
-/* ============================================================
-   📱 MOBILE & TABLET RESPONSIVE — INTERNSHIPS LIST PAGE
-   ============================================================ */
 
-/* Tablet — max-width: 900px */
+.save-btn:hover {
+  background: #0f7273;
+  color: #fff;
+}
+
+/* ---------------- TABLET (max 900px) ---------------- */
 @media (max-width: 900px) {
-
-  .jobs-page {
+  .internships-page {
     padding: 0 40px;
     margin-top: 90px;
   }
 
-  .jobs-title {
+  .internships-title {
     font-size: 30px;
   }
 
-  .jobs-filter-bar {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .jobs-filter-select {
-    width: 100%;
+  .internships-filter-select {
+    min-width: 140px;
   }
 }
 
-/* Mobile — max-width: 600px */
+/* ---------------- MOBILE (max 600px) ---------------- */
 @media (max-width: 600px) {
-
-  .jobs-page {
+  .internships-page {
     padding: 0 20px;
     margin-top: 80px;
   }
 
-  .jobs-title {
+  .internships-title {
     font-size: 26px;
     text-align: center;
   }
 
-  .jobs-subtitle {
+  .internships-subtitle {
     text-align: center;
     font-size: 14px;
   }
 
-  /* FILTER STACK */
-  .jobs-filter-bar {
+  .internships-search-form {
     flex-direction: column;
-    align-items: stretch;
   }
 
-  .jobs-search,
-  .jobs-filter-select {
+  .internships-search-btn {
     width: 100%;
   }
 
-  /* CARD */
+  .internships-filters {
+    flex-direction: column;
+  }
+
+  .internships-filter-select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .internships-clear-btn {
+    width: 100%;
+    text-align: center;
+  }
+
   .job-card {
     padding: 18px;
   }
@@ -217,13 +313,11 @@
     font-size: 14px;
   }
 
-  /* TAGS */
   .tags span {
     padding: 6px 10px;
     font-size: 12px;
   }
 
-  /* ACTION BUTTONS */
   .job-actions {
     flex-direction: column;
     gap: 10px;
@@ -238,15 +332,14 @@
   }
 }
 
-/* Very Small — max-width: 400px */
+/* ---------------- VERY SMALL (max 400px) ---------------- */
 @media (max-width: 400px) {
-
-  .jobs-title {
-    font-size: 22px;
+  .internships-page {
+    padding: 0 14px;
   }
 
-  .jobs-page {
-    padding: 0 14px;
+  .internships-title {
+    font-size: 22px;
   }
 
   .job-card {
@@ -257,51 +350,12 @@
     font-size: 18px;
   }
 
+  .job-desc {
+    font-size: 13px;
+  }
+
   .tags span {
     font-size: 11px;
     padding: 5px 9px;
-  }
-}
-
-/* ============================================================
-   📱 FIX TEXT WRAPPING – INTERNSHIPS LIST PAGE
-   ============================================================ */
-
-.job-desc,
-.job-title,
-.company-name,
-.job-info span {
-  word-wrap: break-word !important;
-  overflow-wrap: break-word !important;
-  white-space: normal !important;
-}
-
-.job-card {
-  max-width: 100% !important;
-  overflow: hidden !important;
-}
-
-/* Prevent long description from breaking layout */
-.job-desc {
-  display: block;
-  font-size: 15px;
-  line-height: 1.55;
-}
-
-/* Mobile fixes */
-@media (max-width: 600px) {
-  .job-desc {
-    font-size: 14px !important;
-    line-height: 1.5;
-  }
-
-  .job-card {
-    padding: 16px !important;
-  }
-}
-
-@media (max-width: 400px) {
-  .job-desc {
-    font-size: 13px !important;
   }
 }

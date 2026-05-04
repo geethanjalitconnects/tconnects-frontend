@@ -14,7 +14,6 @@ const Header = ({ currentUser, onLogout }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const menuRef = useRef(null);
 
-  // Use currentUser prop if available, fallback to context
   const user = currentUser || contextUser;
 
   useEffect(() => {
@@ -40,9 +39,6 @@ const Header = ({ currentUser, onLogout }) => {
     }
   };
 
-  // ✅ FIXED: Header no longer calls the logout API itself.
-  // It just delegates fully to onLogout() from App.jsx.
-  // This prevents the double API call that was causing the bug.
   const logoutUser = async () => {
     setDropdownOpen(false);
     closeMobileMenu();
@@ -79,8 +75,8 @@ const Header = ({ currentUser, onLogout }) => {
               onClick={closeMobileMenu}
             >
               <span className="nav-text">Home</span>
-            </Nav.Link>
-
+            </Nav.Link>  
+           
             {/* FIND WORK DROPDOWN */}
             <NavDropdown
               title={
@@ -135,6 +131,8 @@ const Header = ({ currentUser, onLogout }) => {
               >
                 Skill Development
               </NavDropdown.Item>
+              {/* PRICING LINK */}
+              
               <NavDropdown.Item
                 as={Link}
                 to="/mock-interview"
@@ -143,17 +141,26 @@ const Header = ({ currentUser, onLogout }) => {
               >
                 Schedule a Mock Interview
               </NavDropdown.Item>
+
+              {/* ✅ FIXED: Now opens internally at /resume instead of Vercel URL */}
               <NavDropdown.Item
-                as="a"
-                href="https://tconnects.vercel.app/"
-                target="_self"
-                rel="noopener noreferrer"
+                as={Link}
+                to="/resume"
                 className="dropdown-item-custom"
                 onClick={closeMobileMenu}
               >
                 Resume Building
               </NavDropdown.Item>
             </NavDropdown>
+        
+          <Nav.Link
+              as={Link}
+              to="/pricing"
+              className="nav-link-custom"
+              onClick={closeMobileMenu}
+            >
+              <span className="nav-text">Subscriptions</span>
+            </Nav.Link>
           </Nav>
 
           <div className="right-section">

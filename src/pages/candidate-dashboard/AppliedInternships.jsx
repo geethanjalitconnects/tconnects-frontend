@@ -14,7 +14,7 @@ export default function AppliedInternships() {
     const fetchAppliedInternships = async () => {
       try {
         const res = await api.get("/api/applications/internship/applied/");
-        setApplications(res.data);
+        setApplications(res.data.results ? res.data.results : res.data);
       } catch (err) {
         console.error("Failed to load applied internships:", err);
       } finally {

@@ -1,4 +1,4 @@
-// ManageJobs.jsx — SAME UI AS ManageInternships (NO STATUS)
+// ManageJobs.jsx
 import React, { useEffect, useState } from "react";
 import api from "../../../config/api";
 import { toast } from "react-hot-toast";
@@ -8,11 +8,10 @@ export default function ManageJobs() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Load Jobs
   const loadJobs = async () => {
     try {
-      const res = await api.get("/api/jobs/");
-      setJobs(res.data);
+      const res = await api.get("/api/jobs/my-jobs/");
+      setJobs(res.data.results ? res.data.results : res.data);
     } catch (err) {
       console.error("Failed to load jobs:", err);
     } finally {
@@ -24,10 +23,8 @@ export default function ManageJobs() {
     loadJobs();
   }, []);
 
-  // Delete Job
   const deleteJob = async (jobId) => {
     if (!window.confirm("Are you sure you want to delete this job?")) return;
-
     try {
       await api.delete(`/api/jobs/${jobId}/delete/`);
       toast.success("Job deleted successfully!");
@@ -36,6 +33,65 @@ export default function ManageJobs() {
       console.error("Delete failed:", err);
       toast.error("Failed to delete job.");
     }
+  };
+
+  // ✅ Status badge helper
+  const getStatusBadge = (job) => {
+    if (!job.is_active && job.scheduled_at) {
+      const scheduledDate = new Date(job.scheduled_at);
+      const formatted = scheduledDate.toLocaleString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+      return (
+        <span style={{
+          backgroundColor: "#fff3cd",
+          color: "#856404",
+          border: "1px solid #ffc107",
+          borderRadius: "6px",
+          padding: "3px 10px",
+          fontSize: "0.78rem",
+          fontWeight: "600",
+          whiteSpace: "nowrap",
+        }}>
+          🕒 Scheduled: {formatted}
+        </span>
+      );
+    }
+
+    if (job.is_active) {
+      return (
+        <span style={{
+          backgroundColor: "#d1fae5",
+          color: "#065f46",
+          border: "1px solid #6ee7b7",
+          borderRadius: "6px",
+          padding: "3px 10px",
+          fontSize: "0.78rem",
+          fontWeight: "600",
+        }}>
+          ✅ Posted
+        </span>
+      );
+    }
+
+    return (
+      <span style={{
+        backgroundColor: "#f3f4f6",
+        color: "#6b7280",
+        border: "1px solid #d1d5db",
+        borderRadius: "6px",
+        padding: "3px 10px",
+        fontSize: "0.78rem",
+        fontWeight: "600",
+      }}>
+        ⏸ Inactive
+      </span>
+    );
   };
 
   if (loading) return <div className="rd-loading">Loading jobs...</div>;
@@ -54,20 +110,21 @@ export default function ManageJobs() {
 
               {/* LEFT SIDE */}
               <div className="rd-job-card-left">
-                <h3 className="rd-job-title">{job.title}</h3>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap", marginBottom: "6px" }}>
+                  <h3 className="rd-job-title" style={{ margin: 0 }}>{job.title}</h3>
+                  {getStatusBadge(job)}
+                </div>
 
                 <p className="rd-job-meta">
-                  <span>Category:</span> {job.category || "N/A"} &nbsp; | &nbsp;
-                  <span>Location:</span> {job.location || "N/A"} &nbsp; | &nbsp;
-                  <span>Type:</span> {job.employment_type || "N/A"} &nbsp; | &nbsp;
+                  <span>Category:</span> {job.category || "N/A"} &nbsp;|&nbsp;
+                  <span>Location:</span> {job.location || "N/A"} &nbsp;|&nbsp;
+                  <span>Type:</span> {job.employment_type || "N/A"} &nbsp;|&nbsp;
                   <span>Salary:</span> {job.salary_range || "N/A"}
                 </p>
               </div>
 
               {/* RIGHT SIDE BUTTONS */}
               <div className="rd-job-card-actions">
-
-                {/* VIEW APPLICATIONS */}
                 <button
                   className="rd-action-btn apps"
                   onClick={() =>
@@ -77,7 +134,6 @@ export default function ManageJobs() {
                   View Applications
                 </button>
 
-                {/* EDIT BUTTON */}
                 <button
                   className="rd-action-btn edit"
                   onClick={() =>
@@ -87,14 +143,12 @@ export default function ManageJobs() {
                   Edit
                 </button>
 
-                {/* DELETE BUTTON */}
                 <button
                   className="rd-action-btn delete"
                   onClick={() => deleteJob(job.id)}
                 >
                   Delete
                 </button>
-
               </div>
             </div>
           ))

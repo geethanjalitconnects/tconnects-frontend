@@ -14,7 +14,8 @@ export default function AppliedJobs() {
     const fetchAppliedJobs = async () => {
       try {
         const res = await api.get("/api/applications/job/applied/");
-        setApplications(res.data);
+        // Handle both paginated and non-paginated responses
+        setApplications(res.data.results ? res.data.results : res.data);
       } catch (err) {
         console.error("Failed to load applied jobs:", err);
       } finally {

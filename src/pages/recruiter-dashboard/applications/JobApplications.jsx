@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import api from "../../../config/api";
 import "../RecruiterDashboard.css";
 
@@ -12,12 +12,21 @@ export default function JobApplications() {
   useEffect(() => {
     fetchJobs();
   }, []);
+  useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const jobIdFromURL = params.get("job_id");
+
+  if (jobIdFromURL) {
+    setSelectedJob(jobIdFromURL);
+    fetchApplications(jobIdFromURL);
+  }
+}, []);
 
   const fetchJobs = async () => {
     try {
       const res = await api.get("/api/jobs/my-jobs/");
       console.log("Jobs fetched:", res.data);
-      setJobs(res.data);
+      setJobs(res.data.results ? res.data.results : res.data);
     } catch (error) {
       console.error("Failed to fetch jobs", error);
       setError("Failed to load jobs");
@@ -25,34 +34,25 @@ export default function JobApplications() {
   };
 
   const fetchApplications = async (jobId) => {
-    if (!jobId) {
-      setApplications([]);
-      return;
-    }
+  if (!jobId) {
+    setApplications([]);
+    return;
+  }
 
-    setLoading(true);
-    setError("");
-    try {
-      const res = await api.get(`/api/applications/job/${jobId}/applicants/`);
-      console.log("Applications fetched:", res.data);
-      console.log("Number of applications:", res.data.length);
-      
-      // Check the structure of first application if exists
-      if (res.data.length > 0) {
-        console.log("First application structure:", res.data[0]);
-      }
-      
-      setApplications(res.data);
-    } catch (error) {
-      console.error("Failed to fetch job applications", error);
-      console.error("Error details:", error.response?.data);
-      setError("Failed to load applications");
-      setApplications([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  setError("");
 
+  try {
+    const res =await api.get(`/api/applications/job/${jobId}/applicants/`);
+    setApplications(res.data.results ? res.data.results : res.data);
+  } catch (error) {
+    console.error("Failed to fetch job applications", error);
+    setError("Failed to load applications");
+    setApplications([]);
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="rd-applications-page">
       {/* Page Header */}
@@ -92,13 +92,6 @@ export default function JobApplications() {
         </div>
       )}
 
-      {/* Debug Info */}
-      <div style={{ padding: '10px', backgroundColor: '#f0f0f0', marginBottom: '10px', fontSize: '12px' }}>
-        <strong>Debug Info:</strong>
-        <div>Selected Job: {selectedJob || 'None'}</div>
-        <div>Applications Count: {applications.length}</div>
-        <div>Loading: {loading ? 'Yes' : 'No'}</div>
-      </div>
 
       {/* Applications */}
       <div className="rd-applications-list">

@@ -191,24 +191,29 @@ const HeroSection = ({ navigateToJobsList, navigateToResumeMaking, onNavigate })
               </Card>
               
               {/* Updated Action Buttons with Navigation */}
-              <div className="d-grid gap-3 d-sm-flex justify-content-sm-center hero-buttons">
-   <Link 
-  to="/jobs" 
-  className="hero-btn explore-jobs-btn"
->
-  Explore Jobs <i className="bi bi-arrow-right"></i>
-</Link>
+             <div className="d-grid gap-3 d-sm-flex justify-content-sm-center hero-buttons">
+  <Link 
+    to="/jobs" 
+    className="hero-btn explore-jobs-btn"
+  >
+    Explore Jobs <i className="bi bi-arrow-right"></i>
+  </Link>
 
+  <Button 
+    size="lg" 
+    className="hero-btn btn-orange-resume"
+    onClick={handleResumeMakingClick}
+  >
+    Resume Making <i className="bi bi-file-earmark-text ms-2"></i>
+  </Button>
 
-
-                <Button 
-                  size="lg" 
-                  className="hero-btn btn-orange-resume"
-                  onClick={handleResumeMakingClick}
-                >
-                  Resume Making <i className="bi bi-file-earmark-text ms-2"></i>
-                </Button>
-              </div>
+  <Link 
+    to="/pricing" 
+    className="hero-btn explore-jobs-btn"
+  >
+    View Plans <i className="bi bi-star ms-2"></i>
+  </Link>
+</div>
             </Col>
           </Row>
         </Container>

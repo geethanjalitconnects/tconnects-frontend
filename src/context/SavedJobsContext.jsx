@@ -10,11 +10,11 @@ export function SavedJobsProvider({ children }) {
   const [savedIds, setSavedIds] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // load saved jobs from backend
   const loadSaved = async () => {
     try {
       const res = await api.get("/api/applications/saved-jobs/");
-      setSavedIds(res.data.map((i) => i.job.id));
+      const data = res.data.results ?? res.data;
+      setSavedIds(data.map((i) => i.job.id));
     } catch (err) {
       console.error("Failed to load saved jobs", err);
     } finally {
@@ -22,7 +22,6 @@ export function SavedJobsProvider({ children }) {
     }
   };
 
-  // toggle save/unsave and keep local state in sync
   const toggleSave = async (jobId) => {
     try {
       if (savedIds.includes(Number(jobId))) {
@@ -34,12 +33,10 @@ export function SavedJobsProvider({ children }) {
       }
     } catch (err) {
       console.error("Save/Unsave failed:", err);
-      // recover by reloading from backend
       await loadSaved();
     }
   };
 
-  // manual refresh helper
   const refreshSaved = async () => {
     setLoading(true);
     await loadSaved();

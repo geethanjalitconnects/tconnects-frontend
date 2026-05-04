@@ -11,8 +11,8 @@ export default function ManageInternships() {
   // Load Internships
   const loadInternships = async () => {
     try {
-      const res = await api.get("/api/internships/");
-      setInternships(res.data);
+      const res = await api.get("/api/internships/my-internships/");
+      setInternships(res.data.results ? res.data.results : res.data);
     } catch (err) {
       console.error("Failed to load internships:", err);
     } finally {
