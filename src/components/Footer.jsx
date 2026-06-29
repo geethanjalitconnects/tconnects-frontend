@@ -60,10 +60,22 @@ const Footer = () => {
               <Nav.Link as={Link} to="/mock-interview" className="footer-link p-0 mb-2">Schedule a mock interview</Nav.Link>
             </Nav>
           </Col>
+          <Col md={2} className="mb-4 mb-md-0">
+            <h6 className="text-dark-blue mb-3 footer-heading">Legal</h6>
+            <Nav className="flex-column">
+              <Nav.Link as={Link} to="/terms-and-conditions" className="footer-link p-0 mb-2">Terms & Conditions</Nav.Link>
+              <Nav.Link as={Link} to="/privacy-policy" className="footer-link p-0 mb-2">Privacy Policy</Nav.Link>
+            </Nav>
+          </Col>
         </Row>
         <hr className="footer-divider my-4" />
         <div className="text-center footer-copyright">
           <p className="mb-0">Virtual Protect Security Pvt Ltd | All rights reserved</p>
+          <p className="mb-0 mt-2">
+            <Link to="/terms-and-conditions" className="footer-link">Terms & Conditions</Link>
+            {" · "}
+            <Link to="/privacy-policy" className="footer-link">Privacy Policy</Link>
+          </p>
         </div>
       </Container>
     </footer>

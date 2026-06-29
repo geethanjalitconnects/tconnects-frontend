@@ -1,0 +1,318 @@
+/* ============================================================
+   AIResumeGenerator.css
+   All class names prefixed with "ai-resume-" to avoid any
+   conflict with TConnects existing styles.
+   ============================================================ */
+
+.ai-resume-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 100px 24px 48px 24px; /* top padding accounts for TConnects navbar */
+  background-color: #f4fbfb;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.ai-resume-shell {
+  max-width: 1200px;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 24px;
+  padding: 24px;
+}
+
+@media (max-width: 900px) {
+  .ai-resume-shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ai-resume-left,
+.ai-resume-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Page Header ───────────────────────────────────────────── */
+.ai-resume-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ai-resume-page-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #008b8b;
+}
+
+.ai-resume-page-subtitle {
+  font-size: 0.9rem;
+  color: #6b7b8b;
+  margin-top: 4px;
+}
+
+.ai-resume-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #d0e7e7;
+  font-size: 0.75rem;
+  color: #008b8b;
+  background: #f0fbfb;
+  white-space: nowrap;
+}
+
+/* ── Card ──────────────────────────────────────────────────── */
+.ai-resume-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #d0e7e7;
+  padding: 16px 20px;
+}
+
+.ai-resume-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1f2933;
+}
+
+/* ── Form Fields ───────────────────────────────────────────── */
+.ai-resume-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.ai-resume-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.ai-resume-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #1f2933;
+}
+
+.ai-resume-label-hint {
+  font-size: 0.8rem;
+  color: #6b7b8b;
+}
+
+.ai-resume-input,
+.ai-resume-textarea,
+.ai-resume-select {
+  border-radius: 10px;
+  border: 1px solid #d0e7e7;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  transition: border 0.15s ease, box-shadow 0.15s ease;
+  color: #1f2933;
+  width: 100%;
+}
+
+.ai-resume-input:focus,
+.ai-resume-textarea:focus,
+.ai-resume-select:focus {
+  border-color: #00b3b3;
+  box-shadow: 0 0 0 1px rgba(0, 179, 179, 0.2);
+}
+
+.ai-resume-textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.ai-resume-select {
+  background-color: #ffffff;
+}
+
+/* ── Buttons ───────────────────────────────────────────────── */
+.ai-resume-actions-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.ai-resume-btn-primary {
+  background: linear-gradient(135deg, #008b8b, #00b3b3);
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.15s;
+}
+
+.ai-resume-btn-primary:hover {
+  opacity: 0.9;
+}
+
+.ai-resume-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ai-resume-btn-secondary {
+  background: transparent;
+  border-radius: 999px;
+  border: 1px dashed #d0e7e7;
+  padding: 7px 14px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #6b7b8b;
+  transition: border-color 0.15s;
+}
+
+.ai-resume-btn-secondary:hover {
+  border-color: #008b8b;
+  color: #008b8b;
+}
+
+/* ── Status Messages ───────────────────────────────────────── */
+.ai-resume-status-text {
+  font-size: 0.85rem;
+  color: #6b7b8b;
+  margin-top: 8px;
+}
+
+.ai-resume-status-error {
+  font-size: 0.85rem;
+  color: #c0392b;
+  margin-top: 8px;
+  background: #fdf0ef;
+  border: 1px solid #f5c6c2;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+/* ── Tips Chips ────────────────────────────────────────────── */
+.ai-resume-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ai-resume-chip {
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid #d0e7e7;
+  font-size: 0.75rem;
+  color: #6b7b8b;
+}
+
+/* ── Resume Preview Wrapper ────────────────────────────────── */
+.ai-resume-preview-wrapper {
+  background: #f8fdfd;
+  border-radius: 16px;
+  border: 1px solid #d0e7e7;
+  padding: 20px 24px;
+  overflow-y: auto;
+  max-height: calc(100vh - 160px);
+  flex: 1;
+}
+
+/* ── Resume Document Styles ────────────────────────────────── */
+.resume-header {
+  border-bottom: 1px solid #d0e7e7;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.resume-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1f2933;
+}
+
+.resume-headline {
+  font-size: 0.9rem;
+  color: #6b7b8b;
+  margin-top: 4px;
+}
+
+.resume-contact {
+  font-size: 0.8rem;
+  color: #6b7b8b;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.resume-section {
+  margin-bottom: 12px;
+}
+
+.resume-section-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #008b8b;
+  border-bottom: 1px solid #d0e7e7;
+  padding-bottom: 2px;
+  margin-bottom: 6px;
+}
+
+.resume-summary {
+  font-size: 0.85rem;
+  color: #1f2933;
+  line-height: 1.5;
+}
+
+.resume-skills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 0.8rem;
+}
+
+.resume-tag {
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: #e5f7f7;
+  color: #008b8b;
+}
+
+.resume-entry {
+  margin-bottom: 8px;
+}
+
+.resume-entry-title-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #1f2933;
+}
+
+.resume-entry-sub {
+  font-size: 0.8rem;
+  color: #6b7b8b;
+  margin-top: 2px;
+}
+
+.resume-bullets {
+  margin: 4px 0 0;
+  padding-left: 16px;
+  font-size: 0.8rem;
+  color: #1f2933;
+  line-height: 1.6;
+}

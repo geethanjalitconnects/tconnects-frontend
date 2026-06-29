@@ -16,7 +16,7 @@ export default function SavedInternships() {
     const loadSaved = async () => {
       try {
         const res = await api.get("/api/applications/saved-internships/");
-        setItems(res.data);
+        setItems(res.data.results ? res.data.results : res.data);
       } catch (err) {
         console.error("Failed to load saved internships:", err);
       } finally {

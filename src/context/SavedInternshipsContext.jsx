@@ -11,7 +11,8 @@ export function SavedInternshipsProvider({ children }) {
   const loadSaved = async () => {
     try {
       const res = await api.get("/api/applications/saved-internships/");
-      setSavedIds(res.data.map((i) => i.internship.id));
+      const data = res.data.results ?? res.data;
+      setSavedIds(data.map((i) => i.internship.id));
     } catch (err) {
       console.error("Failed to load saved internships:", err);
     } finally {
@@ -20,22 +21,21 @@ export function SavedInternshipsProvider({ children }) {
   };
 
   const toggleSave = async (id) => {
-  try {
-    if (savedIds.includes(Number(id))) {
-      await api.delete(`/api/applications/saved-internships/remove/${id}/`);
-      setSavedIds((prev) => prev.filter((x) => x !== Number(id)));
-    } else {
-      await api.post("/api/applications/saved-internships/add/", {
-        internship_id: id, // ⭐ required by backend
-      });
-      setSavedIds((prev) => [...prev, Number(id)]);
+    try {
+      if (savedIds.includes(Number(id))) {
+        await api.delete(`/api/applications/saved-internships/remove/${id}/`);
+        setSavedIds((prev) => prev.filter((x) => x !== Number(id)));
+      } else {
+        await api.post("/api/applications/saved-internships/add/", {
+          internship_id: id,
+        });
+        setSavedIds((prev) => [...prev, Number(id)]);
+      }
+    } catch (err) {
+      console.error("Save/Unsave internship failed:", err);
+      await loadSaved();
     }
-  } catch (err) {
-    console.error("Save/Unsave internship failed:", err);
-    await loadSaved();
-  }
-};
-
+  };
 
   useEffect(() => {
     loadSaved();

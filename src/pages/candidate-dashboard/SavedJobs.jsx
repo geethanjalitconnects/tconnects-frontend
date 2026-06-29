@@ -22,7 +22,7 @@ export default function SavedJobs() {
     const fetchSavedJobs = async () => {
       try {
         const res = await api.get("/api/applications/saved-jobs/");
-        setSavedJobs(res.data);
+        setSavedJobs(res.data.results ? res.data.results : res.data);
       } catch (err) {
         console.error("Failed to fetch saved jobs:", err);
       } finally {

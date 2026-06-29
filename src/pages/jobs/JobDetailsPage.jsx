@@ -1,4 +1,4 @@
-// JobDetailsPage.jsx — with recruiter apply restriction
+// JobDetailsPage.jsx — with recruiter restriction + auth check for save/apply
 
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,10 +10,8 @@ import "./JobDetailsPage.css";
 
 const JobDetailsPage = () => {
   const navigate = useNavigate();
-  const { slug } = useParams();
-  const { user } = useContext(AuthContext); // ✅ get logged-in user
-
-  const id = slug.split("-").pop();
+  const { id } = useParams();
+  const { user } = useContext(AuthContext);
 
   const [job, setJob] = useState(null);
   const [company, setCompany] = useState(null);
@@ -52,39 +50,47 @@ const JobDetailsPage = () => {
   }, [id]);
 
   useEffect(() => {
-    // Only check applied status for candidates
-    if (isRecruiter) return;
+    if (!user || isRecruiter) return;
 
     const loadApplied = async () => {
       try {
         const res = await api.get("/api/applications/job/applied/");
-        const appliedIds = res.data.map((a) => a.job_id);
-        setApplied(appliedIds.includes(Number(id)));
+        const appliedList = res.data.results || res.data; // ✅ paginated fix
+
+        const isApplied = appliedList.some(
+          (a) =>
+            a.job_id === Number(id) ||
+            a.job === Number(id) ||
+            a.job_details?.id === Number(id)
+        );
+        setApplied(isApplied);
       } catch (err) {
         console.error("Failed to load applied status:", err);
       }
     };
 
     loadApplied();
-  }, [id, isRecruiter]);
+  }, [id, isRecruiter, user]);
 
   const handleApplyNow = () => {
-    // ✅ Block recruiters from applying
     if (!user) {
       toast.error("Please login to apply for this job.");
       navigate("/login");
       return;
     }
-
     if (isRecruiter) {
       toast.error("Recruiters cannot apply for jobs. Please use a candidate account.");
       return;
     }
-
     navigate(`/apply?jobId=${id}`);
   };
 
   const handleToggleSave = async () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    if (isRecruiter) return;
     await toggleSave(Number(id));
   };
 
@@ -124,14 +130,25 @@ const JobDetailsPage = () => {
               className="jd-apply-btn"
               disabled={applied || isRecruiter}
               title={isRecruiter ? "Recruiters cannot apply for jobs" : ""}
-              onClick={!applied && !isRecruiter ? handleApplyNow : null}
-              style={isRecruiter ? {
-                backgroundColor: "#d1d5db",
-                color: "#9ca3af",
-                border: "1px solid #d1d5db",
-                cursor: "not-allowed",
-                pointerEvents: "none",
-              } : {}}
+              onClick={handleApplyNow}
+              style={
+                applied
+                  ? {
+                      backgroundColor: "#6b7280",
+                      color: "#fff",
+                      cursor: "not-allowed",
+                      pointerEvents: "none",
+                    }
+                  : isRecruiter
+                  ? {
+                      backgroundColor: "#d1d5db",
+                      color: "#9ca3af",
+                      border: "1px solid #d1d5db",
+                      cursor: "not-allowed",
+                      pointerEvents: "none",
+                    }
+                  : {}
+              }
             >
               {applied ? "Applied ✓" : "Apply Now"}
             </button>
@@ -140,7 +157,7 @@ const JobDetailsPage = () => {
             <button
               className="jd-save-btn"
               disabled={isRecruiter}
-              onClick={!isRecruiter ? handleToggleSave : null}
+              onClick={handleToggleSave}
               title={isRecruiter ? "Recruiters cannot save jobs" : ""}
               style={isRecruiter ? {
                 backgroundColor: "#d1d5db",
@@ -155,7 +172,7 @@ const JobDetailsPage = () => {
           </div>
         </div>
 
-        {/* ✅ Recruiter notice banner */}
+        {/* Recruiter notice banner */}
         {isRecruiter && (
           <div style={{
             background: "#fff3cd",
@@ -231,6 +248,7 @@ const JobDetailsPage = () => {
             )}
           </div>
         )}
+
       </div>
     </div>
   );

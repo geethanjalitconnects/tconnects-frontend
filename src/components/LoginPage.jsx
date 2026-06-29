@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';   // ← added useLocation
 import api, { checkAuth } from '../config/api';
 import './LoginPage.css';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
@@ -18,7 +18,13 @@ const LoginPage = ({ onLoginSuccess }) => {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const navigate = useNavigate();
+  const navigate  = useNavigate();
+  const location  = useLocation();                              // ← added
+
+  // Where to go after login:
+  // • if came from /mock-interview (or any guarded page) → go back there
+  // • otherwise → go to home
+  const redirectTo = location.state?.from || '/';              // ← added
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,9 +44,7 @@ const LoginPage = ({ onLoginSuccess }) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
-
-
-  // ✅ FIXED: always navigate to home page after login
+  // ✅ After login → redirect back to the page the user came from
   const handleLoginSuccess = async (userData) => {
     toast.success(`Welcome back, ${userData.full_name?.split(' ')[0] || 'there'}! 👋`);
 
@@ -60,9 +64,9 @@ const LoginPage = ({ onLoginSuccess }) => {
       onLoginSuccess(userData);
     }
 
-    // ✅ Navigate to home for all roles
+    // ✅ Go back to the page that triggered the login (e.g. /mock-interview)
     setTimeout(() => {
-      navigate('/');
+      navigate(redirectTo, { replace: true });                  // ← changed
     }, 1200);
   };
 

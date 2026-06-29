@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import WelcomeModal from "./components/WelcomeModal";
-
+import PricingPage from "./pages/pricing/PricingPage";
 import { Toaster } from "react-hot-toast";
 
 /* AUTH CONTEXT */
@@ -16,6 +16,8 @@ import HeroSection from "./components/HeroSection";
 import RiskCategoryModal from "./components/RiskCategoryModal";
 import AboutSection from "./components/AboutSection";
 import AboutUs from "./components/AboutUs";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import WhyChoose from "./components/WhyChoose";
 import HowItWorks from "./components/HowItWorks";
 import Footer from "./components/Footer";
@@ -30,6 +32,7 @@ import CourseDetails from "./pages/courses/CourseDetails";
 import LearnCourse from "./pages/courses/LearnCourse";
 
 import MockInterview from "./pages/mock-interview/MockInterview";
+import AIResumeGenerator from "./pages/ai-resume/AIResumeGenerator";
 
 /* ================= CANDIDATE DASHBOARD ================= */
 import CandidateDashboardLayout from "./pages/candidate-dashboard/CandidateDashboardLayout";
@@ -53,6 +56,8 @@ import FreelancerProfilePreview from "./pages/candidate-dashboard/freelancer/Fre
 /* ================= JOBS ================= */
 import JobsListPage from "./pages/jobs/JobsListPage";
 import JobDetailsPage from "./pages/jobs/JobDetailsPage";
+/* import of city by ruchitha */
+import CityJobs from "./pages/jobs/CityJobs";
 
 /* ================= INTERNSHIPS ================= */
 import InternshipsListPage from "./pages/internships/InternshipsListPage";
@@ -91,10 +96,7 @@ function HomePage({ onCategoryClick, navigate }) {
     <>
       <HeroSection
         onCategoryClick={onCategoryClick}
-        navigateToJobsList={() => navigate("/jobs")}
-        navigateToResumeMaking={() =>
-          window.open("https://tconnects.vercel.app/", "_blank")
-        }
+        navigateToJobsList={() => navigate("/jobs")}        navigateToResumeMaking={() => navigate("/resume")}
       />
       <AboutSection navigateToAboutUs={() => navigate("/about-us")} />
       <WhyChoose />
@@ -108,7 +110,6 @@ function HomePage({ onCategoryClick, navigate }) {
 function App() {
   const [modalCategory, setModalCategory] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
-  // Start as true so we show loading until auth check completes
   const [isChecking, setIsChecking] = useState(true);
 
   const location = useLocation();
@@ -119,12 +120,10 @@ function App() {
     location.pathname.startsWith("/candidate-dashboard") ||
     location.pathname.startsWith("/recruiter-dashboard");
 
-  // ✅ SINGLE auth check on mount using /api/auth/check/
-  // This is the only place we check auth — no duplicate in AuthContext
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const authData = await checkAuth(); // calls /api/auth/check/
+        const authData = await checkAuth();
         if (authData.authenticated && authData.user) {
           setCurrentUser(authData.user);
         } else {
@@ -140,7 +139,6 @@ function App() {
     initAuth();
   }, []);
 
-  // Listen for logout events (e.g. triggered by api.js on 401)
   useEffect(() => {
     const handleLogout = () => {
       setCurrentUser(null);
@@ -157,10 +155,8 @@ function App() {
     setCurrentUser(userData);
   };
 
-  // ✅ FIXED LOGOUT: single call to apiLogout (which calls the endpoint once),
-  // then clear state and navigate. No double-calling the endpoint.
   const handleLogout = async () => {
-    await apiLogout(); // clears cookies + dispatches auth:logout event
+    await apiLogout();
     setCurrentUser(null);
     navigate("/");
   };
@@ -201,6 +197,9 @@ function App() {
                 }
               />
               <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/pricing" element={<PricingPage />} />
+              <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
               {/* AUTH ROUTES */}
               <Route
@@ -214,7 +213,7 @@ function App() {
                 }
               />
 
-              {/* FREELANCERS PUBLIC PAGES */}
+              {/* FREELANCERS */}
               <Route path="/freelancers" element={<FreelancerList />} />
               <Route path="/freelancers/:id" element={<FreelancerProfile />} />
 
@@ -225,22 +224,19 @@ function App() {
 
               {/* MOCK INTERVIEW */}
               <Route path="/mock-interview" element={<MockInterview />} />
+              <Route path="/resume" element={<AIResumeGenerator />} />
 
-              {/* JOBS */}
+              {/* JOBS — ✅ FIXED: :id instead of :slug */}
               <Route path="/jobs" element={<JobsListPage />} />
-              <Route path="/jobs/:slug" element={<JobDetailsPage />} />
+              {/* Job city  */}
+              <Route path="/jobs/city/:city" element={<CityJobs />} />
+              <Route path="/jobs/:id" element={<JobDetailsPage />} />
               <Route path="/apply" element={<ApplyJobPage />} />
 
               {/* INTERNSHIPS */}
               <Route path="/internships" element={<InternshipsListPage />} />
-              <Route
-                path="/internships/:id"
-                element={<InternshipDetailsPage />}
-              />
-              <Route
-                path="/apply-internship"
-                element={<ApplyInternshipPage />}
-              />
+              <Route path="/internships/:id" element={<InternshipDetailsPage />} />
+              <Route path="/apply-internship" element={<ApplyInternshipPage />} />
 
               {/* CANDIDATE DASHBOARD */}
               <Route
@@ -251,44 +247,17 @@ function App() {
                 <Route path="overview" element={<Overview />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="applied-jobs" element={<AppliedJobs />} />
-                <Route
-                  path="applied-internships"
-                  element={<AppliedInternships />}
-                />
+                <Route path="applied-internships" element={<AppliedInternships />} />
                 <Route path="saved-jobs" element={<SavedJobs />} />
-                <Route
-                  path="saved-internships"
-                  element={<SavedInternships />}
-                />
+                <Route path="saved-internships" element={<SavedInternships />} />
                 <Route path="courses" element={<Courses />} />
-                <Route
-                  path="freelancer/basic-information"
-                  element={<FreelancerBasicInfo />}
-                />
-                <Route
-                  path="freelancer/professional-details"
-                  element={<FreelancerProfessionalDetails />}
-                />
-                <Route
-                  path="freelancer/education"
-                  element={<FreelancerEducation />}
-                />
-                <Route
-                  path="freelancer/availability"
-                  element={<FreelancerAvailability />}
-                />
-                <Route
-                  path="freelancer/payment-method"
-                  element={<FreelancerPayment />}
-                />
-                <Route
-                  path="freelancer/social-links"
-                  element={<FreelancerSocialLinks />}
-                />
-                <Route
-                  path="freelancer/profile-preview"
-                  element={<FreelancerProfilePreview />}
-                />
+                <Route path="freelancer/basic-information" element={<FreelancerBasicInfo />} />
+                <Route path="freelancer/professional-details" element={<FreelancerProfessionalDetails />} />
+                <Route path="freelancer/education" element={<FreelancerEducation />} />
+                <Route path="freelancer/availability" element={<FreelancerAvailability />} />
+                <Route path="freelancer/payment-method" element={<FreelancerPayment />} />
+                <Route path="freelancer/social-links" element={<FreelancerSocialLinks />} />
+                <Route path="freelancer/profile-preview" element={<FreelancerProfilePreview />} />
               </Route>
 
               {/* RECRUITER DASHBOARD */}
@@ -298,39 +267,20 @@ function App() {
               >
                 <Route index element={<RecruiterOverview />} />
                 <Route path="overview" element={<RecruiterOverview />} />
-                <Route
-                  path="profile/basic-info"
-                  element={<BasicInformation />}
-                />
-                <Route
-                  path="profile/company-profile"
-                  element={<CompanyProfile />}
-                />
+                <Route path="profile/basic-info" element={<BasicInformation />} />
+                <Route path="profile/company-profile" element={<CompanyProfile />} />
                 <Route path="jobs/post-job" element={<PostJob />} />
-                <Route
-                  path="jobs/post-internship"
-                  element={<PostInternship />}
-                />
+                <Route path="jobs/post-internship" element={<PostInternship />} />
                 <Route path="jobs/manage-jobs" element={<ManageJobs />} />
-                <Route
-                  path="jobs/manage-internships"
-                  element={<ManageInternships />}
-                />
+                <Route path="jobs/manage-internships" element={<ManageInternships />} />
                 <Route path="jobs/edit-job/:id" element={<EditJob />} />
-                <Route
-                  path="jobs/edit-internship/:id"
-                  element={<EditInternship />}
-                />
-                <Route
-                  path="applications/jobs"
-                  element={<JobApplications />}
-                />
-                <Route
-                  path="applications/internships"
-                  element={<InternshipApplications />}
-                />
+                <Route path="jobs/edit-internship/:id" element={<EditInternship />} />
+                <Route path="applications/jobs" element={<JobApplications />} />
+                <Route path="applications/internships" element={<InternshipApplications />} />
+                
               </Route>
 
+              {/* 404 */}
               <Route path="*" element={<div>Page Not Found</div>} />
             </Routes>
 

@@ -27,7 +27,7 @@ const InternshipDetailsPage = () => {
     const load = async () => {
       try {
         const res = await api.get(`/api/internships/${id}/`);
-        setInternship(res.data);
+        setInternship(res.data.results ? res.data.results : res.data);
 
         const rid = res.data.recruiter_id;
         if (rid) {
@@ -55,7 +55,8 @@ const InternshipDetailsPage = () => {
     const loadApplied = async () => {
       try {
         const res = await api.get("/api/applications/internship/applied/");
-        const appliedIds = res.data.map((a) => a.internship_id);
+       const appliedList = res.data.results || res.data;
+        const appliedIds = appliedList.map((a) => a.internship_id);
         setApplied(appliedIds.includes(Number(id)));
       } catch (err) {
         console.error("Failed to load applied status:", err);

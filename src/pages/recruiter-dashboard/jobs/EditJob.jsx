@@ -31,7 +31,7 @@ export default function EditJob() {
     const loadJob = async () => {
       try {
         const res = await api.get(`/api/jobs/${id}/`);
-        setJob(res.data);
+        setJob(res.data.results ? res.data.results : res.data);
 
         setForm({
           title: res.data.title || "",

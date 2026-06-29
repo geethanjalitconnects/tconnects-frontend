@@ -10,7 +10,7 @@ export default function PostJob() {
     title: "",
     category: "",
     location: "",
-    job_type: "full_time",   // FIXED: backend expects ID
+    job_type: "full_time",
     salary: "",
     experience: "",
     description: "",
@@ -27,46 +27,66 @@ export default function PostJob() {
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async () => {
+    // ✅ Validate scheduling fields before submission
+    if (form.post_type === "Schedule for later") {
+      if (!form.schedule_date || !form.schedule_time) {
+        toast.error("Please select both a schedule date and time.");
+        return;
+      }
+
+      const scheduledDateTime = new Date(`${form.schedule_date}T${form.schedule_time}:00`);
+      if (scheduledDateTime <= new Date()) {
+        toast.error("Scheduled time must be in the future.");
+        return;
+      }
+    }
+
     setSaving(true);
 
     try {
-      // ⭐ Correct payload (unchanged UI, backend-compatible)
+      // ✅ Build scheduled_at ISO string only when scheduling
+      let scheduled_at = null;
+      if (form.post_type === "Schedule for later" && form.schedule_date && form.schedule_time) {
+        scheduled_at = new Date(`${form.schedule_date}T${form.schedule_time}:00`).toISOString();
+      }
+
       const payload = {
         title: form.title,
         category: form.category,
         location: form.location,
-
-        employment_type: form.job_type,          // FIXED
+        employment_type: form.job_type,
         salary_range: form.salary,
         experience_range: form.experience,
-
         full_description: form.description,
-
         responsibilities: form.responsibilities
           .split(",")
           .map((s) => s.trim())
           .filter((s) => s),
-
         skills: form.skills
           .split(",")
           .map((s) => s.trim())
           .filter((s) => s),
-
         eligible_degrees: form.education
           .split(",")
           .map((s) => s.trim())
           .filter((s) => s),
-
         application_deadline: form.deadline || null,
+        scheduled_at,   // ✅ null = post immediately, ISO string = schedule
       };
 
       await api.post("/api/jobs/create/", payload);
 
-      toast.success("Job posted successfully!");
+      if (scheduled_at) {
+        toast.success(`Job scheduled for ${new Date(scheduled_at).toLocaleString("en-IN")}`);
+      } else {
+        toast.success("Job posted successfully!");
+      }
+
       window.location.href = "/recruiter-dashboard/jobs/manage-jobs";
 
     } catch (err) {
       console.error("Job posting failed:", err);
+      console.error("Error detail:", JSON.stringify(err.response?.data, null, 2));
       toast.error("Something went wrong. Please try again.");
     } finally {
       setSaving(false);
@@ -78,9 +98,7 @@ export default function PostJob() {
       <h2 className="rd-page-title">Post a Job</h2>
       <p className="rd-page-subtitle">Fill all details to publish a new job opening.</p>
 
-      {/* ======================================================
-                       JOB DETAILS CARD
-      ====================================================== */}
+      {/* ====================================================== JOB DETAILS CARD */}
       <div className="rd-profile-card">
         <h3 className="rd-card-title">Job Details</h3>
 
@@ -100,14 +118,29 @@ export default function PostJob() {
 
           <div className="rd-form-group">
             <label className="rd-label">Job Category</label>
-            <input
-              type="text"
+            <select
               className="rd-input"
               name="category"
               value={form.category}
               onChange={handleChange}
-              placeholder="Risk, Finance, Operations..."
-            />
+            >
+              <option value="">Select Category</option>
+              <option value="Risk Management">Risk Management</option>
+              <option value="Credit Risk">Credit Risk</option>
+              <option value="Market Risk">Market Risk</option>
+              <option value="Operational Risk">Operational Risk</option>
+              <option value="Fraud Risk">Fraud Risk</option>
+              <option value="Compliance & GRC">Compliance & GRC</option>
+              <option value="Audit & Analytics">Audit & Analytics</option>
+              <option value="Cybersecurity & IT Risk">Cybersecurity & IT Risk</option>
+              <option value="Finance & Banking">Finance & Banking</option>
+              <option value="Insurance">Insurance</option>
+              <option value="Enterprise Risk Management">Enterprise Risk Management</option>
+              <option value="Third Party Risk Management">Third Party Risk Management</option>
+              <option value="Model Risk Management">Model Risk Management</option>
+              <option value="Data Privacy & Technology Risk">Data Privacy & Technology Risk</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
 
           <div className="rd-form-group">
@@ -124,8 +157,6 @@ export default function PostJob() {
 
           <div className="rd-form-group">
             <label className="rd-label">Job Type</label>
-
-            {/* ⭐ FIXED ONLY VALUES, UI remains SAME */}
             <select
               className="rd-input"
               name="job_type"
@@ -223,9 +254,7 @@ export default function PostJob() {
         </div>
       </div>
 
-      {/* ======================================================
-                      SCHEDULE SECTION (UI SAME)
-      ====================================================== */}
+      {/* ====================================================== SCHEDULE SECTION */}
       <div className="rd-schedule-card">
         <h3 className="rd-card-title">Schedule Job</h3>
         <p className="rd-schedule-info">
@@ -256,6 +285,7 @@ export default function PostJob() {
               value={form.schedule_date}
               onChange={handleChange}
               disabled={form.post_type === "Post Now"}
+              min={new Date().toISOString().split("T")[0]}  // ✅ prevent past dates
             />
           </div>
 
@@ -275,7 +305,7 @@ export default function PostJob() {
       </div>
 
       <button className="rd-save-btn" disabled={saving} onClick={handleSubmit}>
-        {saving ? "Posting..." : "Post Job"}
+        {saving ? "Posting..." : form.post_type === "Schedule for later" ? "Schedule Job" : "Post Job"}
       </button>
     </div>
   );

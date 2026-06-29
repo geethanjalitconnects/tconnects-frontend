@@ -58,7 +58,6 @@ const Profile = () => {
 
   // SAVE PROFILE
   const handleSave = async () => {
-    // Required fields validation INCLUDING resume
     if (
       !userData.phone_number ||
       !userData.location ||
@@ -111,6 +110,20 @@ const Profile = () => {
     }
 
     setUploading(false);
+  };
+
+  // DELETE RESUME
+  const handleResumeDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete your resume?")) return;
+
+    try {
+      await api.delete("/api/profiles/candidate/delete-resume/");
+      setUserData((prev) => ({ ...prev, resume_url: "" }));
+      showToast("Resume deleted successfully.");
+    } catch (err) {
+      console.error("Resume delete error", err);
+      showToast("Failed to delete resume.");
+    }
   };
 
   if (loading) return <p>Loading...</p>;
@@ -176,7 +189,6 @@ const Profile = () => {
             <label className="cd-form-label">
               Experience Level <span className="cd-required">*</span>
             </label>
-
             <select
               name="experience"
               className="cd-input"
@@ -209,18 +221,18 @@ const Profile = () => {
           </div>
 
           <div className="cd-form-group cd-full-width">
-  <label className="cd-form-label">
-    About You <span className="cd-required">*</span>
-  </label>
-  <textarea
-    className="cd-textarea"
-    name="bio"
-    value={userData.bio}
-    onChange={handleChange}
-    placeholder="Tell us about yourself"
-    required
-  />
-</div>
+            <label className="cd-form-label">
+              About You <span className="cd-required">*</span>
+            </label>
+            <textarea
+              className="cd-textarea"
+              name="bio"
+              value={userData.bio}
+              onChange={handleChange}
+              placeholder="Tell us about yourself"
+              required
+            />
+          </div>
 
           <div className="cd-form-group cd-full-width cd-upload-card">
             <label className="cd-form-label">
@@ -228,9 +240,26 @@ const Profile = () => {
             </label>
 
             {userData.resume_url ? (
-              <p className="cd-resume-name">
-                {userData.resume_url.split("/").pop()}
-              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "10px" }}>
+                <p className="cd-resume-name" style={{ margin: 0 }}>
+                  {userData.resume_url.split("/").pop()}
+                </p>
+                <button
+                  onClick={handleResumeDelete}
+                  style={{
+                    background: "#fee2e2",
+                    color: "#dc2626",
+                    border: "1px solid #fca5a5",
+                    borderRadius: "6px",
+                    padding: "4px 10px",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  🗑 Delete
+                </button>
+              </div>
             ) : (
               <p className="cd-missing-resume">No resume uploaded</p>
             )}
@@ -247,7 +276,7 @@ const Profile = () => {
                 id="resumeUpload"
                 type="file"
                 onChange={handleResumeUpload}
-                required={!userData.resume_url} // RESUME REQUIRED ONLY IF NOT UPLOADED
+                required={!userData.resume_url}
                 style={{ display: "none" }}
               />
             </div>
