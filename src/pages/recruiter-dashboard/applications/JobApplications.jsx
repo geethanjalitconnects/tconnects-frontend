@@ -14,6 +14,15 @@ export default function JobApplications() {
   useEffect(() => {
     fetchJobs();
   }, []);
+  useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const jobIdFromURL = params.get("job_id");
+
+  if (jobIdFromURL) {
+    setSelectedJob(jobIdFromURL);
+    fetchApplications(jobIdFromURL);
+  }
+}, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
