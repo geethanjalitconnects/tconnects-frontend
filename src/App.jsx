@@ -203,6 +203,7 @@ function App() {
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/delete-account" element={<DeleteAccount />} />
 
               {/* AUTH ROUTES */}
               <Route
@@ -280,7 +281,6 @@ function App() {
                 <Route path="jobs/edit-internship/:id" element={<EditInternship />} />
                 <Route path="applications/jobs" element={<JobApplications />} />
                 <Route path="applications/internships" element={<InternshipApplications />} />
-                <Route path="/delete-account" element={<DeleteAccount />} />
               </Route>
 
               {/* 404 */}
