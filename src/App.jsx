@@ -87,6 +87,9 @@ import InternshipApplications from "./pages/recruiter-dashboard/applications/Int
 import EditJob from "./pages/recruiter-dashboard/jobs/EditJob";
 import EditInternship from "./pages/recruiter-dashboard/jobs/EditInternship";
 
+import DeleteAccount from './components/DeleteAccount';
+
+
 /* ================= API ================= */
 import { checkAuth, logout as apiLogout } from "./config/api";
 
@@ -277,7 +280,7 @@ function App() {
                 <Route path="jobs/edit-internship/:id" element={<EditInternship />} />
                 <Route path="applications/jobs" element={<JobApplications />} />
                 <Route path="applications/internships" element={<InternshipApplications />} />
-                
+                <Route path="/delete-account" element={<DeleteAccount />} />
               </Route>
 
               {/* 404 */}
