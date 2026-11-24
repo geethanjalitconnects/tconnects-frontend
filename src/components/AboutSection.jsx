@@ -78,10 +78,10 @@ const AboutSection = ({ navigateToAboutUs }) => { // Accept navigation prop
           <Col lg={7} className="about-content-column">
             <div className={`about-content ${isVisible ? 'animate-in' : ''}`}>
               <h2 className="about-title slide-up">
-                About <span className="gradient-text">TConnects</span>
+                About <span className="gradient-text">VConnects</span>
               </h2>
               <p className="about-lead slide-up delay-1">
-                TConnects is India's premier risk management job portal, connecting talented
+                VConnects is India's premier risk management job portal, connecting talented
                 professionals with leading organizations across the country. We specialize in
                 enterprise risk management, cybersecurity, compliance, and operational risk
                 roles.

@@ -80,7 +80,7 @@ export default function MentorProfile() {
           ) : (
             <div className="mentor-detail-avatar mentor-avatar-fallback">{(mentor.full_name || "M").charAt(0)}</div>
           )}
-          <span className="mentor-verified"><i className="bi bi-patch-check-fill" /> TConnects verified</span>
+          <span className="mentor-verified"><i className="bi bi-patch-check-fill" /> VConnects verified</span>
           <h1>{mentor.full_name}</h1>
           <p className="mentor-card-role">
             {mentor.job_title}

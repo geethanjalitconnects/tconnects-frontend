@@ -149,7 +149,7 @@ const RegistrationPage = ({ onRegisterSuccess }) => {
       };
 
       // ✅ Show friendly welcome toast for new users
-      toast.success(`Welcome to TConnects, ${response.data.user?.full_name?.split(' ')[0] || 'there'}! 🎉`);
+      toast.success(`Welcome to VConnects, ${response.data.user?.full_name?.split(' ')[0] || 'there'}! 🎉`);
 
       setTimeout(() => {
         navigate('/');

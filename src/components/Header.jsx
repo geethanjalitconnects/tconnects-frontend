@@ -54,7 +54,7 @@ const Header = ({ currentUser, onLogout }) => {
     >
       <Container fluid className="px-3 px-md-4">
         <Navbar.Brand as={Link} to="/" onClick={closeMobileMenu}>
-          <img src={newLogo} className="main-logo" alt="TConnects Logo" />
+          <img src={newLogo} className="main-logo" alt="VConnects Logo" />
         </Navbar.Brand>
 
         <Navbar.Toggle

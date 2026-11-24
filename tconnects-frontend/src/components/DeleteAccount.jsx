@@ -5,9 +5,9 @@ const DeleteAccount = () => {
   return (
     <div className="delete-account-page">
       <div className="delete-account-container">
-        <h1>Delete Your TConnects Account</h1>
+        <h1>Delete Your VConnects Account</h1>
         <p className="intro">
-          If you would like to permanently delete your TConnects account and associated data,
+          If you would like to permanently delete your VConnects account and associated data,
           please follow the steps below.
         </p>
 
@@ -16,7 +16,7 @@ const DeleteAccount = () => {
           <ol>
             <li>
               Send an email to{' '}
-              <a href="mailto:tconnects@vprotectsecurity.com">tconnects@vprotectsecurity.com</a>{' '}
+              <a href="mailto:vconnects@vprotectsecurity.com">vconnects@vprotectsecurity.com</a>{' '}
               from the email address registered on your account.
             </li>
             <li>Use the subject line: <strong>"Account Deletion Request"</strong>.</li>
@@ -50,7 +50,7 @@ const DeleteAccount = () => {
           <h2>Questions?</h2>
           <p>
             If you have any questions about this process, contact us at{' '}
-            <a href="mailto:tconnects@vprotectsecurity.com">tconnects@vprotectsecurity.com</a>.
+            <a href="mailto:vconnects@vprotectsecurity.com">vconnects@vprotectsecurity.com</a>.
           </p>
         </div>
       </div>

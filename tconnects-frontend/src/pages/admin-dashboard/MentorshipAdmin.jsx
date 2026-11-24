@@ -42,7 +42,7 @@ export default function MentorshipAdmin() {
           <>
             <div className="mb-page-head">
               <div>
-                <span className="mb-kicker">TConnects admin</span>
+                <span className="mb-kicker">VConnects admin</span>
                 <h1>Mentorship</h1>
                 <p>Bookings, Razorpay payments, refunds, platform commission and mentor payouts.</p>
               </div>

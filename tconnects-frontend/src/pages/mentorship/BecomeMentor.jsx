@@ -1137,7 +1137,7 @@ export default function BecomeMentor() {
         {state === "approved" && (
           <>
             <h1>Your mentor profile is approved.</h1>
-            <p>Your profile is live in the TConnects mentor directory.</p>
+            <p>Your profile is live in the VConnects mentor directory.</p>
             {status.has_pending_changes && (
               <p className="mentor-state-note">
                 You have changes waiting for review. Your previous details stay live until they are approved.
@@ -1197,7 +1197,7 @@ export default function BecomeMentor() {
             {status.review_message && (
               <blockquote className="mentor-state-quote">{status.review_message}</blockquote>
             )}
-            <p>Your profile is hidden from the directory and you will not receive new bookings. Please contact TConnects support if you have questions.</p>
+            <p>Your profile is hidden from the directory and you will not receive new bookings. Please contact VConnects support if you have questions.</p>
             <Link className="mentor-btn mentor-btn-outline" to="/mentorship">Back to mentorship</Link>
           </>
         )}
@@ -1223,7 +1223,7 @@ export default function BecomeMentor() {
       {currentStep > 0 && (
         <section className="become-mentor-intro">
           <span className="mentor-eyebrow">
-            TCONNECTS VERIFIED MENTOR NETWORK
+            VCONNECTS VERIFIED MENTOR NETWORK
           </span>
           <h1>Your experience can shape someone's future.</h1>
           <p>
@@ -1290,7 +1290,7 @@ export default function BecomeMentor() {
           <section className="mentor-welcome-step">
             <div className="mentor-welcome-copy">
               <span className="mentor-welcome-icon"><i className="bi bi-stars" /></span>
-              <span className="mentor-section-kicker">TCONNECTS VERIFIED MENTOR NETWORK</span>
+              <span className="mentor-section-kicker">VCONNECTS VERIFIED MENTOR NETWORK</span>
               <h2>Turn your experience into someone else's next opportunity.</h2>
               <p>Build your mentor profile in a few short steps. Choose from simple options, save your progress, and return whenever you're ready.</p>
               <div className="mentor-welcome-benefits">
@@ -1299,7 +1299,7 @@ export default function BecomeMentor() {
                 <div><i className="bi bi-shield-check" /><span><b>Private verification</b><small>Your profile is reviewed before publishing</small></span></div>
               </div>
               <button type="button" className="mentor-btn mentor-btn-primary mentor-welcome-cta" onClick={() => goToStep(1)}>Build my profile <i className="bi bi-arrow-right" /></button>
-              <p className="mentor-welcome-footnote">You can review your details before submitting. Your profile will not be public or bookable until TConnects approves it.</p>
+              <p className="mentor-welcome-footnote">You can review your details before submitting. Your profile will not be public or bookable until VConnects approves it.</p>
             </div>
             <div className="mentor-welcome-art" aria-hidden="true">
               <div className="mentor-welcome-orbit orbit-a" /><div className="mentor-welcome-orbit orbit-b" />
@@ -1745,7 +1745,7 @@ export default function BecomeMentor() {
             <div>
               <span className="mentor-section-kicker">SESSIONS & PRICING</span>
               <h2>Set your mentoring preferences</h2>
-              <p>Proposed details are subject to TConnects review and approval.</p>
+              <p>Proposed details are subject to VConnects review and approval.</p>
             </div>
           </div>
 
@@ -2027,7 +2027,7 @@ export default function BecomeMentor() {
             <span>
               I confirm that the information provided is accurate, I will not
               share confidential employer or client information, and I agree to
-              the TConnects mentor code of conduct and verification process.
+              the VConnects mentor code of conduct and verification process.
             </span>
           </label>
         </section>

@@ -24,7 +24,7 @@ export function AdminGate({ status }) {
   return (
     <div className="mb-empty" style={{ maxWidth: 520, margin: "40px auto" }}>
       <i className="bi bi-shield-lock" />
-      <h3>{signedOut ? "Admin sign-in required" : "This area is for TConnects administrators"}</h3>
+      <h3>{signedOut ? "Admin sign-in required" : "This area is for VConnects administrators"}</h3>
       <p>
         {signedOut
           ? "Please sign in with your admin account to manage mentorship."

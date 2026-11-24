@@ -98,7 +98,7 @@ export default function MentorDirectory() {
   return (
     <main className="mentorship-page mentor-directory-page">
       <section className="mentor-directory-heading">
-        <span className="mentor-eyebrow">TCONNECTS MENTOR NETWORK</span>
+        <span className="mentor-eyebrow">VCONNECTS MENTOR NETWORK</span>
         <h1>Find guidance from people who've done the work.</h1>
         <p>Explore approved professionals across risk management and related specializations.</p>
         <div className="mentor-filters">

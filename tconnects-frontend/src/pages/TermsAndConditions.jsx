@@ -150,8 +150,8 @@ export default function TermsAndConditions() {
           <h2>14. Contact Information</h2>
           <p>
             Email:{" "}
-            <a href="mailto:tconnects@vprotectsecurity.com">
-              tconnects@vprotectsecurity.com
+            <a href="mailto:vconnects@vprotectsecurity.com">
+              vconnects@vprotectsecurity.com
             </a>
           </p>
         </section>

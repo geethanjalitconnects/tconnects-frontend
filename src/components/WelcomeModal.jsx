@@ -61,7 +61,7 @@ export default function WelcomeModal({ currentUser }) {
           <img src={TC_LOGO} alt="TC" className="tc-modal-logo" />
         </div>
 
-        <h2 className="tc-modal-title">Welcome to TConnects! 🎉</h2>
+        <h2 className="tc-modal-title">Welcome to VConnects! 🎉</h2>
 
         <p className="tc-modal-sub">
           Create your profile to get personalized job recommendations and apply instantly.

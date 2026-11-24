@@ -51,7 +51,7 @@ export async function payWithRazorpay(checkout, { onFailure } = {}) {
       order_id: checkout.order_id,
       amount: checkout.amount,
       currency: checkout.currency || "INR",
-      name: checkout.name || "TConnects Mentorship",
+      name: checkout.name || "VConnects Mentorship",
       description: checkout.description || "Mentorship session",
       prefill: checkout.prefill || {},
       readonly: { email: true },

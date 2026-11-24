@@ -38,10 +38,10 @@ export default function PrivacyPolicy() {
             <li>Work Experience</li>
             <li>Skills and Certifications</li>
             <li>Location</li>
-            <li>Resume (uploaded files or generated content via TConnects.in)</li>
+            <li>Resume (uploaded files or generated content via VConnects.in)</li>
           </ul>
 
-          <h3>1.2 Information from Recruiters on TConnects.in</h3>
+          <h3>1.2 Information from Recruiters on v-connects.com </h3>
           <p>When recruiters create an account, we may collect:</p>
           <ul>
             <li>Name of recruiter</li>

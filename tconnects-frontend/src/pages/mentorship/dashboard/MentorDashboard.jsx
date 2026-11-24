@@ -95,7 +95,7 @@ export default function MentorDashboard() {
       {app.status === "suspended" && (
         <div className="mb-alert error">
           <i className="bi bi-pause-circle" />
-          <span>Your profile is suspended: it is hidden from the directory and cannot take new bookings. Sessions already paid for still go ahead.{app.review_message ? ` Note from TConnects: ${app.review_message}` : ""}</span>
+          <span>Your profile is suspended: it is hidden from the directory and cannot take new bookings. Sessions already paid for still go ahead.{app.review_message ? ` Note from VConnects: ${app.review_message}` : ""}</span>
         </div>
       )}
 
@@ -247,7 +247,7 @@ function MentorBookingDrawer({ id, onClose, onChanged }) {
   };
 
   const mailto = b
-    ? `mailto:${b.booker.email}?subject=${encodeURIComponent(`Your TConnects mentorship session ${b.reference}`)}&body=${encodeURIComponent(`Hi ${b.booker.name},\n\n`)}`
+    ? `mailto:${b.booker.email}?subject=${encodeURIComponent(`Your VConnects mentorship session ${b.reference}`)}&body=${encodeURIComponent(`Hi ${b.booker.name},\n\n`)}`
     : "#";
 
   return (
@@ -305,7 +305,7 @@ function MentorBookingDrawer({ id, onClose, onChanged }) {
                 <span>
                   <b>{b.issue.resolved_at ? "Reported problem (resolved)" : "The booker reported a problem"}</b> · {fmtDateTime(b.issue.reported_at)}
                   <br />{b.issue.note}
-                  {!b.issue.resolved_at && <><br /><small>Your payout for this session is paused until TConnects support resolves it.</small></>}
+                  {!b.issue.resolved_at && <><br /><small>Your payout for this session is paused until VConnects support resolves it.</small></>}
                 </span>
               </div>
             )}
@@ -760,7 +760,7 @@ function ProfileTab({ app, onSaved }) {
       }
       if (Object.keys(payload).length) await mentorshipApi.liveEdit(payload);
       const reviewed = Object.keys(payload).some((k) => REVIEWED_FIELDS.has(k));
-      toast.success(reviewed ? "Saved. Work details and rate changes go live after TConnects checks them." : "Profile updated.");
+      toast.success(reviewed ? "Saved. Work details and rate changes go live after VConnects checks them." : "Profile updated.");
       onSaved();
     } catch (err) {
       setError(apiError(err));
@@ -827,7 +827,7 @@ function ProfileTab({ app, onSaved }) {
 
       <div className="mb-panel">
         <h3>Work &amp; experience {reviewTag}</h3>
-        <p>To keep mentors verified, changes here are checked by TConnects. Your current details stay live until then.</p>
+        <p>To keep mentors verified, changes here are checked by VConnects. Your current details stay live until then.</p>
         <div className="mb-grid-2">
           <div className="mb-field" style={{ gridColumn: "1 / -1" }}>
             <span>Employment status</span>
@@ -923,7 +923,7 @@ function EarningsTab() {
     <>
       <div className="mb-panel">
         <h3>Payout account</h3>
-        <p>Your share of each session is held until both you and your mentee swipe to confirm the session is completed, then released to this account by TConnects.</p>
+        <p>Your share of each session is held until both you and your mentee swipe to confirm the session is completed, then released to this account by VConnects.</p>
         {error && <div className="mb-alert error">{error}</div>}
         {acct === undefined ? (
           <p className="mb-muted">Loading…</p>

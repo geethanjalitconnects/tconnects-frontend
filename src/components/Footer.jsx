@@ -10,7 +10,7 @@ const Footer = () => {
       <Container>
         <Row>
           <Col md={4} className="mb-4 mb-md-0">
-            <h5 className="mb-3 text-dark-blue footer-title">TConnects</h5>
+            <h5 className="mb-3 text-dark-blue footer-title">VConnects</h5>
             <p className="text-dark footer-description">
               Connecting risk management professionals with their next career opportunity.
             </p>

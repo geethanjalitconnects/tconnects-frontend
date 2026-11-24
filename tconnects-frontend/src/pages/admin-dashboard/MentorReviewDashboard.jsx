@@ -129,7 +129,7 @@ export default function MentorReviewDashboard() {
       <div className="mb-scope"><AdminNav /></div>
       <header className="review-page-header">
         <div>
-          <span className="review-eyebrow">TConnects admin</span>
+          <span className="review-eyebrow">VConnects admin</span>
           <h1>Mentor Verification</h1>
           <p>
             Review professional profiles and manage mentor applications.
