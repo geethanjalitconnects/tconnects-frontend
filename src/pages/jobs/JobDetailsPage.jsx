@@ -1,0 +1,257 @@
+// JobDetailsPage.jsx — with recruiter restriction + auth check for save/apply
+
+import React, { useEffect, useState, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import api from "../../config/api";
+import { useSavedJobs } from "../../context/SavedJobsContext";
+import { AuthContext } from "../../context/AuthContext";
+import toast from "react-hot-toast";
+import "./JobDetailsPage.css";
+
+const JobDetailsPage = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { user } = useContext(AuthContext);
+
+  const [job, setJob] = useState(null);
+  const [company, setCompany] = useState(null);
+  const [applied, setApplied] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const { savedIds, toggleSave } = useSavedJobs();
+  const saved = savedIds.includes(Number(id));
+
+  const isRecruiter = user?.role === "recruiter";
+
+  useEffect(() => {
+    const loadJob = async () => {
+      try {
+        const res = await api.get(`/api/jobs/${id}/`);
+        setJob(res.data);
+
+        if (res.data.recruiter_id) {
+          try {
+            const companyRes = await api.get(
+              `/api/profiles/company/${res.data.recruiter_id}/`
+            );
+            setCompany(companyRes.data);
+          } catch (err) {
+            console.warn("No public company profile");
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load job:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadJob();
+  }, [id]);
+
+  useEffect(() => {
+    if (!user || isRecruiter) return;
+
+    const loadApplied = async () => {
+      try {
+        const res = await api.get("/api/applications/job/applied/");
+        const appliedList = res.data.results || res.data; // ✅ paginated fix
+
+        const isApplied = appliedList.some(
+          (a) =>
+            a.job_id === Number(id) ||
+            a.job === Number(id) ||
+            a.job_details?.id === Number(id)
+        );
+        setApplied(isApplied);
+      } catch (err) {
+        console.error("Failed to load applied status:", err);
+      }
+    };
+
+    loadApplied();
+  }, [id, isRecruiter, user]);
+
+  const handleApplyNow = () => {
+    if (!user) {
+      toast.error("Please login to apply for this job.");
+      navigate("/login");
+      return;
+    }
+    if (isRecruiter) {
+      toast.error("Recruiters cannot apply for jobs. Please use a candidate account.");
+      return;
+    }
+    navigate(`/apply?jobId=${id}`);
+  };
+
+  const handleToggleSave = async () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    if (isRecruiter) return;
+    await toggleSave(Number(id));
+  };
+
+  if (loading) return <div className="jd-loading">Loading job…</div>;
+  if (!job) return <div className="jd-error">Job not found.</div>;
+
+  return (
+    <div className="jd-desktop-wrapper">
+      <div className="jd-container">
+
+        {/* JOB HEADER */}
+        <div className="jd-header-card">
+          <div className="jd-header-left">
+            <h1 className="jd-title">{job.title}</h1>
+
+            <div className="jd-meta">
+              <span className="jd-badge">{job.category}</span>
+              <span className="jd-meta-item">{job.company_name}</span>
+              <span className="jd-meta-item">{job.location}</span>
+              <span className="jd-meta-item">{job.experience_range}</span>
+              <span className="jd-meta-item">{job.salary_range}</span>
+              <span className="jd-meta-item">{job.employment_type}</span>
+
+              {job.application_deadline && (
+                <span className="jd-meta-item">
+                  Deadline:{" "}
+                  {new Date(job.application_deadline).toLocaleDateString("en-IN")}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="jd-header-right">
+
+            {/* APPLY BUTTON */}
+            <button
+              className="jd-apply-btn"
+              disabled={applied || isRecruiter}
+              title={isRecruiter ? "Recruiters cannot apply for jobs" : ""}
+              onClick={handleApplyNow}
+              style={
+                applied
+                  ? {
+                      backgroundColor: "#6b7280",
+                      color: "#fff",
+                      cursor: "not-allowed",
+                      pointerEvents: "none",
+                    }
+                  : isRecruiter
+                  ? {
+                      backgroundColor: "#d1d5db",
+                      color: "#9ca3af",
+                      border: "1px solid #d1d5db",
+                      cursor: "not-allowed",
+                      pointerEvents: "none",
+                    }
+                  : {}
+              }
+            >
+              {applied ? "Applied ✓" : "Apply Now"}
+            </button>
+
+            {/* SAVE BUTTON */}
+            <button
+              className="jd-save-btn"
+              disabled={isRecruiter}
+              onClick={handleToggleSave}
+              title={isRecruiter ? "Recruiters cannot save jobs" : ""}
+              style={isRecruiter ? {
+                backgroundColor: "#d1d5db",
+                color: "#9ca3af",
+                border: "1px solid #d1d5db",
+                cursor: "not-allowed",
+                pointerEvents: "none",
+              } : {}}
+            >
+              {saved ? "Saved" : "Save Job"}
+            </button>
+          </div>
+        </div>
+
+        {/* Recruiter notice banner */}
+        {isRecruiter && (
+          <div style={{
+            background: "#fff3cd",
+            border: "1px solid #ffc107",
+            borderRadius: "8px",
+            padding: "12px 16px",
+            marginBottom: "16px",
+            color: "#856404",
+            fontSize: "0.95rem"
+          }}>
+            ⚠️ You are logged in as a <strong>Recruiter</strong>. To apply for jobs, please login with a candidate account.
+          </div>
+        )}
+
+        {/* JOB DESCRIPTION */}
+        <div className="jd-section">
+          <h2 className="jd-section-title">About the Job</h2>
+          <p className="jd-description">{job.full_description}</p>
+        </div>
+
+        {job.responsibilities?.length > 0 && (
+          <div className="jd-section">
+            <h2 className="jd-section-title">Responsibilities</h2>
+            <ul className="jd-list">
+              {job.responsibilities.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {job.requirements?.length > 0 && (
+          <div className="jd-section">
+            <h2 className="jd-section-title">Requirements</h2>
+            <ul className="jd-list">
+              {job.requirements.map((req, i) => (
+                <li key={i}>{req}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="jd-section">
+          <h2 className="jd-section-title">Skills Required</h2>
+          <div className="jd-skills">
+            {job.skills?.map((skill, i) => (
+              <span key={i} className="jd-skill">{skill}</span>
+            ))}
+          </div>
+        </div>
+
+        {company && (
+          <div className="jd-section-card">
+            <h2 className="jd-section-title">Company Details</h2>
+            <div className="jd-company-grid">
+              <p><strong>Company Name:</strong> {company.company_name}</p>
+              <p><strong>Industry:</strong> {company.industry_category || "Not specified"}</p>
+              <p><strong>Company Size:</strong> {company.company_size || "Not specified"}</p>
+              <p><strong>Location:</strong> {company.company_location || "Not specified"}</p>
+              {company.company_website && (
+                <p>
+                  <strong>Website:</strong>{" "}
+                  <a href={company.company_website} target="_blank" rel="noreferrer">
+                    {company.company_website}
+                  </a>
+                </p>
+              )}
+            </div>
+            {company.about_company && (
+              <p className="jd-company-about">
+                <strong>About Company:</strong> {company.about_company}
+              </p>
+            )}
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+};
+
+export default JobDetailsPage;

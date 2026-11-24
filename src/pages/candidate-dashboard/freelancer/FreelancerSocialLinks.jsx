@@ -1,0 +1,185 @@
+import React, { useState, useEffect } from "react";
+import api from "../../../config/api";
+import toast from "react-hot-toast";
+import "./Freelancer.css";
+import { useNavigate } from "react-router-dom";
+
+export default function FreelancerSocialLinks() {
+  const [data, setData] = useState({
+    linkedin_url: "",
+    github_url: "",
+    portfolio_url: "",
+    ratings: [],
+    badges: []
+  });
+
+  const [reviewerEmail, setReviewerEmail] = useState("");
+  const navigate = useNavigate();
+
+  // ======================================================
+  // 1️⃣ LOAD SOCIAL LINKS (with safe defaults)
+  // ======================================================
+  useEffect(() => {
+    const loadLinks = async () => {
+      try {
+        const res = await api.get("/api/profiles/freelancer/social-links/");
+
+        setData({
+          linkedin_url: res.data.linkedin_url || "",
+          github_url: res.data.github_url || "",
+          portfolio_url: res.data.portfolio_url || "",
+          ratings: Array.isArray(res.data.ratings) ? res.data.ratings : [],
+          badges: Array.isArray(res.data.badges) ? res.data.badges : []
+        });
+
+      } catch (error) {
+        toast.error("Unable to load social links.");
+
+        setData({
+          linkedin_url: "",
+          github_url: "",
+          portfolio_url: "",
+          ratings: [],
+          badges: []
+        });
+      }
+    };
+
+    loadLinks();
+  }, []);
+
+  // ======================================================
+  // 2️⃣ SAVE SOCIAL LINKS (PATCH)
+  // ======================================================
+  const saveLinks = async () => {
+    try {
+      await api.patch("/api/profiles/freelancer/social-links/", {
+        linkedin_url: data.linkedin_url,
+        github_url: data.github_url,
+        portfolio_url: data.portfolio_url
+      });
+
+      toast.success("Social links updated!");
+    } catch (error) {
+      toast.error("Failed to update social links.");
+    }
+  };
+
+  // ======================================================
+  // 3️⃣ SEND RATING REQUEST EMAIL (UI ONLY)
+  // ======================================================
+  const sendRequest = () => {
+    if (!reviewerEmail) {
+      toast.error("Enter recruiter email.");
+      return;
+    }
+
+    toast.success(`Rating request sent to ${reviewerEmail}`);
+    setReviewerEmail("");
+  };
+
+  return (
+    <div className="fr-page">
+      <div className="fr-card fr-form">
+        <h2 className="fr-title">Social Links & Ratings</h2>
+
+        {/* SOCIAL LINKS SECTION */}
+        <div className="fr-row">
+          <label className="fr-label">LinkedIn URL</label>
+          <input
+            className="fr-input"
+            value={data.linkedin_url}
+            onChange={(e) =>
+              setData({ ...data, linkedin_url: e.target.value })
+            }
+            placeholder="https://linkedin.com/in/yourname"
+          />
+        </div>
+
+        <div className="fr-row">
+          <label className="fr-label">GitHub URL</label>
+          <input
+            className="fr-input"
+            value={data.github_url}
+            onChange={(e) =>
+              setData({ ...data, github_url: e.target.value })
+            }
+            placeholder="https://github.com/yourname"
+          />
+        </div>
+
+        <div className="fr-row">
+          <label className="fr-label">Portfolio URL</label>
+          <input
+            className="fr-input"
+            value={data.portfolio_url}
+            onChange={(e) =>
+              setData({ ...data, portfolio_url: e.target.value })
+            }
+            placeholder="https://yourportfolio.com"
+          />
+        </div>
+
+        <button className="fr-btn fr-btn-primary" onClick={saveLinks}>
+          Save Links
+        </button>
+
+        {/* REQUEST REVIEW */}
+        <div className="fr-section-divider">Request Rating</div>
+
+        <div className="fr-row fr-two-col">
+          <div>
+            <label className="fr-label">Recruiter Email</label>
+            <input
+              className="fr-input"
+              value={reviewerEmail}
+              onChange={(e) => setReviewerEmail(e.target.value)}
+              placeholder="recruiter@example.com"
+            />
+          </div>
+
+          <button
+            className="fr-btn fr-btn-secondary"
+            style={{ marginTop: "26px" }}
+            onClick={sendRequest}
+          >
+            Send Request
+          </button>
+        </div>
+
+        {/* RATINGS */}
+        <div className="fr-section-divider">Ratings Received</div>
+
+        {(!data.ratings || data.ratings.length === 0) ? (
+          <p className="fr-empty">No ratings yet.</p>
+        ) : (
+          data.ratings.map((r, i) => (
+            <div key={i} className="fr-rating-item">
+              <strong>{r.stars} ★</strong> — {r.comment || "No comment"}
+            </div>
+          ))
+        )}
+
+        {/* BADGES */}
+        <div className="fr-section-divider">Badges Earned</div>
+
+        {(!data.badges || data.badges.length === 0) ? (
+          <p className="fr-empty">No badges awarded.</p>
+        ) : (
+          <div className="fr-badge-list">
+            {data.badges.map((b, i) => (
+              <span key={i} className="fr-badge">{b}</span>
+            ))}
+          </div>
+        )}
+        
+        <div style={{ marginTop: 12 }}>
+          <div className="fr-actions">
+            <button type="button" className="fr-btn" onClick={() => navigate('/candidate-dashboard/freelancer/payment-method')}>Previous: Payment Method</button>
+            <button type="button" className="fr-btn fr-btn-primary" onClick={() => navigate('/candidate-dashboard/freelancer/profile-preview')}>Next: Profile Preview</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
