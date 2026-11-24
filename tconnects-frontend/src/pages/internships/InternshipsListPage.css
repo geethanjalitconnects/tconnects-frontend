@@ -1,0 +1,336 @@
+/* InternshipsListPage.css - v3 (teal hero + new internship card, matches the jobs page). If you do not see this line at the top of your file, the old file is still in place. */
+
+/* =========================================================
+   Internships page  (InternshipsListPage.jsx)
+   Same look as the jobs page. Palette = the logo + login popup:
+   ink #001d37 · text #52707c · deep #006080 · teal #0184a2 · aqua #09e2f1
+   Sections: 1 tokens + page  2 hero  3 search bar  4 internship card
+             5 tags + buttons  6 states  7 responsive  8 LEGACY card styles
+
+   Every class in sections 1-7 starts with "il-" (internships list), so no other
+   stylesheet in the app can have the same class name and override it.
+========================================================= */
+
+/* ---------- 1. tokens + page ---------- */
+.internships-page {
+  --vc-ink: #001d37;
+  --vc-text: #52707c;
+  --vc-deep: #006080;
+  --vc-teal: #0184a2;
+  --vc-aqua: #09e2f1;
+  --vc-tint: #e6f6f9;
+  --vc-line: #d6e7ec;
+  --vc-grad: linear-gradient(135deg, #00607f 0%, #0184a2 100%);
+  --page-top-gap: 16px;                  /* space between the floating navbar and the teal panel. Change this one number to move the page up or down */
+
+  box-sizing: border-box;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: var(--page-top-gap) 40px 24px;
+  font-family: Inter, sans-serif;
+  color: var(--vc-text);
+}
+.internships-page *, .internships-page *::before, .internships-page *::after { box-sizing: border-box; }
+.internships-page button, .internships-page input, .internships-page select { font-family: inherit; }
+.internships-page button:focus-visible { outline: 3px solid var(--vc-aqua); outline-offset: 2px; }
+
+/* ---------- 2. hero (teal gradient panel, same look as the login page) ---------- */
+.il-hero {
+  position: relative; overflow: hidden;
+  margin: 0 0 16px; padding: 26px 30px 22px;
+  border-radius: 24px;
+  background: linear-gradient(175deg, #0a7a96 0%, #0b6f89 55%, #07566e 100%);
+  box-shadow: 0 18px 40px rgba(1, 80, 100, 0.18);
+}
+.il-hero::before {                       /* diagonal hatch texture, stronger toward the bottom */
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 8px);
+  -webkit-mask: linear-gradient(180deg, transparent 10%, #000 100%); mask: linear-gradient(180deg, transparent 10%, #000 100%);
+}
+.il-hero::after {                        /* aqua glow in the top-right corner */
+  content: ""; position: absolute; top: -170px; right: -120px; width: 380px; height: 380px; pointer-events: none;
+  background: radial-gradient(circle, rgba(9, 226, 241, 0.38), transparent 65%);
+}
+.il-hero > * { position: relative; z-index: 1; }
+
+.il-h1 {
+  margin: 0;
+  font-size: 32px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em;
+  color: #fff;
+}
+.il-subtitle {
+  margin: 6px 0 0; max-width: 46em;
+  font-size: 14.5px; line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* ---------- 3. search bar (search + work mode + location + duration + button on one row) ---------- */
+.il-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px 170px 160px auto;
+  gap: 10px;
+  margin: 18px 0 0;
+}
+.il-search { position: relative; min-width: 0; }
+.il-search-icon {
+  position: absolute; left: 16px; top: 50%; translate: 0 -50%; width: 18px; pointer-events: none;
+  stroke: var(--vc-deep); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+}
+.il-field {
+  display: block; width: 100%; min-width: 0; height: 46px; padding: 0 18px;
+  border: 0; border-radius: 999px; background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 25, 45, 0.14);
+  font-size: 14px; font-weight: 500; color: var(--vc-ink);
+  outline: none;
+}
+.il-search .il-field { padding-left: 44px; }
+.il-field::placeholder { color: #8aa5ae; }
+.il-field:focus { box-shadow: 0 0 0 4px rgba(9, 226, 241, 0.4); }
+.il-select {                             /* own arrow instead of the browser's */
+  appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 40px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23006080' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat; background-position: right 18px center; background-size: 12px 8px;
+}
+
+.il-search-btn {                         /* navy pill with the aqua arrow, same as the navbar button */
+  display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 8px 0 24px;
+  border: 0; border-radius: 999px;
+  background: linear-gradient(180deg, #1c3a52 0%, #001d37 100%);
+  box-shadow: 0 6px 16px rgba(0, 29, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  color: #fff; font-size: 14px; font-weight: 700; white-space: nowrap; cursor: pointer;
+}
+.il-search-btn:hover { background: linear-gradient(180deg, #24475f 0%, #082a49 100%); }
+.il-search-btn i { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #006080, #09e2f1); }
+.il-search-btn i svg { width: 13px; stroke: #fff; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+.il-count-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 26px; margin: 14px 0 0; }
+.il-count { margin: 0; font-size: 13.5px; font-weight: 600; color: rgba(255, 255, 255, 0.9); }
+.il-clear {
+  padding: 4px 12px; border: 0; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16); color: #fff;
+  font-size: 12.5px; font-weight: 700; white-space: nowrap; cursor: pointer;
+}
+.il-clear:hover { background: rgba(255, 255, 255, 0.28); }
+
+/* ---------- 4. internship card ---------- */
+.il-list { display: grid; gap: 12px; margin: 0 0 8px; }
+
+.il-card {
+  position: relative; overflow: hidden;
+  padding: 18px 20px 16px 24px;
+  border: 1px solid var(--vc-line); border-radius: 16px; background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 96, 128, 0.06);
+}
+.il-card::before {                       /* gradient accent bar on the left edge */
+  content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 4px;
+  background: linear-gradient(180deg, #006080, #09e2f1);
+}
+.il-card:hover { border-color: #a9d8e3; box-shadow: 0 8px 22px rgba(0, 96, 128, 0.12); }
+
+.il-card-top { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 14px; }
+.il-logo {                               /* company initial */
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px;
+  background: var(--vc-grad); color: #fff; font-size: 18px; font-weight: 800;
+}
+.il-card-title { margin: 0; font-size: 19px; line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; color: var(--vc-ink); overflow-wrap: break-word; }
+.il-company { margin: 2px 0 0; font-size: 14px; font-weight: 600; color: var(--vc-deep); }
+
+.il-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+.il-meta li {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 8px;
+  background: #f1f7f9; color: #2f4d5b; font-size: 12.5px; font-weight: 600;
+}
+.il-meta svg { flex: none; width: 14px; height: 14px; stroke: var(--vc-teal); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.il-rupee { color: var(--vc-teal); font-weight: 800; }
+
+.il-desc {
+  margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: #34525f; overflow-wrap: break-word;
+  display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;   /* two lines at most, so cards stay the same height */
+}
+
+/* ---------- 5. tags + buttons ---------- */
+.il-tags { display: flex; flex-wrap: wrap; gap: 6px 8px; margin: 12px 0 0; }
+.il-tags span {
+  max-width: 100%; padding: 4px 11px; border-radius: 999px;
+  background: var(--vc-tint); color: var(--vc-deep);
+  font-size: 12.5px; font-weight: 600; line-height: 1.5;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.il-tags .il-more { padding: 3px 10px; border: 1px solid var(--vc-line); background: #fff; color: var(--vc-text); cursor: default; }
+
+.il-actions { display: flex; gap: 8px; }
+.il-view,
+.il-save {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 40px; padding: 0 18px; border-radius: 10px;
+  font-size: 14px; font-weight: 700; white-space: nowrap; cursor: pointer;
+}
+.il-view { border: 0; background: var(--vc-grad); color: #fff; }
+.il-view:hover { filter: brightness(1.1); }
+.il-save { border: 1.5px solid var(--vc-teal); background: #fff; color: var(--vc-deep); }
+.il-save:hover { background: var(--vc-tint); }
+.il-save.is-saved { background: var(--vc-tint); }
+
+/* ---------- 6. loading / empty ---------- */
+.il-state { margin: 0; padding: 36px 0; text-align: center; font-size: 15px; color: var(--vc-text); }
+
+/* ---------- 7. responsive ---------- */
+@media (max-width: 900px) {
+  .internships-page { padding-left: 24px; padding-right: 24px; }
+  .il-hero { padding: 22px 22px 18px; }
+  .il-h1 { font-size: 27px; }
+  .il-toolbar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .il-search,
+  .il-search-btn { grid-column: 1 / -1; }
+  .il-search-btn { justify-content: center; padding: 0 8px 0 24px; }
+}
+
+@media (max-width: 600px) {
+  .internships-page { --page-top-gap: 12px; padding-left: 12px; padding-right: 12px; }
+  .il-hero { padding: 20px 16px 16px; border-radius: 20px; }
+  .il-h1 { font-size: 23px; }
+  .il-subtitle { font-size: 13.5px; }
+  .il-toolbar { grid-template-columns: 1fr; }
+  .il-card { padding: 16px 16px 14px 20px; border-radius: 14px; }
+  .il-card-top { grid-template-columns: 40px minmax(0, 1fr); gap: 12px; }
+  .il-logo { width: 40px; height: 40px; font-size: 16px; }
+  .il-card-title { font-size: 17px; }
+  .il-actions { grid-column: 1 / -1; }
+  .il-view,
+  .il-save { flex: 1; }
+}
+
+/* =========================================================
+   8. LEGACY card styles (the old look, unchanged)
+
+   The internships page no longer uses these. They are kept here ONLY because
+   other pages may still use the class names .job-card, .tags, .view-btn,
+   .save-btn and so on (Saved Jobs, Saved Internships, dashboards...).
+   Their old green colours are what made buttons look green on other pages.
+   We will delete this block once those pages have been restyled.
+========================================================= */
+.job-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 26px;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 18px rgba(0, 90, 90, 0.08);
+  cursor: pointer;
+  transition: 0.2s ease-out;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.job-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 25px rgba(0, 90, 90, 0.15);
+}
+
+.job-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #033536;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.company-name {
+  margin-top: 6px;
+  font-size: 16px;
+  color: #066b6e;
+}
+
+.job-info {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #0d6b70;
+}
+
+.job-info span {
+  margin-right: 6px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.job-desc {
+  font-size: 15px;
+  margin: 10px 0 16px 0;
+  color: #07565c;
+  line-height: 1.55;
+  display: block;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.tags {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.tags span {
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: #e8f7f7;
+  color: #0f7072;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.job-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.view-btn {
+  padding: 12px 22px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0f7173, #17a3a2);
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.view-btn:hover {
+  opacity: 0.9;
+}
+
+.save-btn {
+  padding: 12px 22px;
+  background: #fff;
+  border: 2px solid #0f7273;
+  border-radius: 10px;
+  font-weight: 700;
+  color: #0f7273;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.save-btn:hover {
+  background: #0f7273;
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  .job-card { padding: 18px; }
+  .job-title { font-size: 20px; }
+  .company-name { font-size: 14px; }
+  .job-info { font-size: 13px; }
+  .job-desc { font-size: 14px; }
+  .tags span { padding: 6px 10px; font-size: 12px; }
+  .job-actions { flex-direction: column; gap: 10px; }
+  .view-btn,
+  .save-btn { width: 100%; text-align: center; font-size: 14px; padding: 10px; }
+}
+
+@media (max-width: 400px) {
+  .job-card { padding: 15px; }
+  .job-title { font-size: 18px; }
+  .job-desc { font-size: 13px; }
+  .tags span { font-size: 11px; padding: 5px 9px; }
+}

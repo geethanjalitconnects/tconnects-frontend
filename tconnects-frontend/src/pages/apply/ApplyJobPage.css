@@ -1,0 +1,385 @@
+/* ApplyJobPage.css */
+
+.apply-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+  padding: 40px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apply-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  max-width: 700px;
+  width: 100%;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.apply-title {
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 24px 0;
+  text-align: center;
+}
+
+/* Job Summary */
+.apply-job-summary {
+  background: linear-gradient(135deg, #00a6b6 0%, #007a87 100%);
+  color: white;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.apply-job-summary h2 {
+  font-size: clamp(20px, 3vw, 24px);
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.apply-company {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 8px 0;
+  opacity: 0.95;
+}
+
+.apply-location,
+.apply-experience,
+.apply-salary {
+  font-size: 14px;
+  margin: 6px 0;
+  opacity: 0.9;
+}
+
+/* Requirements Section */
+.apply-requirements {
+  margin-bottom: 30px;
+}
+
+.apply-requirements h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0 0 16px 0;
+}
+
+.apply-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f7fafc;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.check-item.completed {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.check-item.incomplete {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.check-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.check-item.completed .check-icon {
+  background: #22c55e;
+  color: white;
+}
+
+.check-item.incomplete .check-icon {
+  background: #ef4444;
+  color: white;
+}
+
+.check-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+/* Action Buttons */
+.apply-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.apply-btn {
+  flex: 1;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  min-height: 50px;
+}
+
+.apply-btn-primary {
+  background: linear-gradient(135deg, #00a6b6 0%, #007a87 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 166, 182, 0.4);
+}
+
+.apply-btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 166, 182, 0.5);
+}
+
+.apply-btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.apply-btn-primary:disabled {
+  background: #cbd5e0;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.apply-btn-secondary {
+  background: white;
+  color: #4a5568;
+  border: 2px solid #e2e8f0;
+}
+
+.apply-btn-secondary:hover:not(:disabled) {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+}
+
+/* Warning Message */
+.apply-warning {
+  margin-top: 20px;
+  padding: 16px;
+  background: #fef3c7;
+  border: 2px solid #fbbf24;
+  border-radius: 10px;
+  color: #92400e;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.apply-link-btn {
+  padding: 8px 16px;
+  background: #00a6b6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.apply-link-btn:hover {
+  background: #007a87;
+  transform: translateY(-2px);
+}
+
+/* Success Popup */
+.apply-success-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.apply-success-popup {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  max-width: 400px;
+  animation: scaleUp 0.4s ease-out;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.apply-success-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: white;
+  font-size: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  animation: bounce 0.6s ease-out;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.apply-success-popup h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 12px 0;
+}
+
+.apply-success-popup p {
+  font-size: 16px;
+  color: #718096;
+  margin: 0;
+}
+
+/* Loading & Error States */
+.apply-loading,
+.apply-error {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.apply-loading {
+  font-size: 18px;
+  color: #4a5568;
+}
+
+.apply-error {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.apply-error h2 {
+  font-size: 24px;
+  color: #ef4444;
+  margin: 0 0 12px 0;
+}
+
+.apply-error p {
+  font-size: 16px;
+  color: #718096;
+  margin: 0 0 24px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .apply-container {
+    padding: 20px 15px;
+  }
+
+  .apply-card {
+    padding: 24px;
+  }
+
+  .apply-title {
+    font-size: 24px;
+  }
+
+  .apply-job-summary {
+    padding: 20px;
+  }
+
+  .apply-actions {
+    flex-direction: column;
+  }
+
+  .apply-btn {
+    width: 100%;
+  }
+
+  .apply-success-popup {
+    margin: 20px;
+    padding: 30px 20px;
+  }
+
+  .apply-success-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .apply-card {
+    padding: 20px;
+  }
+
+  .apply-job-summary h2 {
+    font-size: 18px;
+  }
+
+  .check-item {
+    padding: 10px;
+  }
+
+  .check-label {
+    font-size: 14px;
+  }
+}

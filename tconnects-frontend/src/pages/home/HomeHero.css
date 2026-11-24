@@ -1,0 +1,447 @@
+/* Homepage hero. Every class is vc- prefixed so it can't clash with the older
+   global stylesheets, and nothing here affects other pages. */
+
+.vc-hero {
+  --vc-nav-height: 72px;
+  --vc-title-size: clamp(2.5rem, min(5.5vw, 11.5svh), 6.25rem);
+  background: var(--vc-white);
+  color: var(--vc-ink);
+  font-family: var(--vc-font);
+  padding-top: var(--vc-nav-height);
+}
+
+.vc-hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  column-gap: clamp(24px, 3vw, 56px);
+  max-width: 1600px;
+  min-height: calc(100svh - var(--vc-nav-height));
+  margin: 0 auto;
+  padding: clamp(16px, 3.5svh, 44px) clamp(20px, 4vw, 64px) clamp(16px, 2.5svh, 28px);
+}
+
+.vc-hero__title {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  font-family: var(--vc-font);
+  font-size: var(--vc-title-size);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  color: var(--vc-ink);
+}
+
+.vc-hl {
+  color: var(--vc-highlight);
+}
+
+.vc-hero__body {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: center;
+  position: relative;
+  z-index: 2;
+  padding-block: clamp(12px, 2.5svh, 32px);
+}
+
+.vc-hero__sub {
+  max-width: 34em;
+  margin: 0;
+  font-size: clamp(1.0625rem, 1.5vw, 1.4375rem);
+  line-height: 1.5;
+  color: var(--vc-muted);
+}
+
+.vc-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: clamp(16px, 3svh, 32px);
+}
+
+.vc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 28px;
+  border-radius: 999px;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.vc-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.vc-btn:hover svg {
+  transform: translateX(3px);
+}
+
+.vc-btn:active {
+  transform: scale(0.98);
+}
+
+.vc-btn--primary {
+  background: var(--vc-accent);
+  color: var(--vc-white);
+}
+
+.vc-btn--primary:hover {
+  background: var(--vc-accent-strong);
+  color: var(--vc-white);
+}
+
+.vc-btn--secondary {
+  background: var(--vc-tone-strong);
+  color: var(--vc-ink);
+}
+
+.vc-btn--secondary:hover {
+  background: var(--vc-ink);
+  color: var(--vc-white);
+}
+
+.vc-search {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 620px;
+  margin-top: clamp(14px, 2.5svh, 24px);
+  padding: 6px;
+  border-radius: 999px;
+  background: var(--vc-tone);
+  transition: background-color 0.2s ease;
+}
+
+.vc-search:focus-within {
+  background: var(--vc-tone-strong);
+}
+
+.vc-search__field {
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0;
+}
+
+.vc-search__field--main {
+  flex-grow: 1.7;
+}
+
+.vc-search__field input {
+  width: 100%;
+  height: 48px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--vc-ink);
+  text-overflow: ellipsis;
+}
+
+.vc-hero .vc-search__field input::placeholder {
+  color: var(--vc-muted);
+  font-size: 1rem;
+  opacity: 1;
+}
+
+.vc-search__submit {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--vc-ink);
+  color: var(--vc-white);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.vc-search__submit:hover {
+  background: var(--vc-accent);
+}
+
+.vc-search__submit:active {
+  transform: scale(0.97);
+}
+
+.vc-search__submit-sr {
+  display: none;
+}
+
+/* The ribbon scene sits to the right, starting below the headline's first line. */
+.vc-stage {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  position: relative;
+  min-height: 0;
+  margin-top: calc(var(--vc-title-size) * 0.9);
+}
+
+.vc-stage__poster,
+.vc-stage__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.vc-stage__poster {
+  object-fit: contain;
+  transition: opacity 0.5s ease;
+}
+
+.vc-stage__poster.is-hidden {
+  opacity: 0;
+}
+
+.vc-stage__canvas {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.vc-stage__canvas.is-ready {
+  opacity: 1;
+}
+
+.vc-stage__pause {
+  position: absolute;
+  right: 0;
+  bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--vc-tone);
+  color: var(--vc-ink);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.vc-stage__pause:hover {
+  background: var(--vc-tone-strong);
+}
+
+.vc-services {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  position: relative;
+  z-index: 2;
+  margin-top: clamp(10px, 2svh, 20px);
+}
+
+.vc-services ul {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vc-service {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 56px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: var(--vc-tone);
+  color: var(--vc-ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.vc-service svg {
+  flex: none;
+  color: var(--vc-accent);
+  transition: color 0.2s ease;
+}
+
+.vc-service:hover {
+  background: var(--vc-accent);
+  color: var(--vc-white);
+  transform: translateY(-2px);
+}
+
+.vc-service:hover svg {
+  color: var(--vc-white);
+}
+
+.vc-service:active {
+  transform: translateY(0);
+}
+
+.vc-hero a:focus-visible,
+.vc-hero button:focus-visible,
+.vc-search__field input:focus-visible {
+  outline: 3px solid var(--vc-accent);
+  outline-offset: 2px;
+}
+
+.vc-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Quick arrival. The headline is never animated, so it is there from the first paint. */
+.vc-rise {
+  animation: vc-rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.vc-hero__sub.vc-rise {
+  animation-delay: 0.06s;
+}
+
+.vc-hero__actions.vc-rise {
+  animation-delay: 0.12s;
+}
+
+.vc-search.vc-rise {
+  animation-delay: 0.18s;
+}
+
+.vc-services.vc-rise {
+  animation-delay: 0.24s;
+}
+
+@keyframes vc-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Phone and small tablet: its own order, with services above the scene. */
+@media (max-width: 899.98px) {
+  .vc-hero {
+    --vc-nav-height: 64px;
+    --vc-title-size: clamp(2.25rem, 10vw, 4.5rem);
+  }
+
+  .vc-hero__inner {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 20px 20px 24px;
+  }
+
+  .vc-hero__body {
+    padding-block: 16px 0;
+  }
+
+  .vc-hero__sub {
+    font-size: 1.0625rem;
+  }
+
+  .vc-hero__actions .vc-btn {
+    flex: 1 1 0;
+    padding: 0 16px;
+    white-space: nowrap;
+  }
+
+  .vc-search {
+    max-width: none;
+  }
+
+  .vc-search__field input {
+    padding: 0 12px;
+  }
+
+  .vc-search__submit {
+    width: 48px;
+    padding: 0;
+  }
+
+  .vc-search__submit-label {
+    display: none;
+  }
+
+  .vc-search__submit-sr {
+    display: block;
+  }
+
+  .vc-services {
+    order: 3;
+    margin-top: 16px;
+  }
+
+  .vc-services ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vc-services li:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .vc-service {
+    justify-content: flex-start;
+    min-height: 48px;
+    padding: 8px 14px;
+  }
+
+  .vc-stage {
+    order: 4;
+    height: clamp(200px, 56vw, 380px);
+    margin-top: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vc-rise {
+    animation: none;
+  }
+
+  .vc-btn,
+  .vc-btn svg,
+  .vc-service,
+  .vc-search,
+  .vc-search__submit,
+  .vc-stage__poster,
+  .vc-stage__canvas {
+    transition: none;
+  }
+
+  .vc-btn:hover svg,
+  .vc-btn:active,
+  .vc-service:hover,
+  .vc-search__submit:active {
+    transform: none;
+  }
+}

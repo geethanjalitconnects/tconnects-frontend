@@ -1,0 +1,312 @@
+/* FreelancerList.css - v3 (teal hero, premium cards, shared by FreelancerList.jsx and FreelancerProfile.jsx). If you do not see this line at the top of your file, the old file is still in place. */
+
+/* =========================================================
+   Freelancers pages
+   Same palette as the jobs, internships and details pages:
+   ink #0b0f14 · text #52707c · deep #006080 · teal #0184a2 · aqua #09e2f1
+   Sections: 1 tokens + page  2 list hero + search  3 list cards  4 states + buttons
+             5 profile hero  6 profile layout  7 responsive
+
+   Classes starting with "fl-" belong to the list page (and shared parts such as
+   badges and chips), classes starting with "flp-" belong to the profile page.
+
+   Removed from the old file, because they leaked into the WHOLE app:
+   - the global  * { box-sizing }  rule (now scoped to .fl-page)
+   - the global  button, a { min-height: 44px; min-width: 44px }  rule on phones
+========================================================= */
+
+/* ---------- 1. tokens + page ---------- */
+.fl-page {
+  --vc-ink: #0b0f14;
+  --vc-text: #52707c;
+  --vc-deep: #006080;
+  --vc-teal: #0184a2;
+  --vc-aqua: #09e2f1;
+  --vc-tint: #e6f6f9;
+  --vc-mist: #f5fafc;
+  --vc-line: #d6e7ec;
+  --vc-grad: linear-gradient(135deg, #00607f 0%, #0184a2 100%);   /* buttons and avatars */
+  --fl-top-gap: 16px;                    /* space between the floating navbar and the teal panel. Change this one number to move the page up or down */
+
+  box-sizing: border-box;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: var(--fl-top-gap) 40px 48px;
+  font-family: Inter, sans-serif;
+  color: #1c262d;
+}
+.fl-page *, .fl-page *::before, .fl-page *::after { box-sizing: border-box; }
+.fl-page button, .fl-page input { font-family: inherit; }
+.fl-page button:focus-visible, .fl-page a:focus-visible { outline: 3px solid var(--vc-aqua); outline-offset: 2px; }
+.fl-page svg { flex: none; width: 16px; height: 16px; stroke: var(--vc-teal); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- 2. list hero + search (teal gradient panel, same look as the jobs page) ---------- */
+.fl-page .fl-hero,
+.fl-page .flp-hero {
+  position: relative; overflow: hidden;
+  margin: 0 0 20px;
+  border-radius: 24px;
+  background: linear-gradient(175deg, #0a7a96 0%, #0b6f89 55%, #07566e 100%);
+  box-shadow: 0 18px 40px rgba(1, 80, 100, 0.18);
+}
+.fl-page .fl-hero { padding: 28px 30px 22px; }
+.fl-page .fl-hero::before,
+.fl-page .flp-hero::before {             /* diagonal hatch texture, stronger toward the bottom */
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 8px);
+  -webkit-mask: linear-gradient(180deg, transparent 10%, #000 100%); mask: linear-gradient(180deg, transparent 10%, #000 100%);
+}
+.fl-page .fl-hero::after,
+.fl-page .flp-hero::after {              /* aqua glow in the top-right corner */
+  content: ""; position: absolute; top: -170px; right: -120px; width: 380px; height: 380px; pointer-events: none;
+  background: radial-gradient(circle, rgba(9, 226, 241, 0.38), transparent 65%);
+}
+.fl-page .fl-hero > *,
+.fl-page .flp-hero > * { position: relative; z-index: 1; }
+
+.fl-page .fl-h1 { margin: 0; font-size: 32px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
+.fl-page .fl-subtitle { margin: 6px 0 0; font-size: 14.5px; line-height: 1.5; color: rgba(255, 255, 255, 0.88); }
+
+.fl-page .fl-search { position: relative; max-width: 620px; margin: 18px 0 0; }
+.fl-page .fl-search svg {
+  position: absolute; left: 16px; top: 50%; translate: 0 -50%; width: 18px; pointer-events: none;
+  stroke: var(--vc-deep); stroke-width: 2.2;
+}
+.fl-page .fl-search input {
+  display: block; width: 100%; height: 46px; padding: 0 18px 0 44px;
+  border: 0; border-radius: 999px; background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 25, 45, 0.14);
+  font-size: 14px; font-weight: 500; color: var(--vc-ink);
+  outline: none;
+}
+.fl-page .fl-search input::placeholder { color: #8aa5ae; }
+.fl-page .fl-search input:focus { box-shadow: 0 0 0 4px rgba(9, 226, 241, 0.4); }
+
+.fl-page .fl-count-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 12px; min-height: 26px; margin: 14px 0 0; }
+.fl-page .fl-count { margin: 0; font-size: 13.5px; font-weight: 600; color: rgba(255, 255, 255, 0.9); }
+.fl-page .fl-count-right { display: flex; align-items: center; gap: 10px; }
+.fl-page .fl-live { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: rgba(255, 255, 255, 0.92); }
+.fl-page .fl-live i { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.25); }
+.fl-page .fl-clear {
+  padding: 4px 12px; border: 0; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16); color: #fff;
+  font-size: 12.5px; font-weight: 700; white-space: nowrap; cursor: pointer;
+}
+.fl-page .fl-clear:hover { background: rgba(255, 255, 255, 0.28); }
+
+/* ---------- 3. list cards ---------- */
+.fl-page .fl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+
+.fl-page .fl-card {
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 0 20px 20px;
+  border: 1px solid var(--vc-line); border-radius: 20px; background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 96, 128, 0.06);
+}
+.fl-page .fl-card:hover { border-color: #a9d8e3; box-shadow: 0 10px 26px rgba(0, 96, 128, 0.14); }
+
+.fl-page .fl-banner {                    /* gradient strip behind the avatar */
+  position: relative; overflow: hidden; align-self: stretch; height: 84px; margin: 0 -20px;
+  background: linear-gradient(135deg, #0a7a96 0%, #07566e 100%);
+}
+.fl-page .fl-banner::before {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0 1px, transparent 1px 8px);
+}
+.fl-page .fl-banner::after {
+  content: ""; position: absolute; top: -90px; right: -60px; width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(9, 226, 241, 0.4), transparent 65%);
+}
+
+.fl-page .fl-avatar {
+  position: relative; z-index: 1; overflow: hidden;
+  display: grid; place-items: center; width: 84px; height: 84px; margin-top: -42px;
+  border: 4px solid #fff; border-radius: 50%;
+  background: var(--vc-grad); color: #fff; font-size: 30px; font-weight: 800;
+  box-shadow: 0 8px 18px rgba(0, 96, 128, 0.25);
+}
+.fl-page .fl-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+.fl-page .fl-name { margin: 12px 0 0; font-size: 18px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em; color: var(--vc-ink); overflow-wrap: anywhere; }
+.fl-page .fl-expertise { margin: 4px 0 0; font-size: 14px; font-weight: 600; color: var(--vc-deep); overflow-wrap: anywhere; }
+.fl-page .fl-location { display: inline-flex; align-items: center; gap: 6px; margin: 10px 0 0; font-size: 13px; font-weight: 500; color: #5b6b74; }
+
+.fl-page .fl-skills { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 14px 0 0; }
+.fl-page .fl-skill {
+  padding: 4px 11px; border-radius: 999px;
+  background: var(--vc-tint); color: var(--vc-deep);
+  font-size: 12.5px; font-weight: 600; line-height: 1.5;
+}
+.fl-page .fl-skill.fl-more { border: 1px solid var(--vc-line); background: #fff; color: var(--vc-text); }
+
+.fl-page .fl-card-foot { width: 100%; margin-top: auto; padding-top: 18px; }
+.fl-page .fl-view-btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; height: 44px; padding: 0 16px;
+  border: 0; border-radius: 12px; background: var(--vc-grad); color: #fff;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: filter 0.15s;
+}
+.fl-page .fl-view-btn:hover { filter: brightness(1.1); }
+.fl-page .fl-view-btn i { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); }
+.fl-page .fl-view-btn i svg { width: 12px; stroke: #fff; stroke-width: 2.4; }
+
+/* availability badge (used on cards, in the profile hero and in the sidebar) */
+.fl-page .fl-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 12px 5px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; white-space: nowrap;
+}
+.fl-page .fl-badge i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; font-style: normal; }
+.fl-page .fl-available { background: #e6f9ef; color: #0b7a43; }
+.fl-page .fl-occupied { background: #fff3e0; color: #a35a00; }
+.fl-page .fl-card .fl-badge { position: absolute; top: 12px; right: 12px; z-index: 2; box-shadow: 0 4px 10px rgba(0, 25, 45, 0.18); }
+
+/* ---------- 4. states + buttons ---------- */
+.fl-page .fl-state { margin: 0; padding: 48px 0; text-align: center; font-size: 15px; color: var(--vc-text); }
+
+.fl-page .fl-empty {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 56px 24px;
+  border: 1px dashed #b9d6de; border-radius: 20px; background: var(--vc-mist);
+}
+.fl-page .fl-empty-icon { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 0 16px; border-radius: 50%; background: var(--vc-tint); }
+.fl-page .fl-empty-icon svg { width: 28px; height: 28px; }
+.fl-page .fl-empty h2 { margin: 0; font-size: 20px; line-height: 1.3; font-weight: 800; color: var(--vc-ink); }
+.fl-page .fl-empty p { margin: 6px 0 0; max-width: 30em; font-size: 14.5px; line-height: 1.6; color: var(--vc-text); }
+.fl-page .fl-empty.is-error { border-color: #f1c4bd; background: #fff8f6; }
+.fl-page .fl-empty.is-error .fl-empty-icon { background: #fdeceb; }
+.fl-page .fl-empty.is-error .fl-empty-icon svg { stroke: #d6361f; }
+
+.fl-page .fl-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; margin-top: 18px; padding: 0 22px;
+  border: 0; border-radius: 12px; background: var(--vc-grad); color: #fff;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+}
+.fl-page .fl-btn:hover { filter: brightness(1.1); }
+.fl-page .fl-btn svg { stroke: #fff; }
+
+/* ---------- 5. profile hero ---------- */
+.fl-page .flp-hero { padding: 22px 30px 30px; }
+
+.fl-page .flp-back {
+  display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 16px 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.28); border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12); color: #fff;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+}
+.fl-page .flp-back:hover { background: rgba(255, 255, 255, 0.22); }
+.fl-page .flp-back svg { stroke: #fff; }
+
+.fl-page .flp-hero-main { display: flex; align-items: center; gap: 24px; margin: 20px 0 0; }
+.fl-page .flp-avatar {
+  display: grid; place-items: center; flex: none; overflow: hidden; width: 116px; height: 116px;
+  border: 4px solid rgba(255, 255, 255, 0.92); border-radius: 50%;
+  background: linear-gradient(135deg, #00607f, #09e2f1); color: #fff; font-size: 44px; font-weight: 800;
+  box-shadow: 0 12px 28px rgba(0, 25, 45, 0.3);
+}
+.fl-page .flp-avatar img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.fl-page .flp-hero-text { flex: 1; min-width: 0; }
+.fl-page .flp-name { margin: 0; font-size: 32px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; color: #fff; overflow-wrap: anywhere; }
+.fl-page .flp-expertise { margin: 6px 0 0; font-size: 16px; font-weight: 600; color: rgba(255, 255, 255, 0.92); overflow-wrap: anywhere; }
+.fl-page .flp-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+.fl-page .flp-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22); background: rgba(255, 255, 255, 0.14);
+  color: #fff; font-size: 12.5px; font-weight: 600;
+}
+.fl-page .flp-chip svg { stroke: #fff; }
+
+.fl-page .flp-hire {                     /* navy pill with the aqua arrow, same as the Search button on the jobs page */
+  display: flex; align-items: center; gap: 12px; flex: none; height: 46px; padding: 0 8px 0 24px;
+  border: 0; border-radius: 999px;
+  background: linear-gradient(180deg, #1c3a52 0%, #001d37 100%);
+  box-shadow: 0 6px 16px rgba(0, 29, 55, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  color: #fff; font-size: 14px; font-weight: 700; white-space: nowrap; cursor: pointer;
+}
+.fl-page .flp-hire:hover { background: linear-gradient(180deg, #24475f 0%, #082a49 100%); }
+.fl-page .flp-hire i { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #006080, #09e2f1); }
+.fl-page .flp-hire i svg { width: 13px; stroke: #fff; stroke-width: 2.4; }
+
+/* ---------- 6. profile layout ---------- */
+.fl-page .flp-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
+.fl-page .flp-main { display: grid; gap: 16px; min-width: 0; }
+.fl-page .flp-side { display: grid; gap: 16px; position: sticky; top: calc(var(--vc-hh, 84px) + 12px); min-width: 0; }   /* sticks just below the floating navbar */
+
+.fl-page .flp-section,
+.fl-page .flp-card {
+  border: 1px solid var(--vc-line); border-radius: 18px; background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 29, 55, 0.04), 0 6px 18px rgba(0, 96, 128, 0.05);
+}
+.fl-page .flp-section { padding: 26px 28px; }
+.fl-page .flp-card { padding: 22px 22px 20px; }
+.fl-page .flp-section-title { margin: 0 0 14px; font-size: 19px; line-height: 1.3; font-weight: 700; letter-spacing: -0.01em; color: var(--vc-ink); }
+.fl-page .flp-side-title { margin: 0 0 14px; font-size: 17px; line-height: 1.3; font-weight: 700; color: var(--vc-ink); }
+.fl-page .flp-paragraph { margin: 0; font-size: 15px; line-height: 1.75; color: #1c262d; white-space: pre-line; overflow-wrap: anywhere; }
+.fl-page .flp-muted { margin: 0; font-size: 14px; color: var(--vc-text); }
+
+/* education timeline */
+.fl-page .flp-edu { margin: 0; padding: 0; list-style: none; display: grid; gap: 22px; }
+.fl-page .flp-edu-item { position: relative; padding-left: 22px; border-left: 2px solid var(--vc-line); }
+.fl-page .flp-edu-item::before {
+  content: ""; position: absolute; left: -7px; top: 4px; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--vc-teal); box-shadow: 0 0 0 4px var(--vc-tint);
+}
+.fl-page .flp-edu-item h3 { margin: 0; font-size: 16px; line-height: 1.35; font-weight: 700; color: var(--vc-ink); overflow-wrap: anywhere; }
+.fl-page .flp-edu-school { margin: 3px 0 0; font-size: 14.5px; font-weight: 600; color: var(--vc-deep); overflow-wrap: anywhere; }
+.fl-page .flp-edu-year { display: inline-block; margin: 8px 0 0; padding: 3px 10px; border-radius: 999px; background: #f1f7f9; color: #2f4d5b; font-size: 12.5px; font-weight: 600; }
+.fl-page .flp-edu-item .flp-paragraph { margin: 10px 0 0; font-size: 14.5px; }
+
+/* sidebar fact rows */
+.fl-page .flp-facts { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+.fl-page .flp-facts li { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.fl-page .flp-facts li > svg {           /* icon tile */
+  display: grid; place-items: center; flex: none; width: 38px; height: 38px; padding: 9px; border-radius: 10px;
+  background: var(--vc-mist); border: 1px solid #e6f0f4;
+}
+.fl-page .flp-facts div { min-width: 0; }
+.fl-page .flp-facts span { display: block; font-size: 12.5px; font-weight: 500; color: #5b6b74; }
+.fl-page .flp-facts strong { display: block; margin: 1px 0 0; font-size: 14.5px; font-weight: 700; color: var(--vc-ink); overflow-wrap: anywhere; }
+.fl-page .flp-facts-compact { gap: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--vc-line); }
+
+.fl-page .flp-days { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--vc-line); }
+.fl-page .flp-days-label { display: block; font-size: 12.5px; font-weight: 500; color: #5b6b74; }
+.fl-page .flp-left { justify-content: flex-start; margin: 10px 0 0; }
+
+.fl-page .flp-links { display: grid; gap: 10px; }
+.fl-page .flp-links a {
+  display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+  border: 1px solid var(--vc-line); border-radius: 12px; background: var(--vc-mist);
+  color: var(--vc-ink); font-size: 14.5px; font-weight: 700; text-decoration: none;
+}
+.fl-page .flp-links a span { flex: 1; }
+.fl-page .flp-links a svg { width: 18px; height: 18px; }
+.fl-page .flp-links a svg:last-child { width: 15px; height: 15px; stroke: #5b6b74; }
+.fl-page .flp-links a:hover { border-color: var(--vc-teal); background: var(--vc-tint); }
+
+/* ---------- 7. responsive ---------- */
+@media (max-width: 960px) {
+  .fl-page { padding-left: 24px; padding-right: 24px; }
+  .fl-page .flp-layout { grid-template-columns: 1fr; }
+  .fl-page .flp-side { position: static; }
+  .fl-page .flp-hero-main { flex-wrap: wrap; }
+  .fl-page .flp-hero-text { flex: 1 1 280px; }
+  .fl-page .flp-hire { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 600px) {
+  .fl-page { --fl-top-gap: 12px; padding-left: 12px; padding-right: 12px; }
+  .fl-page .fl-hero { padding: 22px 16px 16px; border-radius: 20px; }
+  .fl-page .flp-hero { padding: 18px 16px 20px; border-radius: 20px; }
+  .fl-page .fl-h1 { font-size: 24px; }
+  .fl-page .fl-subtitle { font-size: 13.5px; }
+  .fl-page .fl-grid { grid-template-columns: 1fr; }
+  .fl-page .flp-hero-main { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .fl-page .flp-avatar { width: 92px; height: 92px; font-size: 36px; }
+  .fl-page .flp-hero-text { flex: none; width: 100%; }
+  .fl-page .flp-name { font-size: 25px; }
+  .fl-page .flp-section { padding: 20px 18px; border-radius: 14px; }
+  .fl-page .flp-card { padding: 20px 18px; border-radius: 14px; }
+}

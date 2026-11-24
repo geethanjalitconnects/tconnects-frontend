@@ -1,0 +1,227 @@
+/* PricingPage.css - v2 (white premium, logo colours). If you do not see this line at the top of your file, the old file is still in place. */
+
+/* =========================================================
+   Pricing page (PricingPage.jsx)
+
+   COLOUR PALETTE  (same as the jobs, job details and mock interview pages)
+   black  #0b0f14   headings, prices
+   body   #1c262d   feature text
+   muted  #5b6b74   small labels
+   deep   #006080   badges text, links
+   teal   #0184a2   icons, hover borders
+   aqua   #09e2f1   ribbon end, glow, focus ring
+   button gradient  #00506f -> #0088a6 -> #06c4db   (taken from the logo ribbon)
+   tint   #eaf7fa   soft fills
+   mist   #f5fafc   subtle surfaces
+   line   #dcebf0   borders
+
+   Sections: 1 tokens + page  2 hero  3 banner  4 sections + grids  5 cards  6 buttons  7 toast  8 responsive
+   Every class starts with "pr-" and every rule is scoped under ".pr-page", so older
+   pricing styles (and the old global :root colours) cannot override anything here.
+========================================================= */
+
+/* ---------- 1. tokens + page ---------- */
+.pr-page {
+  --vc-ink: #0b0f14;
+  --vc-body: #1c262d;
+  --vc-muted: #5b6b74;
+  --vc-deep: #006080;
+  --vc-teal: #0184a2;
+  --vc-aqua: #09e2f1;
+  --vc-tint: #eaf7fa;
+  --vc-mist: #f5fafc;
+  --vc-line: #dcebf0;
+  --vc-btn: linear-gradient(135deg, #00506f 0%, #0088a6 50%, #06c4db 100%);
+  --vc-grad-logo: linear-gradient(90deg, #006080 0%, #0184a2 55%, #09e2f1 100%);
+  --pr-top-gap: 16px;                    /* space under the floating navbar */
+
+  box-sizing: border-box;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: var(--pr-top-gap) 40px 64px;
+  font-family: Inter, sans-serif;
+  color: var(--vc-body);
+}
+.pr-page *, .pr-page *::before, .pr-page *::after { box-sizing: border-box; }
+.pr-page button { font-family: inherit; }
+.pr-page :focus-visible { outline: 3px solid var(--vc-aqua); outline-offset: 2px; }
+.pr-page svg { flex: none; width: 18px; height: 18px; stroke: var(--vc-teal); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- 2. hero ---------- */
+.pr-page .pr-hero {
+  position: relative; overflow: hidden;
+  margin: 0 0 32px; padding: 56px 32px 52px;
+  border: 1px solid var(--vc-line); border-radius: 28px;
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbfd 100%);
+  box-shadow: 0 1px 2px rgba(0, 29, 55, 0.04), 0 22px 50px rgba(0, 96, 128, 0.09);
+  text-align: center;
+}
+.pr-page .pr-hero::before {              /* logo-colour ribbon along the top edge */
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; pointer-events: none;
+  background: var(--vc-grad-logo);
+}
+.pr-page .pr-hero::after {               /* very soft aqua glow, top-right */
+  content: ""; position: absolute; top: -200px; right: -140px; width: 480px; height: 480px; pointer-events: none;
+  background: radial-gradient(circle, rgba(9, 226, 241, 0.16), transparent 65%);
+}
+.pr-page .pr-hero > * { position: relative; z-index: 1; }
+.pr-page .pr-hero-title { margin: 0; font-size: 44px; line-height: 1.15; font-weight: 800; letter-spacing: -0.03em; color: var(--vc-ink); }
+.pr-page .pr-hero-sub { max-width: 560px; margin: 16px auto 0; font-size: 16.5px; line-height: 1.65; color: #3f4b53; }
+
+/* ---------- 3. active plan banner ---------- */
+.pr-page .pr-banner {
+  display: flex; align-items: center; gap: 16px; max-width: 880px; margin: 0 auto 40px; padding: 16px 20px;
+  border: 1px solid #bfe0e9; border-radius: 16px; background: var(--vc-tint);
+}
+.pr-page .pr-banner-icon {
+  display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 12px; background: #fff;
+  border: 1px solid var(--vc-line); box-shadow: 0 4px 10px rgba(0, 96, 128, 0.08);
+}
+.pr-page .pr-banner-icon svg { width: 22px; height: 22px; }
+.pr-page .pr-banner strong { display: block; font-size: 15px; font-weight: 700; color: var(--vc-ink); }
+.pr-page .pr-banner small { display: block; margin: 3px 0 0; font-size: 13px; color: var(--vc-muted); }
+
+/* ---------- 4. sections + grids ---------- */
+.pr-page .pr-section { margin: 0 0 64px; }
+.pr-page .pr-section-title { margin: 0; text-align: center; font-size: 28px; line-height: 1.25; font-weight: 800; letter-spacing: -0.02em; color: var(--vc-ink); }
+.pr-page .pr-section-sub { max-width: 560px; margin: 10px auto 36px; text-align: center; font-size: 15px; line-height: 1.6; color: var(--vc-muted); }
+
+.pr-page .pr-grid { display: grid; gap: 24px; margin: 0 auto; align-items: stretch; }
+.pr-page .pr-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 840px; }
+.pr-page .pr-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* ---------- 5. cards ---------- */
+.pr-page .pr-card {
+  position: relative; display: flex; flex-direction: column;
+  padding: 34px 28px 28px;
+  border: 1px solid var(--vc-line); border-radius: 22px; background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 29, 55, 0.04), 0 8px 24px rgba(0, 96, 128, 0.06);
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.pr-page .pr-card:hover { border-color: #a9d8e3; box-shadow: 0 1px 2px rgba(0, 29, 55, 0.04), 0 18px 40px rgba(0, 96, 128, 0.13); transform: translateY(-3px); }
+
+/* most popular: logo-gradient outline + soft glow. It is the one card that stands out. */
+.pr-page .pr-card.is-popular {
+  border: 2px solid transparent;
+  background: linear-gradient(#fff, #fff) padding-box, var(--vc-grad-logo) border-box;
+  box-shadow: 0 1px 2px rgba(0, 29, 55, 0.04), 0 22px 48px rgba(1, 132, 162, 0.2);
+}
+.pr-page .pr-card.is-popular:hover { box-shadow: 0 1px 2px rgba(0, 29, 55, 0.04), 0 26px 56px rgba(1, 132, 162, 0.26); }
+.pr-page .pr-card.is-current { border-color: var(--vc-teal); background: linear-gradient(180deg, #ffffff 0%, #f1fafc 100%); }
+
+.pr-page .pr-badge {
+  align-self: flex-start; margin: 0 0 16px; padding: 4px 12px; border-radius: 999px;
+  font-size: 12.5px; font-weight: 700; line-height: 1.5;
+}
+.pr-page .pr-badge-soft { background: var(--vc-tint); color: var(--vc-deep); }
+.pr-page .pr-badge-grad { background: var(--vc-btn); color: #fff; text-shadow: 0 1px 2px rgba(0, 50, 70, 0.3); }
+
+.pr-page .pr-plan-icon {
+  display: grid; place-items: center; width: 48px; height: 48px; margin: 0 0 14px; border-radius: 14px;
+  background: var(--vc-mist); border: 1px solid #e6f0f4;
+}
+.pr-page .pr-plan-icon svg { width: 22px; height: 22px; }
+.pr-page .pr-plan-name { margin: 0; font-size: 20px; line-height: 1.3; font-weight: 700; letter-spacing: -0.01em; color: var(--vc-ink); }
+.pr-page .pr-price { margin: 8px 0 0; font-size: 42px; line-height: 1.1; font-weight: 800; letter-spacing: -0.03em; color: var(--vc-ink); }
+.pr-page .pr-price span { font-size: 16px; font-weight: 600; letter-spacing: 0; color: var(--vc-muted); }
+.pr-page .pr-duration { margin: 4px 0 22px; font-size: 13.5px; color: var(--vc-muted); }
+
+.pr-page .pr-features { flex: 1; margin: 0 0 24px; padding: 18px 0 0; list-style: none; border-top: 1px solid var(--vc-line); display: grid; gap: 12px; align-content: start; }
+.pr-page .pr-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 14.5px; line-height: 1.45; color: var(--vc-body); }
+.pr-page .pr-features li.is-off { color: #8a99a1; }
+.pr-page .pr-tick {
+  display: grid; place-items: center; flex: none; width: 20px; height: 20px; margin: 1px 0 0; border-radius: 50%;
+  background: var(--vc-tint);
+}
+.pr-page .pr-tick svg { width: 12px; height: 12px; stroke-width: 3; }
+.pr-page .pr-tick-off { background: #eef2f4; }
+.pr-page .pr-tick-off svg { stroke: #a5b2b9; }
+
+.pr-page .pr-note { margin: 0 0 14px; font-size: 13.5px; font-weight: 500; color: var(--vc-muted); }
+.pr-page .pr-note-ok { font-weight: 700; color: var(--vc-deep); }
+
+/* ---------- 6. buttons ---------- */
+.pr-page .pr-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 100%; height: 48px; padding: 0 20px; border: 0; border-radius: 12px;
+  font-size: 15px; font-weight: 700; line-height: 1; cursor: pointer;
+  transition: filter 0.15s;
+}
+.pr-page .pr-btn-primary {
+  background: var(--vc-btn); color: #fff; text-shadow: 0 1px 2px rgba(0, 50, 70, 0.35);
+  box-shadow: 0 8px 20px rgba(0, 136, 166, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.pr-page .pr-btn-primary:hover:not(:disabled) { filter: brightness(1.1); }
+.pr-page .pr-btn:disabled { cursor: not-allowed; }
+.pr-page .pr-btn-disabled,
+.pr-page .pr-btn-disabled:disabled { background: #eef2f4; color: #8a99a1; box-shadow: none; text-shadow: none; }
+.pr-page .pr-btn-primary:disabled:not(.pr-btn-disabled) { opacity: 0.6; }
+
+/* ---------- 7. toast + footer note ---------- */
+.pr-page .pr-toast {
+  position: fixed; top: 20px; right: 20px; z-index: 9999; max-width: min(420px, calc(100vw - 40px));
+  padding: 14px 20px; border-radius: 14px; font-size: 14.5px; font-weight: 600; line-height: 1.4; color: #fff;
+  box-shadow: 0 12px 32px rgba(0, 29, 55, 0.25);
+  animation: pr-fade 0.25s ease;
+}
+.pr-page .pr-toast-success { background: linear-gradient(135deg, #00506f, #0088a6); }
+.pr-page .pr-toast-warning { background: #b45309; }
+@keyframes pr-fade { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .pr-page .pr-toast { animation: none; } .pr-page .pr-card { transition: none; } }
+
+.pr-page .pr-foot { margin: 0; text-align: center; font-size: 13px; color: var(--vc-muted); }
+
+/* ---------- 8. responsive ---------- */
+@media (max-width: 1000px) {
+  .pr-page { padding-left: 24px; padding-right: 24px; }
+  .pr-page .pr-grid-3 { grid-template-columns: 1fr; max-width: 520px; }
+  .pr-page .pr-hero-title { font-size: 36px; }
+}
+
+@media (max-width: 700px) {
+  .pr-page .pr-grid-2 { grid-template-columns: 1fr; max-width: 520px; }
+}
+
+@media (max-width: 600px) {
+  .pr-page { --pr-top-gap: 12px; padding-left: 12px; padding-right: 12px; }
+  .pr-page .pr-hero { border-radius: 22px; padding: 40px 18px 36px; }
+  .pr-page .pr-hero-title { font-size: 28px; }
+  .pr-page .pr-hero-sub { font-size: 15px; }
+  .pr-page .pr-section { margin-bottom: 48px; }
+  .pr-page .pr-section-title { font-size: 23px; }
+  .pr-page .pr-card { padding: 28px 20px 22px; border-radius: 18px; }
+  .pr-page .pr-price { font-size: 36px; }
+  .pr-page .pr-banner { padding: 14px; }
+}
+/* ─────────────────────────────────────────────────────────────
+   ADD THIS to the bottom of your existing PricingPage.css
+   Styles for the struck-out original price + "xx% OFF" tag
+   on the subscription cards.
+   ───────────────────────────────────────────────────────────── */
+
+.pr-original-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 2px;
+  flex-wrap: wrap;
+}
+
+.pr-original-price {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #8a94a6;
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+
+.pr-discount-tag {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: #e6f6f9;
+  color: #0088a6;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}

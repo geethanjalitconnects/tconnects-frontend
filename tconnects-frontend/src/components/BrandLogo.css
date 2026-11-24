@@ -1,0 +1,91 @@
+/* VConnects brand tokens, taken from the logo's teal-to-cyan range.
+   Text colours are darkened from the logo so they stay readable on white. */
+:root {
+  --vc-ink: #06242f;
+  --vc-muted: #3f5862;
+  --vc-accent: #00708f;
+  --vc-accent-strong: #02546c;
+  --vc-highlight: #007c9e;
+  --vc-tone: #eff6f8;
+  --vc-tone-strong: #dfeef2;
+  --vc-white: #ffffff;
+  --vc-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.vc-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  --vc-logo-height: 30px;
+}
+
+.vc-logo__mark {
+  position: relative;
+  display: block;
+  flex: none;
+  height: var(--vc-logo-height);
+  overflow: hidden;
+}
+
+.vc-logo__mark img {
+  position: absolute;
+  max-width: none;
+  height: auto;
+  /* Removes the JPEG's near-white background on light surfaces. */
+  mix-blend-mode: multiply;
+}
+
+.vc-logo__name {
+  font-family: var(--vc-font);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--vc-ink);
+}
+
+.vc-logo--badge .vc-logo__mark {
+  box-sizing: content-box;
+  padding: 7px 9px;
+  border-radius: 10px;
+  background: var(--vc-white);
+}
+
+.vc-logo--badge .vc-logo__mark img {
+  mix-blend-mode: normal;
+}
+
+.vc-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100svh;
+  background: var(--vc-white);
+}
+
+.vc-loader__logo {
+  --vc-logo-height: 40px;
+  animation: vc-loader-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes vc-loader-pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (max-width: 400px) {
+  .vc-logo {
+    --vc-logo-height: 26px;
+  }
+
+  .vc-logo__name {
+    font-size: 1.15rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vc-loader__logo {
+    animation: none;
+  }
+}

@@ -1,0 +1,58 @@
+import React, { createContext, useContext, useEffect, useState } from "react";
+import api from "../config/api";
+
+const SavedInternshipsContext = createContext();
+export const useSavedInternships = () => useContext(SavedInternshipsContext);
+
+export function SavedInternshipsProvider({ children, enabled = true }) {
+  const [savedIds, setSavedIds] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadSaved = async () => {
+    try {
+      const res = await api.get("/api/applications/saved-internships/");
+      const data = res.data.results ?? res.data;
+      setSavedIds(data.map((i) => i.internship.id));
+    } catch (err) {
+      console.error("Failed to load saved internships:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleSave = async (id) => {
+    try {
+      if (savedIds.includes(Number(id))) {
+        await api.delete(`/api/applications/saved-internships/remove/${id}/`);
+        setSavedIds((prev) => prev.filter((x) => x !== Number(id)));
+      } else {
+        await api.post("/api/applications/saved-internships/add/", {
+          internship_id: id,
+        });
+        setSavedIds((prev) => [...prev, Number(id)]);
+      }
+    } catch (err) {
+      console.error("Save/Unsave internship failed:", err);
+      await loadSaved();
+    }
+  };
+
+  // Waits for the login check, so requests run in the same order as before
+  // even though the homepage now renders during that check.
+  useEffect(() => {
+    if (!enabled) return undefined;
+    loadSaved();
+
+    const onFocus = () => loadSaved();
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
+  }, [enabled]);
+
+  return (
+    <SavedInternshipsContext.Provider
+      value={{ savedIds, toggleSave, loading }}
+    >
+      {children}
+    </SavedInternshipsContext.Provider>
+  );
+}

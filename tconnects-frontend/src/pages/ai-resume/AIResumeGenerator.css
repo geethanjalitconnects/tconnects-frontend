@@ -1,0 +1,214 @@
+/* AIResumeGenerator.css - v2 (white premium, logo colours). If you do not see this line at the top of your file, the old file is still in place. */
+
+/* =========================================================
+   AI Resume Generator page
+
+   COLOUR PALETTE  (same as the jobs, job details, mock interview and pricing pages)
+   black  #0b0f14   headings and main text
+   body   #1c262d   paragraphs
+   muted  #5b6b74   hints and small labels
+   deep   #006080   badge text, resume section titles
+   teal   #0184a2   icons, hover and focus borders
+   aqua   #09e2f1   ribbon end, glow, focus ring
+   button gradient  #00506f -> #0088a6 -> #06c4db   (taken from the logo ribbon)
+   tint   #eaf7fa   tags and soft fills
+   mist   #f5fafc   inputs
+   line   #dcebf0   borders
+
+   Sections: 1 tokens + page  2 header  3 cards + fields  4 buttons + messages
+             5 preview  6 resume document  7 responsive
+
+   The class names are the same as v1, so AIResumeGenerator.jsx needs no change.
+   Page rules are scoped under ".ai-resume-page"; the ".resume-*" document rules are left
+   unscoped on purpose, in case the same resume markup is used for print or PDF elsewhere.
+========================================================= */
+
+/* ---------- 1. tokens + page ---------- */
+.ai-resume-page {
+  --vc-ink: #0b0f14;
+  --vc-body: #1c262d;
+  --vc-muted: #5b6b74;
+  --vc-deep: #006080;
+  --vc-teal: #0184a2;
+  --vc-aqua: #09e2f1;
+  --vc-tint: #eaf7fa;
+  --vc-mist: #f5fafc;
+  --vc-line: #dcebf0;
+  --vc-btn: linear-gradient(135deg, #00506f 0%, #0088a6 50%, #06c4db 100%);
+  --vc-grad-logo: linear-gradient(90deg, #006080 0%, #0184a2 55%, #09e2f1 100%);
+  --ai-top-gap: 16px;                    /* space under the floating navbar. Was 100px, which left a big empty gap */
+
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  padding: var(--ai-top-gap) 40px 48px;
+  background: #fff;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--vc-body);
+}
+.ai-resume-page *, .ai-resume-page *::before, .ai-resume-page *::after { box-sizing: border-box; }
+.ai-resume-page button, .ai-resume-page input, .ai-resume-page select, .ai-resume-page textarea { font-family: inherit; }
+.ai-resume-page :focus-visible { outline: 3px solid var(--vc-aqua); outline-offset: 2px; }
+
+.ai-resume-page .ai-resume-shell {
+  position: relative; overflow: hidden;
+  width: 100%; max-width: 1240px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 28px;
+  padding: 36px 32px 32px;
+  border: 1px solid var(--vc-line); border-radius: 28px;
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbfd 100%);
+  box-shadow: 0 1px 2px rgba(0, 29, 55, 0.04), 0 22px 50px rgba(0, 96, 128, 0.09);
+}
+.ai-resume-page .ai-resume-shell::before {   /* logo-colour ribbon along the top edge */
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; pointer-events: none;
+  background: var(--vc-grad-logo);
+}
+.ai-resume-page .ai-resume-shell::after {    /* very soft aqua glow, top-right */
+  content: ""; position: absolute; top: -200px; right: -140px; width: 480px; height: 480px; pointer-events: none;
+  background: radial-gradient(circle, rgba(9, 226, 241, 0.14), transparent 65%);
+}
+.ai-resume-page .ai-resume-shell > * { position: relative; z-index: 1; }
+
+.ai-resume-page .ai-resume-left,
+.ai-resume-page .ai-resume-right { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.ai-resume-page .ai-resume-right { position: sticky; top: 16px; align-self: start; }   /* preview stays in view while the form scrolls */
+
+/* ---------- 2. page header ---------- */
+.ai-resume-page .ai-resume-page-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.ai-resume-page .ai-resume-page-title { margin: 0; font-size: 32px; line-height: 1.15; font-weight: 800; letter-spacing: -0.025em; color: var(--vc-ink); }
+.ai-resume-page .ai-resume-page-subtitle { margin: 8px 0 0; font-size: 15px; line-height: 1.55; color: var(--vc-muted); }
+.ai-resume-page .ai-resume-badge {
+  flex: none; padding: 5px 12px; border-radius: 999px; border: 0;
+  background: var(--vc-tint); color: var(--vc-deep); font-size: 12.5px; font-weight: 700; white-space: nowrap;
+}
+
+/* ---------- 3. cards + form fields ---------- */
+.ai-resume-page .ai-resume-card {
+  padding: 22px 24px;
+  border: 1px solid var(--vc-line); border-radius: 18px; background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 29, 55, 0.04), 0 6px 18px rgba(0, 96, 128, 0.05);
+}
+.ai-resume-page .ai-resume-card-title { margin: 0 0 14px; font-size: 18px; line-height: 1.3; font-weight: 700; letter-spacing: -0.01em; color: var(--vc-ink); }
+
+.ai-resume-page .ai-resume-field-group { display: flex; flex-direction: column; gap: 7px; margin: 0 0 16px; }
+.ai-resume-page .ai-resume-label-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.ai-resume-page .ai-resume-label { font-size: 14px; font-weight: 600; color: var(--vc-ink); }
+.ai-resume-page .ai-resume-label-hint { font-size: 12.5px; color: var(--vc-muted); }
+
+.ai-resume-page .ai-resume-input,
+.ai-resume-page .ai-resume-textarea,
+.ai-resume-page .ai-resume-select {
+  display: block; width: 100%; padding: 11px 14px;
+  border: 1px solid var(--vc-line); border-radius: 12px; background-color: var(--vc-mist);
+  font-size: 14.5px; line-height: 1.5; color: var(--vc-ink);
+  outline: none; box-shadow: none;
+  transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+.ai-resume-page .ai-resume-input { height: 46px; padding-top: 0; padding-bottom: 0; }
+.ai-resume-page .ai-resume-input::placeholder,
+.ai-resume-page .ai-resume-textarea::placeholder { color: #8aa5ae; }
+.ai-resume-page .ai-resume-input:hover,
+.ai-resume-page .ai-resume-textarea:hover,
+.ai-resume-page .ai-resume-select:hover { border-color: #b9dbe5; }
+.ai-resume-page .ai-resume-input:focus,
+.ai-resume-page .ai-resume-textarea:focus,
+.ai-resume-page .ai-resume-select:focus { border-color: var(--vc-teal); background-color: #fff; box-shadow: 0 0 0 4px rgba(9, 226, 241, 0.22); }
+
+.ai-resume-page .ai-resume-textarea { min-height: 120px; resize: vertical; }
+.ai-resume-page .ai-resume-select {      /* own arrow instead of the browser's */
+  height: 46px; padding-top: 0; padding-bottom: 0; padding-right: 40px;
+  appearance: none; -webkit-appearance: none; cursor: pointer;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23006080' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat; background-position: right 16px center; background-size: 12px 8px;
+}
+
+/* ---------- 4. buttons + messages ---------- */
+.ai-resume-page .ai-resume-actions-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 8px 0 0; }
+
+.ai-resume-page .ai-resume-btn-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 46px; padding: 0 24px; border: 0; border-radius: 12px;
+  background: var(--vc-btn); color: #fff; text-shadow: 0 1px 2px rgba(0, 50, 70, 0.35);
+  font-size: 14.5px; font-weight: 700; line-height: 1; cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 136, 166, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: filter 0.15s;
+}
+.ai-resume-page .ai-resume-btn-primary:hover:not(:disabled) { filter: brightness(1.1); }
+.ai-resume-page .ai-resume-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; box-shadow: none; }
+
+.ai-resume-page .ai-resume-btn-secondary {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 46px; padding: 0 20px; border: 1.5px solid #bfe0e9; border-radius: 12px; background: #fff;
+  font-size: 14px; font-weight: 700; color: var(--vc-deep); cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.ai-resume-page .ai-resume-btn-secondary:hover { background: var(--vc-tint); border-color: var(--vc-teal); color: var(--vc-deep); }
+
+.ai-resume-page .ai-resume-status-text { margin: 10px 0 0; font-size: 13.5px; color: var(--vc-muted); }
+.ai-resume-page .ai-resume-status-error {
+  margin: 10px 0 0; padding: 10px 14px;
+  border: 1px solid #f1c9c4; border-radius: 12px; background: #fff4f2;
+  font-size: 13.5px; line-height: 1.5; color: #a4281c;
+}
+
+/* ---------- tips chips ---------- */
+.ai-resume-page .ai-resume-chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.ai-resume-page .ai-resume-chip {
+  padding: 5px 12px; border: 0; border-radius: 999px;
+  background: var(--vc-tint); color: var(--vc-deep); font-size: 12.5px; font-weight: 600;
+}
+
+/* ---------- 5. preview wrapper (looks like a sheet of paper) ---------- */
+.ai-resume-page .ai-resume-preview-wrapper {
+  flex: 1; overflow-y: auto; max-height: calc(100vh - 200px);
+  padding: 26px 30px;
+  border: 1px solid var(--vc-line); border-radius: 18px; background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 29, 55, 0.04), 0 12px 30px rgba(0, 96, 128, 0.08);
+  color: var(--vc-body); font-size: 14.5px; line-height: 1.6;       /* the "No resume yet" message uses these */
+  scrollbar-width: thin; scrollbar-color: #b9dbe5 transparent;
+}
+.ai-resume-page .ai-resume-preview-wrapper strong { color: var(--vc-ink); }
+
+/* ---------- 6. resume document ---------- */
+.resume-header { margin: 0 0 16px; padding: 0 0 12px; border-bottom: 2px solid #0184a2; }
+.resume-name { font-size: 1.6rem; line-height: 1.2; font-weight: 800; letter-spacing: -0.02em; color: #0b0f14; }
+.resume-headline { margin-top: 4px; font-size: 0.95rem; font-weight: 600; color: #006080; }
+.resume-contact { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 0.8rem; color: #5b6b74; }
+
+.resume-section { margin-bottom: 16px; }
+.resume-section-title {
+  margin: 0 0 8px; padding: 0 0 4px; border-bottom: 1px solid #dcebf0;
+  font-size: 0.8rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #006080;
+}
+.resume-summary { font-size: 0.88rem; line-height: 1.6; color: #1c262d; }
+
+.resume-skills-row { display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.8rem; }
+.resume-tag { padding: 3px 10px; border-radius: 999px; background: #eaf7fa; color: #006080; font-weight: 600; }
+
+.resume-entry { margin-bottom: 12px; }
+.resume-entry-title-row { display: flex; justify-content: space-between; gap: 12px; font-size: 0.9rem; font-weight: 700; color: #0b0f14; }
+.resume-entry-sub { margin-top: 2px; font-size: 0.8rem; color: #5b6b74; }
+.resume-bullets { margin: 6px 0 0; padding-left: 18px; font-size: 0.84rem; line-height: 1.6; color: #1c262d; }
+.resume-bullets li { margin-bottom: 2px; }
+
+/* ---------- 7. responsive ---------- */
+@media (max-width: 960px) {
+  .ai-resume-page { padding-left: 24px; padding-right: 24px; }
+  .ai-resume-page .ai-resume-shell { grid-template-columns: 1fr; padding: 28px 22px 24px; }
+  .ai-resume-page .ai-resume-right { position: static; }
+  .ai-resume-page .ai-resume-preview-wrapper { max-height: none; }
+}
+
+@media (max-width: 600px) {
+  .ai-resume-page { --ai-top-gap: 12px; padding-left: 12px; padding-right: 12px; }
+  .ai-resume-page .ai-resume-shell { border-radius: 22px; padding: 24px 16px 18px; gap: 20px; }
+  .ai-resume-page .ai-resume-page-header { flex-direction: column; gap: 10px; }
+  .ai-resume-page .ai-resume-page-title { font-size: 26px; }
+  .ai-resume-page .ai-resume-card { padding: 18px 16px; border-radius: 16px; }
+  .ai-resume-page .ai-resume-label-row { flex-direction: column; gap: 2px; }
+  .ai-resume-page .ai-resume-actions-row .ai-resume-btn-primary,
+  .ai-resume-page .ai-resume-actions-row .ai-resume-btn-secondary { flex: 1; }
+  .ai-resume-page .ai-resume-preview-wrapper { padding: 20px 16px; }
+}

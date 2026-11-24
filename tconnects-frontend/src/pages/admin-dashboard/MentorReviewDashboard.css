@@ -1,0 +1,629 @@
+/* ================================
+   TCONNECTS MENTOR REVIEW DASHBOARD
+   Restyle: flat, joined status strip, dot badges
+   Same class names as before, drop-in replacement
+================================ */
+
+main.mentor-review-dashboard {
+  --mr-primary: #087f8c;
+  --mr-primary-dark: #065966;
+  --mr-primary-soft: #e6f4f5;
+
+  --mr-ink: #12313a;
+  --mr-muted: #5f7780;
+  --mr-faint: #8fa2a9;
+  --mr-line: #d9e3e6;
+  --mr-line-soft: #e9f0f2;
+  --mr-surface: #ffffff;
+  --mr-background: #eff4f5;
+
+  /* status accents (stat cards + badges) */
+  --mr-amber: #b7791f;
+  --mr-amber-soft: #fdf3dc;
+  --mr-green: #1f7a4d;
+  --mr-green-soft: #e2f4ea;
+  --mr-blue: #2b5fa8;
+  --mr-blue-soft: #e5eefc;
+  --mr-red: #b03a3a;
+  --mr-red-soft: #fce9e9;
+
+  --mr-radius: 8px;
+  --mr-radius-lg: 12px;
+
+  /* space reserved for the fixed TConnects header */
+  --mr-header-offset: 110px;
+
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+  /* single padding rule: top clears header, sides stay 18px to 44px */
+  /* !important: guards against global "main { padding: 0 }" style resets */
+  padding: var(--mr-header-offset) clamp(18px, 3vw, 44px) 56px !important;
+  background: var(--mr-background) !important;
+  color: var(--mr-ink);
+}
+
+main.mentor-review-dashboard *,
+main.mentor-review-dashboard *::before,
+main.mentor-review-dashboard *::after {
+  box-sizing: border-box;
+}
+
+/* Keyboard focus */
+
+main.mentor-review-dashboard button:focus-visible,
+main.mentor-review-dashboard select:focus-visible,
+main.mentor-review-dashboard input:focus-visible {
+  outline: 2px solid var(--mr-primary);
+  outline-offset: 2px;
+}
+
+/* ---------- Page heading ---------- */
+
+.review-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 26px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--mr-line);
+}
+
+.review-eyebrow {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding-left: 10px;
+  border-left: 3px solid var(--mr-primary);
+  color: var(--mr-primary-dark);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.review-page-header h1 {
+  margin: 0;
+  color: var(--mr-ink);
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.review-page-header p {
+  max-width: 62ch;
+  margin: 8px 0 0;
+  color: var(--mr-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.review-refresh-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 10px 16px;
+  border: 1px solid var(--mr-line);
+  border-radius: var(--mr-radius);
+  background: var(--mr-surface);
+  color: var(--mr-ink);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.review-refresh-button:hover {
+  border-color: var(--mr-primary);
+  background: var(--mr-primary-soft);
+  color: var(--mr-primary-dark);
+}
+
+/* ---------- Status strip (one joined bar, not four floating cards) ---------- */
+
+.review-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px; /* shows the grid background as divider lines */
+  margin-bottom: 24px;
+  overflow: hidden;
+  border: 1px solid var(--mr-line);
+  border-radius: var(--mr-radius-lg);
+  background: var(--mr-line);
+}
+
+.review-stat-card {
+  --accent: var(--mr-primary);
+  --accent-soft: var(--mr-primary-soft);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  min-height: 150px;
+  padding: 20px 22px 18px;
+  border: 0;
+  border-radius: 0;
+  background: var(--mr-surface);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+/* coloured edge marks each status */
+.review-stat-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--accent);
+  opacity: 0.35;
+  transition: opacity 0.15s;
+}
+
+.review-stat-card:nth-child(1) { --accent: var(--mr-amber); --accent-soft: var(--mr-amber-soft); }
+.review-stat-card:nth-child(2) { --accent: var(--mr-green); --accent-soft: var(--mr-green-soft); }
+.review-stat-card:nth-child(3) { --accent: var(--mr-blue);  --accent-soft: var(--mr-blue-soft); }
+.review-stat-card:nth-child(4) { --accent: var(--mr-red);   --accent-soft: var(--mr-red-soft); }
+
+.review-stat-card:hover {
+  background: #fafcfc;
+}
+
+.review-stat-card:hover::before {
+  opacity: 0.7;
+}
+
+.review-stat-card.selected {
+  background: var(--accent-soft);
+}
+
+.review-stat-card.selected::before {
+  opacity: 1;
+}
+
+.review-stat-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: auto;
+  border-radius: var(--mr-radius);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 17px;
+}
+
+.review-stat-card.selected .review-stat-icon {
+  background: var(--mr-surface);
+}
+
+.review-stat-label {
+  margin-top: 18px;
+  color: var(--mr-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.review-stat-card strong {
+  margin-top: 2px;
+  color: var(--mr-ink);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Applications panel ---------- */
+
+.review-applications-panel {
+  overflow: hidden;
+  border: 1px solid var(--mr-line);
+  border-radius: var(--mr-radius-lg);
+  background: var(--mr-surface);
+}
+
+.review-panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 24px 18px;
+}
+
+.review-panel-heading h2 {
+  margin: 0;
+  color: var(--mr-ink);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.review-panel-heading p {
+  margin: 5px 0 0;
+  color: var(--mr-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.review-result-count {
+  flex-shrink: 0;
+  padding: 5px 11px;
+  border-radius: 6px;
+  background: var(--mr-primary-soft);
+  color: var(--mr-primary-dark);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Search and filter ---------- */
+
+.review-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px 20px;
+}
+
+.review-search {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 10px;
+  min-width: 0;
+  padding: 0 14px;
+  border: 1px solid var(--mr-line);
+  border-radius: var(--mr-radius);
+  background: var(--mr-background);
+  color: var(--mr-faint);
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.review-search:focus-within {
+  border-color: var(--mr-primary);
+  background: var(--mr-surface);
+  box-shadow: 0 0 0 3px rgb(8 127 140 / 12%);
+}
+
+.review-search input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--mr-ink);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.review-search input::placeholder {
+  color: var(--mr-faint);
+}
+
+.review-toolbar select {
+  width: 200px;
+  max-width: 100%;
+  padding: 11px 34px 11px 13px;
+  border: 1px solid var(--mr-line);
+  border-radius: var(--mr-radius);
+  background-color: var(--mr-surface);
+  color: var(--mr-ink);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.review-toolbar select:focus {
+  border-color: var(--mr-primary);
+}
+
+/* ---------- Table ---------- */
+
+.review-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.review-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.review-table thead {
+  background: var(--mr-background);
+}
+
+.review-table th {
+  padding: 12px 22px;
+  border-top: 1px solid var(--mr-line);
+  border-bottom: 1px solid var(--mr-line);
+  color: var(--mr-muted);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.review-table td {
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--mr-line-soft);
+  color: var(--mr-muted);
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.review-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.review-table tbody tr {
+  transition: background 0.12s;
+}
+
+.review-table tbody tr:hover {
+  background: #f8fbfb;
+}
+
+.review-table td strong,
+.review-table td small {
+  display: block;
+}
+
+.review-table td strong {
+  margin-bottom: 3px;
+  color: var(--mr-ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.review-table td small {
+  margin-top: 3px;
+  color: var(--mr-faint);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Status badges (dot + label) ---------- */
+
+.review-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px 5px 9px;
+  border-radius: 6px;
+  background: var(--mr-line-soft);
+  color: var(--mr-muted);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.review-status::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.review-status-submitted {
+  background: var(--mr-amber-soft);
+  color: var(--mr-amber);
+}
+
+.review-status-approved {
+  background: var(--mr-green-soft);
+  color: var(--mr-green);
+}
+
+.review-status-changes_requested {
+  background: var(--mr-blue-soft);
+  color: var(--mr-blue);
+}
+
+.review-status-rejected,
+.review-status-suspended {
+  background: var(--mr-red-soft);
+  color: var(--mr-red);
+}
+
+/* ---------- Review button (primary action) ---------- */
+
+.review-open-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border: 1px solid var(--mr-primary);
+  border-radius: var(--mr-radius);
+  background: var(--mr-primary);
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.review-open-button:hover {
+  border-color: var(--mr-primary-dark);
+  background: var(--mr-primary-dark);
+}
+
+/* ---------- Error and empty states ---------- */
+
+.review-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 24px 20px;
+  padding: 13px 16px;
+  border: 1px solid #f1cccc;
+  border-left: 4px solid var(--mr-red);
+  border-radius: var(--mr-radius);
+  background: var(--mr-red-soft);
+  color: #8f2d2d;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.review-empty-state {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 8px;
+  min-height: 240px;
+  padding: 36px 20px;
+  border-top: 1px solid var(--mr-line-soft);
+  color: var(--mr-muted);
+  text-align: center;
+}
+
+.review-empty-state > i {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 6px;
+  border: 1px dashed #b5cdd0;
+  border-radius: var(--mr-radius-lg);
+  background: var(--mr-background);
+  color: var(--mr-primary);
+  font-size: 24px;
+}
+
+.review-empty-state h3 {
+  margin: 0;
+  color: var(--mr-ink);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.review-empty-state p {
+  margin: 0;
+  color: var(--mr-muted);
+  font-size: 13px;
+}
+
+.review-spinner {
+  width: 26px;
+  height: 26px;
+  border: 3px solid var(--mr-primary-soft);
+  border-top-color: var(--mr-primary);
+  border-radius: 50%;
+  animation: review-spin 0.8s linear infinite;
+}
+
+@keyframes review-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Tablet ---------- */
+
+@media (max-width: 1050px) {
+  .review-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .review-table th,
+  .review-table td {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 640px) {
+  main.mentor-review-dashboard {
+    /* adjust if your header is not fixed on mobile */
+    --mr-header-offset: 84px;
+    padding: var(--mr-header-offset) 14px 36px !important;
+  }
+
+  .review-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 18px;
+  }
+
+  .review-stat-card {
+    min-height: 128px;
+    padding: 16px 14px 14px;
+  }
+
+  .review-stat-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 15px;
+  }
+
+  .review-stat-label {
+    margin-top: 12px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .review-stat-card strong {
+    font-size: 26px;
+  }
+
+  .review-panel-heading {
+    align-items: flex-start;
+    padding: 18px 16px 16px;
+  }
+
+  .review-panel-heading h2 {
+    font-size: 17px;
+  }
+
+  .review-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 0 16px 18px;
+  }
+
+  .review-toolbar select {
+    width: 100%;
+  }
+
+  .review-table {
+    min-width: 760px;
+  }
+
+  .review-error {
+    margin-right: 16px;
+    margin-left: 16px;
+  }
+}
+
+/* ---------- Accessibility ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .review-stat-card,
+  .review-stat-card::before,
+  .review-open-button,
+  .review-refresh-button,
+  .review-search,
+  .review-table tbody tr {
+    transition: none;
+  }
+
+  .review-spinner {
+    animation-duration: 2s;
+  }
+}

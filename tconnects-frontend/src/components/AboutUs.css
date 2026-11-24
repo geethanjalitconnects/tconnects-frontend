@@ -1,0 +1,137 @@
+/* GLOBAL */
+.aboutus-wrapper {
+  width: 100%;
+  background: #f4fcff;
+  font-family: 'Inter', sans-serif;
+  color: #023047;
+  padding-bottom: 60px;
+}
+
+/* HERO BANNER */
+.aboutus-hero {
+  width: 100%;
+  padding: 110px 20px 100px;
+  background: linear-gradient(135deg, #006D77, #0096A5);
+  text-align: center;
+  color: white;
+  position: relative;
+}
+
+.aboutus-hero-content {
+  max-width: 800px;
+  margin: auto;
+}
+
+.aboutus-title {
+  font-size: 3rem;
+  font-weight: 800;
+}
+
+.aboutus-subtitle {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  opacity: 0.95;
+}
+
+/* MAIN CONTENT CONTAINER */
+.aboutus-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 50px auto;
+  padding: 0 20px;
+}
+
+/* PREMIUM CARD STYLE */
+.aboutus-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(10px);
+  padding: 35px 30px;
+  border-radius: 16px;
+  margin-bottom: 35px;
+  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 150, 165, 0.15);
+}
+
+.section-heading {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #006D77;
+  margin-bottom: 15px;
+}
+
+.aboutus-card p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #023047;
+}
+
+/* VALUES LIST */
+.premium-values-list {
+  margin-top: 15px;
+  list-style: none;
+  padding-left: 0;
+}
+
+.premium-values-list li {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  padding-left: 28px;
+  position: relative;
+}
+
+.premium-values-list li::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background: #0096A5;
+  border-radius: 3px;
+  position: absolute;
+  top: 6px;
+  left: 0;
+}
+.parent-company-link {
+  color: #006D77; /* TConnects teal */
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 2px solid rgba(0, 109, 119, 0.3);
+  padding-bottom: 2px;
+  transition: 0.2s ease-in-out;
+}
+
+.parent-company-link:hover {
+  color: #00555d;
+
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+  .aboutus-title {
+    font-size: 2.4rem;
+  }
+
+  .aboutus-subtitle {
+    font-size: 1rem;
+  }
+
+  .section-heading {
+    font-size: 1.6rem;
+  }
+
+  .aboutus-card p {
+    font-size: 1rem;
+  }
+
+  .premium-values-list li {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .aboutus-title {
+    font-size: 2rem;
+  }
+
+  .aboutus-hero {
+    padding: 90px 20px;
+  }
+}

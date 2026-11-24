@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* =========================================================
+   VConnects welcome modal (premium).
+   ink #001d37 · deep #006080 · teal #0184a2 · cyan #09e2f1 · orange #ee7a3c
+========================================================= */
+.vcw-overlay {
+  --ink: #001d37;
+  --text: #4d6b77;
+  --deep: #006080;
+  --teal: #0184a2;
+  --aqua: #09e2f1;
+  --or: #ee7a3c;
+  --f: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --m: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  padding: 20px;
+  overflow-y: auto;            /* only the dark backdrop scrolls on very short screens, never the card */
+  overflow-x: hidden;
+  background:
+    radial-gradient(55% 55% at 50% 45%, rgba(9, 226, 241, 0.2), transparent 70%),
+    rgba(0, 20, 40, 0.62);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  animation: vcw-fade 0.4s ease both;
+}
+.vcw-overlay *,
+.vcw-overlay *::before,
+.vcw-overlay *::after { box-sizing: border-box; }
+/* force the brand font over any global button / heading rules */
+.vcw-overlay .vcw-card,
+.vcw-overlay .vcw-card * { font-family: var(--f); }
+
+/* ---------- card ---------- */
+.vcw-card {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin: auto;                /* centres, and stays reachable if the screen is short */
+  padding: 34px 32px 18px;
+  text-align: center;
+  border-radius: 32px;
+  overflow: hidden;            /* clips the particle field: no scrollbars */
+  isolation: isolate;
+  background:
+    radial-gradient(75% 55% at 0% 0%, rgba(154, 235, 240, 0.75) 0, transparent 70%),
+    radial-gradient(60% 50% at 100% 100%, rgba(251, 227, 211, 0.9) 0, transparent 70%),
+    #fbfeff;
+  box-shadow:
+    0 50px 120px rgba(0, 12, 28, 0.55),
+    0 0 90px rgba(9, 226, 241, 0.28);
+  animation: vcw-pop 0.8s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+/* hairline gradient border */
+.vcw-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: linear-gradient(140deg, #fff 0%, rgba(9, 226, 241, 0.9) 35%, rgba(1, 132, 162, 0.2) 65%, rgba(238, 122, 60, 0.7) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+.vcw-card > * { position: relative; z-index: 2; }
+
+/* ---------- close ---------- */
+.vcw-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 5;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.35s, background 0.2s;
+}
+.vcw-close svg { width: 15px; stroke: var(--ink); fill: none; stroke-width: 2.2; stroke-linecap: round; }
+.vcw-close:hover { transform: rotate(90deg); background: #fff; }
+
+/* ---------- logo ---------- */
+.vcw-brand { display:flex; justify-content:center; margin:0 0 18px; }
+.vcw-brand img { height:46px; width:auto; display:block; }
+
+/* ---------- headline ---------- */
+.vcw-title {
+  margin: 0;
+  font-weight: 800;
+  color: var(--ink);
+  font-size: clamp(32px, 5.2vw, 44px);
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+}
+.vcw-grad {
+  background: linear-gradient(100deg, var(--deep) 0%, var(--teal) 50%, #10b5c4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.vcw-sub {
+  max-width: 25em;
+  margin: 14px auto 24px;
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* ---------- role buttons ---------- */
+.vcw-roles { display: grid; gap: 12px; }
+.vcw-role {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin: 0;
+  padding: 13px 13px 13px 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--ink);
+  text-align: left;            /* buttons centre text by default */
+  cursor: pointer;
+  box-shadow: 0 10px 28px rgba(1, 132, 162, 0.13), inset 0 0 0 1px rgba(1, 132, 162, 0.06);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s;
+}
+.vcw-role:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(1, 132, 162, 0.26); }
+.vcw-role:active { transform: translateY(-1px) scale(0.99); }
+.vcw-ico {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(145deg, rgba(1, 132, 162, 0.14), rgba(9, 226, 241, 0.12));
+}
+.vcw-ico svg { width: 22px; stroke: var(--teal); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.vcw-rt { flex: 1; min-width: 0; display: grid; gap: 2px; text-align: left; }
+.vcw-rt b { font-size: 17px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+.vcw-rt small { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.35; }
+.vcw-go {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  transition: translate 0.3s;
+}
+.vcw-go svg { width: 15px; stroke: #fff; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.vcw-role:hover .vcw-go { translate: 3px 0; }
+
+/* primary: rich gradient, soft glow, light sweep */
+.vcw-role-main {
+  background: linear-gradient(120deg, #075f78 0%, #0597b4 55%, #05d4e2 100%);
+  border-color: rgba(255, 255, 255, 0.55);
+  color: #fff;
+  animation: vcw-glow 3s ease-in-out infinite;
+}
+.vcw-role-main::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.45) 50%, transparent 65%);
+  translate: -120% 0;
+  animation: vcw-shine 4.5s ease-in-out 1.2s infinite;
+  pointer-events: none;
+}
+.vcw-role-main .vcw-rt small { color: #e4fdff; }
+.vcw-role-main .vcw-ico { background: rgba(255, 255, 255, 0.2); }
+.vcw-role-main .vcw-ico svg { stroke: #fff; }
+.vcw-role-main .vcw-go { background: #fff; }
+.vcw-role-main .vcw-go svg { stroke: var(--deep); }
+
+/* ---------- perks + later ---------- */
+.vcw-later {
+  margin: 6px 0 0;
+  padding: 8px 12px;
+  border: 0;
+  background: none;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b8791;
+  cursor: pointer;
+}
+.vcw-later:hover { color: var(--teal); text-decoration: underline; text-underline-offset: 4px; }
+.vcw-card button:focus-visible { outline: 3px solid var(--aqua); outline-offset: 3px; }
+
+/* ---------- motion ---------- */
+@keyframes vcw-fade { from { opacity: 0; } }
+@keyframes vcw-pop { from { opacity: 0; transform: translateY(28px) scale(0.95); filter: blur(8px); } }
+@keyframes vcw-shine { 0%, 55% { translate: -120% 0; } 100% { translate: 120% 0; } }
+@keyframes vcw-glow {
+  0%, 100% { box-shadow: 0 14px 32px rgba(1, 132, 162, 0.35); }
+  50% { box-shadow: 0 14px 50px rgba(9, 226, 241, 0.65); }
+}
+
+/* ---------- responsive ---------- */
+@media (max-height: 640px) {
+  .vcw-card { padding-top: 26px; }
+  .vcw-brand { margin-bottom: 10px; }
+  .vcw-sub { margin: 8px auto 14px; }
+}
+@media (max-width: 560px) {
+  .vcw-overlay { padding: 12px; }
+  .vcw-card { padding: 30px 18px 16px; border-radius: 26px; }
+  .vcw-brand img { height: 38px; }
+  .vcw-sub { font-size: 14px; }
+  .vcw-rt b { font-size: 15.5px; }
+  .vcw-rt small { font-size: 12px; }
+  .vcw-ico { width: 40px; height: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vcw-overlay, .vcw-card, .vcw-role-main, .vcw-role-main::after { animation: none !important; }
+}

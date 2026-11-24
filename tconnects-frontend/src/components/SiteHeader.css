@@ -1,0 +1,90 @@
+/* Shared floating header. All rules are prefixed .sh- so nothing depends on (or clashes with) other stylesheets.
+   Brand colours (from the logo): ink #001d37 · deep #006080 · teal #0184a2 · cyan #09e2f1 */
+:root { --vc-hh: 88px; } /* space the header takes (pill + gaps); login/register pages use it to stay clear of it */
+
+/* outer strip: sticky, transparent, lets clicks through to the page around the pill */
+.sh {
+  position: fixed; left: 0; right: 0; top: 0; z-index: 1000; height: var(--vc-hh); padding: 12px 20px 0;
+  pointer-events: none;
+  font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+.sh *, .sh *::before, .sh *::after { box-sizing: border-box; }
+
+/* the floating pill */
+.sh-in {
+  position: relative; pointer-events: auto; height: 64px; max-width: 1240px; margin: 0 auto; padding: 0 9px 0 24px;
+  display: flex; align-items: center; gap: 20px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(1, 132, 162, 0.2);
+  box-shadow: 0 14px 36px rgba(0, 96, 128, 0.15), inset 0 1px 0 #fff;
+}
+
+.sh-logo { display: flex; align-items: center; text-decoration: none; flex: none; }
+.sh-logo img { height: 38px; width: auto; max-width: 80px; display: block; }
+
+/* nav + dropdowns: every <li> is as tall as the pill, so a dropdown starts exactly at the pill's bottom edge */
+.sh-nav { flex: 1; height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.sh-nav ul { height: 100%; list-style: none; margin: 0 auto; padding: 0; display: flex; align-items: center; gap: 4px; }
+.sh-nav li { position: relative; height: 100%; display: flex; align-items: center; margin: 0; padding: 0; }
+
+.sh-link {
+  display: inline-flex; align-items: center; gap: 5px; padding: 9px 16px; border: 0; background: none; border-radius: 999px;
+  font: inherit; font-size: 15px; font-weight: 600; color: #52707c; text-decoration: none; cursor: pointer; transition: color .2s, background .2s;
+}
+.sh-link:hover, .sh-link.open { color: #006080; background: rgba(9, 226, 241, 0.2); }
+.sh-link.active { color: #0184a2; background: rgba(1, 132, 162, 0.1); }
+.sh-link svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
+.sh-link.open svg { transform: rotate(180deg); }
+
+.sh-dd {
+  position: absolute; left: 50%; top: 100%; min-width: 210px; padding: 8px; margin-top: 12px; border-radius: 18px; background: #fff;
+  border: 1px solid #bfe6ee; box-shadow: 0 20px 44px rgba(0, 96, 128, 0.18);
+  opacity: 0; visibility: hidden; transform: translate(-50%, 6px); transition: opacity .18s, transform .18s, visibility .18s;
+}
+.sh-dd::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; } /* hover bridge across the gap */
+.sh-dd.show { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+.sh-dd a { display: block; padding: 11px 14px; border-radius: 12px; font-size: 15px; font-weight: 700; color: #001d37; text-decoration: none; transition: background .15s, color .15s; }
+.sh-dd a:hover { background: linear-gradient(90deg, rgba(9, 226, 241, 0.22), rgba(1, 132, 162, 0.1)); color: #006080; }
+
+.sh-r { display: flex; align-items: center; gap: 8px; flex: none; }
+.sh-btn {
+  display: inline-flex; align-items: center; gap: 12px; height: 46px; padding: 0 8px 0 22px; border: 2px solid transparent; border-radius: 999px;
+  background: #001d37; color: #fff; font: inherit; font-size: 15px; font-weight: 700; text-decoration: none; cursor: pointer;
+  transition: transform .25s, box-shadow .25s, background .25s, color .25s, border-color .25s;
+}
+.sh-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0, 29, 55, 0.28); }
+.sh-btn i { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, #006080, #09e2f1); }
+.sh-btn i svg { width: 14px; height: 14px; fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.sh-btn.sh-out { padding: 0 22px; background: transparent; color: #006080; border-color: #0184a2; }
+.sh-btn.sh-out:hover { background: linear-gradient(135deg, #0184a2, #09c8e0); color: #fff; border-color: transparent; box-shadow: 0 10px 22px rgba(1, 132, 162, 0.3); }
+
+.sh-burger { display: none; margin-left: auto; width: 42px; height: 42px; border: 0; border-radius: 50%; background: rgba(1, 132, 162, 0.12); cursor: pointer; place-content: center; gap: 4px; }
+.sh-burger i { display: block; width: 18px; height: 2px; border-radius: 2px; background: #006080; }
+
+@media (max-width: 960px) {
+  :root { --vc-hh: 76px; }
+  .sh { padding: 10px 10px 0; }
+  .sh-in { height: 56px; padding: 0 7px 0 18px; }
+  .sh-logo img { height: 34px; }
+  .sh-burger { display: grid; }
+  .sh-nav {
+    position: absolute; left: 0; right: 0; top: calc(100% + 10px); height: auto; flex-direction: column; align-items: stretch; gap: 10px; padding: 12px 14px 16px;
+    background: #fff; border: 1px solid #bfe6ee; border-radius: 24px; box-shadow: 0 20px 40px rgba(0, 96, 128, 0.18);
+    max-height: calc(100vh - var(--vc-hh) - 20px); overflow-y: auto; display: none;
+  }
+  .sh-nav.open { display: flex; }
+  .sh-nav ul { height: auto; flex-direction: column; align-items: stretch; margin: 0; }
+  .sh-nav li { height: auto; flex-direction: column; align-items: stretch; }
+  .sh-link { width: 100%; justify-content: space-between; border-radius: 14px; }
+  .sh-dd { position: static; display: none; opacity: 1; visibility: visible; transform: none; box-shadow: none; border: 0; background: transparent; margin: 0; padding: 0 0 0 12px; min-width: 0; }
+  .sh-dd.show { display: block; transform: none; }
+  .sh-dd::before { display: none; }
+  .sh-r { flex-direction: column; align-items: stretch; }
+  .sh-btn { justify-content: space-between; }
+  .sh-btn.sh-out { justify-content: center; }
+}
+
+/* ---------- homepage: header floats over the page (fixed), so the homepage background shows behind it ---------- */
+.sh-home { height: auto; padding-top: 24px; }
+.sh-spacer { height: var(--vc-hh); }
+@media (max-width: 960px) { .sh-home { padding-top: 10px; } }

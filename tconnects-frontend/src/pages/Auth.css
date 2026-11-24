@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+/* =========================================================
+   VConnects login + registration popup  (this ONE file styles both)
+   ink #001d37 · deep #006080 · teal #0184a2 · cyan #09e2f1 · orange #ee7a3c
+   Sections: 1 popup backdrop  2 popup card  3 form  4 button + OTP  5 responsive
+
+   How it works:
+   - .va-page is a full-screen dark, blurred backdrop (position: fixed).
+   - .va-card is the white popup sitting in the middle of it.
+   - If the popup is taller than the screen, the backdrop scrolls.
+   - No animations. The only moving thing left is the loading spinner on the button.
+========================================================= */
+
+/* ---------- 1. popup backdrop ---------- */
+.va-page {
+  --ink: #001d37; --text: #52707c; --deep: #006080; --teal: #0184a2; --aqua: #09e2f1; --or: #ee7a3c;
+  --line: #d6e7ec; --err: #d6361f;
+  position: fixed; inset: 0; z-index: 2000;   /* above the fixed site header */
+  display: flex;
+  padding: 16px;
+  overflow-y: auto;
+  background: rgba(0, 29, 55, 0.55);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--text);
+}
+.va-page *, .va-page *::before, .va-page *::after { box-sizing: border-box; }
+.va-page h1, .va-page h2, .va-page p, .va-page ul { margin: 0; padding: 0; }
+.va-page button, .va-page input { font-family: inherit; }
+
+/* ---------- 2. popup card ---------- */
+.va-card {
+  position: relative; width: 100%; max-width: 440px; margin: auto;   /* margin: auto centres it and still lets the backdrop scroll */
+  padding: 28px 32px 18px; border-radius: 28px;
+  background: linear-gradient(155deg, #bdeff5 0%, #ffffff 34%, #ffffff 70%, #fde8da 100%);
+  border: 1.5px solid rgba(9, 226, 241, 0.45);
+  box-shadow: 0 30px 70px rgba(0, 25, 45, 0.35);
+  outline: none;
+}
+
+.va-close {
+  position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
+  display: grid; place-items: center; border: 0; border-radius: 50%;
+  background: #fff; color: var(--ink); cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 25, 45, 0.14);
+}
+.va-close svg { width: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.va-close:hover { background: #eaf5f8; }
+
+.va-logo { display: flex; justify-content: center; margin-bottom: 10px; }
+.va-logo img { height: 34px; width: auto; display: block; }
+.va-page .va-card h1 { text-align: center; font-size: 24px; font-weight: 800; letter-spacing: -0.03em; color: var(--ink); line-height: 1.15; }
+.va-card h1 span { color: var(--teal); }
+.va-page .va-sub { text-align: center; margin: 8px auto 16px; max-width: 22em; font-size: 13.5px; line-height: 1.45; font-weight: 500; }
+
+.va-roles { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 14px; background: #eaf5f8; margin-bottom: 16px; }
+.va-roles button {
+  display: flex; align-items: center; gap: 9px; padding: 8px 11px; border: 0; border-radius: 11px; background: transparent;
+  color: var(--text); text-align: left; cursor: pointer;
+}
+.va-roles button svg { flex: none; width: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.va-roles button span { display: grid; min-width: 0; }
+.va-roles b { font-size: 13px; font-weight: 800; letter-spacing: -0.01em; }
+.va-roles small { font-size: 10.5px; font-weight: 500; opacity: 0.8; line-height: 1.25; }
+.va-roles button:hover:not(.on):not(:disabled) { background: rgba(255, 255, 255, 0.6); }
+.va-roles button.on { background: #fff; color: var(--ink); box-shadow: 0 4px 12px rgba(1, 132, 162, 0.18); }
+.va-roles button.on svg { stroke: var(--teal); }
+.va-roles button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ---------- 3. form ---------- */
+.va-field { margin-bottom: 11px; }
+.va-label { display: block; margin-bottom: 4px; font-size: 12.5px; font-weight: 600; color: var(--ink); }
+.va-field:focus-within .va-label { color: var(--teal); }
+.va-input {
+  width: 100%; height: 42px; padding: 0 13px; border-radius: 11px; border: 1.5px solid var(--line); background: #fff;
+  font-size: 14px; font-weight: 500; color: var(--ink); outline: none;
+}
+.va-input::placeholder { color: #9db5bd; }
+.va-input:hover:not(:disabled) { border-color: #b9d6de; }
+.va-input:focus { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(9, 226, 241, 0.2); }
+.va-input.err { border-color: var(--err); background: #fff7f5; }
+.va-input:disabled { background: #f2f8fa; cursor: not-allowed; }
+.va-pw { position: relative; }
+.va-pw .va-input { padding-right: 44px; }
+.va-eye { position: absolute; right: 7px; top: 50%; translate: 0 -50%; width: 30px; height: 30px; border: 0; border-radius: 9px; background: none; color: #6b8791; cursor: pointer; display: grid; place-items: center; }
+.va-eye:hover { color: var(--teal); background: rgba(1, 132, 162, 0.08); }
+.va-hint { margin-top: 5px; font-size: 12px; color: #6b8791; font-weight: 500; }
+.va-etext { margin-top: 5px; font-size: 12px; color: var(--err); font-weight: 600; }
+.va-error { margin-bottom: 12px; padding: 10px 13px; border-radius: 12px; background: #fff0ed; border: 1px solid #f6c3b9; color: #b52a14; font-size: 13px; font-weight: 600; text-align: center; }
+.va-rowr { display: flex; justify-content: flex-end; margin: -4px 0 10px; }
+.va-link { border: 0; background: none; padding: 2px 4px; font-size: 12.5px; font-weight: 700; color: var(--teal); cursor: pointer; text-decoration: none; }
+.va-link:hover { color: var(--deep); text-decoration: underline; text-underline-offset: 3px; }
+.va-link:disabled { color: #8aa0a8; cursor: not-allowed; text-decoration: none; }   /* e.g. "Resend in 42s" */
+
+/* optional: put two fields on one line (e.g. Password + Confirm password) with <div className="va-row2"> */
+.va-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ---------- 4. primary button + OTP ---------- */
+.va-btn {
+  position: relative; flex: none;
+  width: 100%; height: 46px; margin-top: 6px; display: flex; align-items: center; justify-content: center; gap: 10px;
+  border: 0; border-radius: 999px; color: #fff; font-size: 14.5px; font-weight: 700; letter-spacing: 0.01em; cursor: pointer;
+  background: linear-gradient(180deg, #1c3a52 0%, #001d37 100%);
+  box-shadow: 0 6px 16px rgba(0, 29, 55, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.va-btn.idle { background: linear-gradient(180deg, #8f9ea6 0%, #6e7d86 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25); }
+.va-btn:hover:not(:disabled):not(.idle) { background: linear-gradient(180deg, #24475f 0%, #082a49 100%); }
+.va-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+.va-btn i { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, var(--deep), var(--aqua)); display: grid; place-items: center; }
+.va-btn i svg { width: 12px; stroke: #fff; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.va-btn[aria-busy="true"] i svg, .va-btn.loading i svg { animation: va-spin 0.8s linear infinite; }   /* the one animation kept: shows the button is working */
+.va-alt { display: flex; justify-content: center; margin-top: 8px; }
+
+.va-otpinfo { text-align: center; margin-bottom: 12px; font-size: 13.5px; }
+.va-otpinfo strong { color: var(--ink); word-break: break-word; }
+.va-otps { display: flex; justify-content: center; gap: 8px; margin: 6px 0 10px; }
+.va-otp { width: 44px; height: 50px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff; text-align: center; font-size: 20px; font-weight: 800; color: var(--ink); outline: none; }
+.va-otp:focus { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(9, 226, 241, 0.2); }
+.va-otp:not(:placeholder-shown) { background: #e9f8fa; border-color: var(--teal); }
+.va-otpmeta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12.5px; }
+
+/* the "Already have an account? / New to VConnects?" link, always visible inside the popup */
+.va-foot { margin: 14px -32px 0; padding: 12px 32px 0; border-top: 1px solid #e3eef1; text-align: center; font-size: 13px; font-weight: 500; color: #8aa0a8; }
+.va-foot .va-link { font-size: 13px; color: var(--ink); font-weight: 800; }
+.va-foot .va-link::after { content: " ›"; }
+.va-page button:focus-visible, .va-page a:focus-visible { outline: 3px solid var(--aqua); outline-offset: 2px; }
+
+@keyframes va-spin { to { transform: rotate(360deg); } }
+
+/* ---------- 5. responsive ---------- */
+@media (max-width: 480px) {
+  .va-page { padding: 8px; }
+  .va-card { padding: 24px 18px 14px; border-radius: 22px; }
+  .va-close { top: 12px; right: 12px; }
+  .va-page .va-card h1 { font-size: 21px; padding: 0 28px; }   /* keeps the title clear of the close button */
+  .va-foot { margin: 14px -18px 0; padding: 12px 18px 0; }
+  .va-roles small { display: none; }
+  .va-row2 { grid-template-columns: 1fr; gap: 0; }
+  .va-otps { gap: 6px; }
+  .va-otp { width: 40px; height: 48px; font-size: 19px; }
+}
