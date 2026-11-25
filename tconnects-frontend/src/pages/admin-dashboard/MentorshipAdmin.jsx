@@ -287,10 +287,10 @@ function AdminBookingDrawer({ id, onClose, onChanged }) {
 
             {mode === "cancel" && (
               <div className="mb-inline-form">
-                <b>Cancel as TConnects support</b>
+                <b>Cancel as VConnects support</b>
                 <input value={form.reason} onChange={(e) => setForm({ ...form, reason: e.target.value })} placeholder="Reason (shown to booker and mentor)" style={{ border: "1px solid #cfe3ea", borderRadius: 8, padding: 8 }} />
                 {paid && <label><input type="checkbox" checked={form.refund} onChange={(e) => setForm({ ...form, refund: e.target.checked })} /> Refund the booker in full ({inr(refundable)})</label>}
-                <div className="mb-actions"><button className="mb-btn" onClick={() => setMode("")}>Back</button><button className="mb-btn danger" disabled={busy} onClick={() => run("cancel", { reason: form.reason || "Cancelled by TConnects support", refund: form.refund }, "Booking cancelled.")}>{busy ? "Working…" : "Cancel booking"}</button></div>
+                <div className="mb-actions"><button className="mb-btn" onClick={() => setMode("")}>Back</button><button className="mb-btn danger" disabled={busy} onClick={() => run("cancel", { reason: form.reason || "Cancelled by VConnects support", refund: form.refund }, "Booking cancelled.")}>{busy ? "Working…" : "Cancel booking"}</button></div>
               </div>
             )}
             {mode === "refund" && (

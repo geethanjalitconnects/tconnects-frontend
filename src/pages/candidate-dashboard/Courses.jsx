@@ -32,7 +32,7 @@ export default function Courses() {
         }>
           <div className="cd-course-info">
             <h3 className="cd-course-title">{course.title}</h3>
-            <p className="cd-course-provider">Offered by: TConnects Academy</p>
+            <p className="cd-course-provider">Offered by: VConnects Academy</p>
             <p className="cd-course-progress-text">
               Progress: {course.progress}%
             </p>

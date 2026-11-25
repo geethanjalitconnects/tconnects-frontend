@@ -8,7 +8,7 @@ const AboutUs = () => {
       {/* ================= HERO SECTION ================= */}
       <section className="aboutus-hero">
         <div className="aboutus-hero-content">
-          <h1 className="aboutus-title">About TConnects</h1>
+          <h1 className="aboutus-title">About VConnects</h1>
           <p className="aboutus-subtitle">
             Empowering careers. Transforming opportunities. Connecting skilled
             professionals with trusted organizations across the country.
@@ -22,7 +22,7 @@ const AboutUs = () => {
           <h2 className="section-heading">Our Parent Company</h2>
 
           <p>
-            TConnects proudly operates under the leadership of{" "}
+            VConnects proudly operates under the leadership of{" "}
             <a
               href="https://www.vprotectsecurity.com/"
               target="_blank"
@@ -41,7 +41,7 @@ const AboutUs = () => {
           <p>
             Built on strong foundations of verified processes, operational
             discipline, and globally aligned security frameworks, Virtual
-            Protect Security enables TConnects to deliver trusted, security-driven
+            Protect Security enables VConnects to deliver trusted, security-driven
             career solutions tailored for both individuals and organizations.
           </p>
         </div>

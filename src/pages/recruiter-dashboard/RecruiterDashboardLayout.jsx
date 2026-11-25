@@ -23,7 +23,7 @@ const RecruiterDashboardLayout = () => {
       {/* SIDEBAR */}
       <aside className="rd-sidebar">
         <div className="rd-sidebar-top">
-          <h2 className="rd-logo">TConnects</h2>
+          <h2 className="rd-logo">VConnects</h2>
         </div>
 
         {/* BACK TO HOME BUTTON */}

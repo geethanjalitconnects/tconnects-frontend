@@ -62,7 +62,7 @@
         <div className="why-choose-container">
             <div className={`section-header ${isVisible ? 'animate-in' : ''}`}>
             <h2 className="section-title">
-                Why Choose <span className="title-highlight">TConnects</span>?
+                Why Choose <span className="title-highlight">VConnects</span>?
             </h2>
             <p className="section-description">
                 Discover what makes us India's most trusted risk management career platform

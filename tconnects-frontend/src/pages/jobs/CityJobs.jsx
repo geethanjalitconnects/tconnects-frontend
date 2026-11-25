@@ -67,7 +67,7 @@ export default function CityJobs() {
   return (
     <>
       <Helmet>
-        <title>{cityName} Jobs & Internships | TConnects</title>
+        <title>{cityName} Jobs & Internships | VConnects</title>
 
         <meta
           name="description"
@@ -81,7 +81,7 @@ export default function CityJobs() {
 
         <link
           rel="canonical"
-          href={`https://tconnects.in/jobs/city/${city}`}
+          href={`https://v-connects.com/jobs/city/${city}`}
         />
       </Helmet>
 

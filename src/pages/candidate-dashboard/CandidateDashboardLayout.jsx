@@ -58,7 +58,7 @@ export default function CandidateDashboardLayout() {
               setSidebarOpen(false);
             }}
           >
-            TConnects
+            VConnects
           </div>
           
           {/* ⭐ Back to Home Button */}

@@ -315,7 +315,7 @@ const LoginPage = ({ onLoginSuccess }) => {
             </div>
 
             <div className="register-link-container">
-              <span className="register-text">New to TConnects? </span>
+              <span className="register-text">New to VConnects? </span>
               <button onClick={() => navigate('/register')} className="register-link">
                 Register
               </button>
@@ -416,7 +416,7 @@ const LoginPage = ({ onLoginSuccess }) => {
             </div>
 
             <div className="register-link-container">
-              <span className="register-text">New to TConnects? </span>
+              <span className="register-text">New to VConnects? </span>
               <button onClick={() => navigate('/register')} className="register-link">
                 Register
               </button>

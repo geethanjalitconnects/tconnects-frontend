@@ -212,7 +212,7 @@ export default function PricingPage() {
       amount,                   // in paise, as returned by backend
       currency,
       order_id,
-      name:        "TConnects",
+      name:        "VConnects",
       description: name,
 
       // ── Step 3: Verify signature on backend after payment ──────────────────
