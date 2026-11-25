@@ -41,9 +41,7 @@ const FOOT = [
     { l: 'Mentorship', to: ROUTES.mentorship },
     { l: 'Subscriptions', to: ROUTES.subscriptions },
   ] },
-  { h: 'Follow', items: [
-    { l: 'Follow on X', href: 'https://x.com/' }, // put your real profile link here
-  ] },
+
 ];
 
 const LEGAL = [

@@ -13,6 +13,7 @@ import { SavedInternshipsProvider } from "./context/SavedInternshipsContext";
 /* PUBLIC COMPONENTS */
 import SiteHeader from "./components/SiteHeader"; // shared header (same design as the homepage header)
 import Footer from "./components/Footer"; // shared footer, shown on every page except the ones listed in hideFooter
+import ScrollToTop from "./components/ScrollToTop"; // scrolls to the top on every route change
 // The old hero's stylesheet stays loaded: other pages may rely on its global classes.
 import "./components/HeroSection.css";
 import NewHomePage from "./pages/home/HomePage"; // NEW homepage (hero and sections; header and footer come from App)
@@ -176,6 +177,9 @@ function App() {
       <SavedJobsProvider enabled={!isChecking}>
         <SavedInternshipsProvider enabled={!isChecking}>
           <div>
+            {/* Scrolls to the top whenever the route changes (e.g. footer links) */}
+            <ScrollToTop />
+
             <Toaster
               position="top-right"
               toastOptions={{
